@@ -48,29 +48,14 @@ const HomePage = ({ navigation, route }) => {
     const [marked, setMarked] = useState(false)
     const [attr, setAttr] = useState([])
     useEffect(
-        //  () => Geolocation.getCurrentPosition(info=>setLocation(info.coords.latitude + "," + info.coords.longitude)),
-        // () => Geolocation.getCurrentPosition(info => setLocation(info)),
         () => {
             MQTT.createClient({
                 uri: 'mqtt://192.168.1.64:1883',
                 clientId: 'teknofest' + Platform.OS
             }).then((client) => {
                 client.on('message', function (msg) {
-                    /*if (!msg.data.includes("INVALID")) {
-                        setKoor(msg.data.split("-")[0].split(","));
-                        setReason(msg.data.split("-")[1])
-                    } else {
-                        setKoor(null);
-                        setReason(null);
-                    }
-                    
-                    console.log(msg.data)
-                    // msg.data.includes("INVALID")?setIsInvalid(true):setIsInvalid(false);
-                    //  console.log(msg.data)*/
                     if (msg.topic == "esp32/responsecalismalar" && JSON.parse(msg.data) != []) {
                         setCalismalar([])
-                        //console.log(JSON.parse(msg.data)["calismalar"])
-                        // console.log(JSON.parse(msg.data)["calismalar"].sort((data => data[1] + "," + data[2])))
                         for (let calisma in JSON.parse(msg.data)["calismalar"]) {
                             setCalismalar(
                                 calismalar => [...calismalar,
@@ -81,27 +66,17 @@ const HomePage = ({ navigation, route }) => {
                                     reason: JSON.parse(msg.data)["calismalar"][calisma][3],
                                     descr: JSON.parse(msg.data)["calismalar"][calisma][4],
                                     hasPhoto: JSON.parse(msg.data)["calismalar"][calisma][5],
-//                                    photoPath: JSON.parse(msg.data)["calismalar"][calisma][6],
                                 }]
                             )
-                            //console.log(descr)
-                            /*
-                                                    mapRef.current.injectJavaScript(`   var marker = L.marker([${JSON.parse(msg.data)["calismalar"][calisma]["calisma"][1]}, ${JSON.parse(msg.data)["calismalar"][calisma]["calisma"][2]}],{icon:greenIcon}).addTo(mymap)
-                                                    ;    mymap.setView([${JSON.parse(msg.data)["calismalar"][calisma]["calisma"][1]}, ${JSON.parse(msg.data)["calismalar"][calisma]["calisma"][2]}], 18) ; true
-                                                    `)*/
-              
-                        }
-                        // console.log(msg.data);
+                               }
                     }
 
                     if (msg.topic == "esp32/responsekoorbyid") {
                         try {
-                            // console.log(JSON.parse(msg.data)["koorbyid"].sort((data=>data[1] + "," + data[2])))
                             console.log(msg.data)
                         } catch (err) {
                             console.log(err);
                         }
-                        // console.log(msg.data);
                     }
                     
                     if (msg.topic == "esp32/responsephotobyid") {
@@ -139,24 +114,13 @@ const HomePage = ({ navigation, route }) => {
     )
 
     const markKoor = () => {
-        /*
-        if (koor) {
-            mapRef.current.injectJavaScript(`   var marker = L.marker([${koor[0]}, ${koor[1]}],{icon:greenIcon}).addTo(mymap)
-      ;    mymap.setView([${koor[0]}, ${koor[1]}], 18) ; true
-      `)
-        } else {
-            setInvalidWarningVisible(true);
-        }*/
-
         setCalismalar([])
         MQTTClient.connect()
         MQTTClient.publish("esp32/calismalar", "GET", 0, true)
         setMarked(true)
         setRefreshing(false)
 
-        // await console.log(calismalar)
-
-    }
+   }
     
     const renderItem = ({ item, index }) => {
         return (
@@ -194,7 +158,6 @@ const HomePage = ({ navigation, route }) => {
                             }).catch(function (err) {
                                 console.log(err);
                             });
-                            // MQTTClient.publish("esp32/photobyid",item.id.toString(),0,false)
                             
                         
                         } else
@@ -247,14 +210,7 @@ const HomePage = ({ navigation, route }) => {
                     <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000", fontWeight: "300", flexShrink: 1, marginRight:30 }}>{location?.toString()}</Text>
                 </View>
             </View>
-            {/*}
-                <View style={{ flexDirection: "row" }}>
-                    <View style={{ flex: 1, height: 300, backgroundColor: "black", shadowOffset: { width: 0, height: 0 }, elevation: 15, marginTop: 20, borderRadius: 6, shadowColor: "#2d2d2d", shadowRadius: 12, shadowOpacity: 0.8, margin: 15 }}>
-                        <WebView containerStyle={{ borderRadius: 6 }} ref={mapRef} source={{ html: Appearance.getColorScheme() == "dark" ? html_script : html_script_light }} style={{ flex: 1 }} />
-                    </View>
-                </View>
-                    {*/}
-
+       
             <Text style={{ marginLeft: 30, marginTop: 30, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>YAKININIZDAKİ YOL ÇALIŞMALARI</Text>
             <FlatList
                 data={calismalar}

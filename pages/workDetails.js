@@ -54,41 +54,11 @@ const WorkDetails = ({ navigation, route }) => {
             </View>
         )
     }
-    //   forceUpdate();
     useFocusEffect(
         () => {
-            //                setFinal(final)
             mapRef.current.injectJavaScript(`   var marker = L.marker([${item.koorX}, ${item.koorY}],{icon:greenIcon}).addTo(mymap)
             ;    mymap.setView([${item.koorX}, ${item.koorY}], 18) ; true
             `)
-            /*MQTT.createClient({
-                uri: 'mqtt://192.168.1.64:1883',
-                clientId: 'teknofest' + Platform.OS
-            }).then(function (client) {
-                client.on("message", (msg) => {
-
-                    if (msg.topic == "esp32/responsephotobyid") {
-                        setOrigMsg(msg.data)
-                        setFinal([])
-             
-                        msg.data.split("📷").forEach(
-                            (elm, ind, arr) => {
-                                setFinal(final => [...final, { id: final.length - 1, photo: elm }]);
-                                
-                            }
-                        )
-                        setRefresh(true)
-                    }
-                })
-                client.on('connect', function () {
-                    client.subscribe("esp32/responsephotobyid", 0);
-                    client.publish("esp32/photobyid", item.id.toString(), 0, false);
-                });
-
-                client.connect();
-            }).catch(function (err) {
-                console.log(err);
-            });*/
         })
     return (
         <ScrollView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }} fadingEdgeLength={160}>
@@ -136,8 +106,6 @@ const WorkDetails = ({ navigation, route }) => {
                             style={{ marginLeft: 30, marginTop: 15, flexDirection: "row", marginBottom: 15 }}
                             onPress={
                                 () => {
-                                    //console.log(Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)));
-                                    
                                     (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.003) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.003) ? navigation.navigate("AddPhoto", { id: item.id }) : null
                                 }}>
                             <PlusCircle size={32} color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} />

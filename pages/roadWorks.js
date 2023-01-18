@@ -21,7 +21,7 @@ import { WebView } from "react-native-webview"
 
 import LinearGradient from 'react-native-linear-gradient';
 
-import { CaretRight, NavigationArrow, Warning } from "phosphor-react-native"
+import { CaretRight, NavigationArrow, Warning, ArrowLeft } from "phosphor-react-native"
 import {getDistance, getPreciseDistance} from 'geolib';
 
 
@@ -50,8 +50,6 @@ const RoadPage = ({ navigation, route }) => {
     const [location, setLocation] = useState([])
     let coords = [];
     useEffect(
-        //  () => Geolocation.getCurrentPosition(info=>setLocation(info.coords.latitude + "," + info.coords.longitude)),
-        // () => Geolocation.getCurrentPosition(info => setLocation(info)),
         () => {
             Geolocation.getCurrentPosition(
                 info=> { 
@@ -134,8 +132,6 @@ const RoadPage = ({ navigation, route }) => {
                 <BottomSheet
                     ref={bottomSheetRef}
                     snapPoints={snapPoints}
-                    // onChange={handleSheetChanges}
-                    // enableHandlePanningGesture={true}
                     backgroundStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff" }}
                     handleIndicatorStyle={{ backgroundColor: isDark ? "#262626" : "#d9d9d9", width: 72 }}
                 >
@@ -155,7 +151,12 @@ const RoadPage = ({ navigation, route }) => {
             </BottomSheetModalProvider>
             <View style={{ position: "absolute", top: 0, left: 0, width: "100%" }}>
                 <LinearGradient style={{ flex: 1, height: 150 }} colors={['#000000df', '#00000000']}>
-                    <Text style={{ color: "#fff", fontSize: 36, marginTop: 60, marginLeft: 32 }}>Yol Çalışmaları</Text>
+                    <View style={{marginTop:60,marginLeft:32}}>
+                        <TouchableOpacity style={{flexDirection:"row"}} onPress={()=>navigation.goBack()}>
+                            <ArrowLeft size={32} color={"#fff"} style={{ alignSelf:"center", marginRight:10 }}/>
+                            <Text style={{ color: "#fff", fontSize: 36 }}>Yol Çalışmaları</Text>
+                        </TouchableOpacity>
+                    </View>
                 </LinearGradient>
             </View>
 
