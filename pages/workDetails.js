@@ -61,18 +61,15 @@ const WorkDetails = ({ navigation, route }) => {
             `)
         })
     return (
-        <ScrollView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }} fadingEdgeLength={160}>
+        <ScrollView overScrollMode='never' style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }} fadingEdgeLength={160}>
             <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 24 }} onPress={() => navigation.goBack()}>
                 <CaretLeft color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />
                 <Text style={{ color: isDark ? "#fff" : "#000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
             </TouchableOpacity>
             <Text style={{ marginLeft: 32, color: isDark ? "#fff" : "#000", marginTop: 15, fontSize: 19 }} adjustsFontSizeToFit>{item.descr}</Text>
-
-            <WebView onLoad={() => {
-                mapRef.current.injectJavaScript(`   var marker = L.marker([${item.koorX}, ${item.koorY}],{icon:greenIcon}).addTo(mymap)
-                                                    ;    mymap.setView([${item.koorX}, ${item.koorY}], 18) ; true
-                    `)
-            }} containerStyle={{ borderRadius: 12, minHeight: 250, maxHeight: 250, margin: 32 }} ref={mapRef} source={{ html: isDark ? html_script : html_script_light }} />
+                            <WebView androidHardwareAccelerationDisabled androidLayerType='software' renderToHardwareTextureAndroid={true}  onLoad={() => {mapRef.current.injectJavaScript(`   var marker = L.marker([${item.koorX}, ${item.koorY}],{icon:greenIcon}).addTo(mymap)
+                                                        ;    mymap.setView([${item.koorX}, ${item.koorY}], 18) ; true
+                        `)}} containerStyle={{ flex: 1, borderRadius:16 , minWidth: 200, minHeight: 200, margin:30, }} ref={mapRef} source={{ html: isDark ? html_script : html_script_light }} />
 
             <Text style={{ fontSize: 18, marginLeft: 32, marginRight: 32, color: isDark ? "#fff" : "#000" }}>{item.reason}</Text>
             <View style={{ marginLeft: 32, flexDirection: "row", marginTop: 20 }}>

@@ -32,6 +32,7 @@ import { House, MapTrifold, Warning, Bell, Gear, Camera } from "phosphor-react-n
 import WorkDetails from './pages/workDetails';
 import RoutesPage from './pages/routes';
 import RoadPage from './pages/roadWorks';
+import SettingsPage from './pages/settingsPage';
 
 const isDark = Appearance.getColorScheme() == "dark"
 
@@ -40,7 +41,7 @@ const Stack = createBottomTabNavigator();
 const HomeButton = (props) => (
   <TouchableOpacity
     activeOpacity={0.9}
-    style={{ alignItems: "center", flex: 1, backgroundColor:  isDark?"#1b1b1b":"#fff", flexDirection: "column", justifyContent: "flex-end", padding: 5 }}
+    style={{ alignItems: "center", flex: 1, backgroundColor:  isDark?"#1b1b1b":"#fff", flexDirection: "column", justifyContent: "flex-end", padding: 2 }}
     onPress={props.onPress}
   >
     <House size={28} color={props.accessibilityState.selected ? "#e05003" : (isDark?"#fff":"#000")} weight= { props.accessibilityState.selected ? "fill" : "regular" }/>
@@ -51,7 +52,7 @@ const HomeButton = (props) => (
 const RouteButton = (props) => (
   <TouchableOpacity
     activeOpacity={0.9}
-    style={{ alignItems: "center", flex: 1, backgroundColor:  isDark?"#1b1b1b":"#fff", flexDirection: "column", justifyContent: "flex-end", padding: 5 }}
+    style={{ alignItems: "center", flex: 1, backgroundColor:  isDark?"#1b1b1b":"#fff", flexDirection: "column", justifyContent: "flex-end", padding: 2 }}
     onPress={()=>{props.onPress()}}
   >
   <MapTrifold size={28} color={props.accessibilityState.selected ? "#e05003" : (isDark?"#fff":"#000")} weight= { props.accessibilityState.selected ? "fill" : "regular" }/>
@@ -61,7 +62,7 @@ const RouteButton = (props) => (
 const RoadworkButton = (props) => (
   <TouchableOpacity
     activeOpacity={0.9}
-    style={{ alignItems: "center", flex: 1, backgroundColor:  isDark?"#1b1b1b":"#fff", flexDirection: "column", justifyContent: "flex-end", padding: 5 }}
+    style={{ alignItems: "center", flex: 1, backgroundColor:  isDark?"#1b1b1b":"#fff", flexDirection: "column", justifyContent: "flex-end", padding: 2 }}
     onPress={()=>{props.onPress()}}
   >
   <Warning size={28} color={props.accessibilityState.selected ? "#e05003" : (isDark?"#fff":"#000")} weight= { props.accessibilityState.selected ? "fill" : "regular" }/>
@@ -71,7 +72,7 @@ const RoadworkButton = (props) => (
 const NotificationsButton = (props) => (
   <TouchableOpacity
     activeOpacity={0.9}
-    style={{ alignItems: "center", flex: 1, backgroundColor:  isDark?"#1b1b1b":"#fff", flexDirection: "column", justifyContent: "flex-end", padding: 5 }}
+    style={{ alignItems: "center", flex: 1, backgroundColor:  isDark?"#1b1b1b":"#fff", flexDirection: "column", justifyContent: "flex-end", padding: 2 }}
     onPress={()=>{props.onPress()}}
   >
   <Bell size={28} color={props.accessibilityState.selected ? "#e05003" : (isDark?"#fff":"#000")} weight= { props.accessibilityState.selected ? "fill" : "regular" }/>
@@ -81,7 +82,7 @@ const NotificationsButton = (props) => (
 const SettingsButton = (props) => (
   <TouchableOpacity
     activeOpacity={0.9}
-    style={{ alignItems: "center", flex: 1, backgroundColor:  isDark?"#1b1b1b":"#fff", flexDirection: "column", justifyContent: "flex-end", padding: 5 }}
+    style={{ alignItems: "center", flex: 1, backgroundColor:  isDark?"#1b1b1b":"#fff", flexDirection: "column", justifyContent: "flex-end", padding: 2 }}
     onPress={()=>{props.onPress()}}
   >
   <Gear size={28} color={props.accessibilityState.selected ? "#e05003" : (isDark?"#fff":"#000")} weight= { props.accessibilityState.selected ? "fill" : "regular" }/>
@@ -109,7 +110,7 @@ const App: () => Node = () => {
           <Stack.Screen name="Routes" component={RoutesPage} options={{ tabBarButton: RouteButton }} />
           <Stack.Screen name="Roadwork" component={RoadPage} options={{ tabBarButton: RoadworkButton }} />
           <Stack.Screen name="Notifications" component={CameraPage} options={{ tabBarButton: NotificationsButton }} />
-          <Stack.Screen name="Settings" component={HomePage} options={{ tabBarButton: SettingsButton }} />
+          <Stack.Screen name="Settings" component={SettingsPage} options={{ tabBarButton: SettingsButton }} />
           <Stack.Screen name="WorkDetails" component={WorkDetails} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
           <Stack.Screen name="AddPhoto" component={CameraPage} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
         </Stack.Navigator>
