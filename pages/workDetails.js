@@ -91,7 +91,7 @@ const WorkDetails = ({ navigation, route }) => {
             });*/
         })
     return (
-        <ScrollView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }}>
+        <ScrollView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }} fadingEdgeLength={160}>
             <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 24 }} onPress={() => navigation.goBack()}>
                 <CaretLeft color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />
                 <Text style={{ color: isDark ? "#fff" : "#000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
@@ -136,20 +136,21 @@ const WorkDetails = ({ navigation, route }) => {
                             style={{ marginLeft: 30, marginTop: 15, flexDirection: "row", marginBottom: 15 }}
                             onPress={
                                 () => {
-
-                                    (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.001) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.001) ? navigation.navigate("AddPhoto", { id: item.id }) : null
+                                    //console.log(Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)));
+                                    
+                                    (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.003) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.003) ? navigation.navigate("AddPhoto", { id: item.id }) : null
                                 }}>
                             <PlusCircle size={32} color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} />
-                            <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.001) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.001) ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
+                            <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.003) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.003) ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
                         </TouchableOpacity>
                     </View>
                     : <TouchableOpacity style={{ marginLeft: 30, marginTop: 15, flexDirection: "row" }} onPress={
                         () => {
                             console.log(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)));
-                            (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.001) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.001) ? navigation.navigate("AddPhoto", { id: item.id }) : null
+                            (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.003) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.003) ? navigation.navigate("AddPhoto", { id: item.id }) : null
                         }}>
                         <PlusCircle size={32} color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} />
-                        <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.001) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.001) ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
+                        <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.003) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.003) ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
                     </TouchableOpacity>
             }
         </ScrollView>

@@ -260,7 +260,7 @@ const HomePage = ({ navigation, route }) => {
                 data={calismalar}
                 renderItem={renderItem}
                 keyExtractor={item => item["id"]}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={markKoor}></RefreshControl>}
+                refreshControl={<RefreshControl progressBackgroundColor={isDark?"#1d1d1d":"#eee"} colors={[isDark?"#fff":"#000"]} refreshing={refreshing} onRefresh={markKoor}></RefreshControl>}
                 onRefresh={markKoor}
                 refreshing={refreshing}
 

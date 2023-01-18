@@ -92,7 +92,7 @@ const SettingsButton = (props) => (
 const App: () => Node = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: isDark?"#1b1b1b":"#fff" }}>
-      <StatusBar barStyle="light-content" backgroundColor="#121212" translucent={true} />
+      <StatusBar barStyle="light-content" backgroundColor={"#00000000"} translucent={true} showHideTransition="fade" />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ 
           headerShown: false, 
