@@ -33,6 +33,7 @@ import WorkDetails from './pages/workDetails';
 import RoutesPage from './pages/routes';
 import RoadPage from './pages/roadWorks';
 import SettingsPage from './pages/settingsPage';
+import NotificationsPage from './pages/notificationsPage';
 
 const isDark = Appearance.getColorScheme() == "dark"
 
@@ -109,7 +110,7 @@ const App: () => Node = () => {
           <Stack.Screen name="Home" component={HomePage} options={{ tabBarButton: HomeButton }} />
           <Stack.Screen name="Routes" component={RoutesPage} options={{ tabBarButton: RouteButton }} />
           <Stack.Screen name="Roadwork" component={RoadPage} options={{ tabBarButton: RoadworkButton }} />
-          <Stack.Screen name="Notifications" component={CameraPage} options={{ tabBarButton: NotificationsButton }} />
+          <Stack.Screen name="Notifications" component={NotificationsPage} options={{ tabBarButton: NotificationsButton }} />
           <Stack.Screen name="Settings" component={SettingsPage} options={{ tabBarButton: SettingsButton }} />
           <Stack.Screen name="WorkDetails" component={WorkDetails} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
           <Stack.Screen name="AddPhoto" component={CameraPage} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />

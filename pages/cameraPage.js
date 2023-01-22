@@ -20,6 +20,8 @@ import { IOSPermission } from 'react-native-permissions';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { useIsFocused } from '@react-navigation/native';
 import MQTT from "sp-react-native-mqtt";
+import Spinner from "react-native-loading-spinner-overlay"
+const ip = require("../ip").default
 
 import { CaretLeft, Camera as CamIcon, CameraRotate, Image as ImageIcon } from 'phosphor-react-native';
 
@@ -56,9 +58,11 @@ const CameraPage = ({ navigation, route }) => {
     const [selected, setSelected] = useState(false)
     const [photoPath, setPhotoPath] = useState("");
     const isFocused = useIsFocused()
+    var loading = false
     console.log(route.params["id"])
     const fotografGonder = async () => {
         //  console.log(camRef);
+        loading = true
         const photo = await camRef.current.takePhoto(
             {
             
@@ -69,12 +73,14 @@ const CameraPage = ({ navigation, route }) => {
         await readFile("file://" + photo["path"], "base64").then((str)=>{
         //    console.log(str)
         const client = MQTT.createClient({
-            uri: 'mqtt://192.168.1.64:1883',
+            uri: `mqtt://${ip}:1883`,
             clientId: 'teknofest' + Platform.OS
         }).then(function (client) {
             client.on('connect', function () {
                 client.subscribe("esp32/sendphoto",0);
                 client.publish("esp32/sendphoto",route.params["id"] + "," + str,0,false);
+                console.log("done");
+                loading = false
             });
             client.connect();
         }).catch(function (err) {
@@ -88,6 +94,8 @@ const CameraPage = ({ navigation, route }) => {
     if (device == null) return <Text>LOADING</Text>
     return (
         <SafeAreaView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }}>
+                        <Spinner  animation='fade' visible={loading} textContent={"Yükleniyor"} overlayColor={"#000000aa"} textStyle={{fontSize:24, fontWeight:"300"}} />
+
             <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 60 }} onPress={() => navigation.goBack()}>
                 <CaretLeft color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />
                 <Text style={{ color: isDark ? "#fff" : "#000", textAlign: "center", alignSelf: "center" }}>Geri</Text>

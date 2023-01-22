@@ -54,29 +54,31 @@ const WorkDetails = ({ navigation, route }) => {
             </View>
         )
     }
+    console.log(item.hasPhoto);
     useFocusEffect(
         () => {
-            mapRef.current.injectJavaScript(`   var marker = L.marker([${item.koorX}, ${item.koorY}],{icon:greenIcon}).addTo(mymap)
-            ;    mymap.setView([${item.koorX}, ${item.koorY}], 18) ; true
-            `)
+            if(mapRef)
+                mapRef.current.injectJavaScript(`   var marker = L.marker([${item.koorX}, ${item.koorY}],{icon:greenIcon}).addTo(mymap)
+                ;    mymap.setView([${item.koorX}, ${item.koorY}], 18) ; true
+                `)
         })
     return (
         <ScrollView overScrollMode='never' style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }} fadingEdgeLength={160}>
-            <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 24 }} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 24 }} onPress={() => navigation.navigate("Home")}>
                 <CaretLeft color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />
                 <Text style={{ color: isDark ? "#fff" : "#000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
             </TouchableOpacity>
-            <Text style={{ marginLeft: 32, color: isDark ? "#fff" : "#000", marginTop: 15, fontSize: 19 }} adjustsFontSizeToFit>{item.descr}</Text>
+            <Text style={{ marginLeft: 32, color: isDark ? "#fff" : "#000", marginTop: 15, fontSize: 19, marginRight:16 }} adjustsFontSizeToFit>{item.descr}</Text>
                             <WebView androidHardwareAccelerationDisabled androidLayerType='software' renderToHardwareTextureAndroid={true}  onLoad={() => {mapRef.current.injectJavaScript(`   var marker = L.marker([${item.koorX}, ${item.koorY}],{icon:greenIcon}).addTo(mymap)
                                                         ;    mymap.setView([${item.koorX}, ${item.koorY}], 18) ; true
                         `)}} containerStyle={{ flex: 1, borderRadius:16 , minWidth: 200, minHeight: 200, margin:30, }} ref={mapRef} source={{ html: isDark ? html_script : html_script_light }} />
 
             <Text style={{ fontSize: 18, marginLeft: 32, marginRight: 32, color: isDark ? "#fff" : "#000" }}>{item.reason}</Text>
             <View style={{ marginLeft: 32, flexDirection: "row", marginTop: 20 }}>
-                <Warning size={36} color={"orange"} style={{ alignSelf: "center" }} />
+                <Warning size={36} color={item.ended==1?"#43f680":"#fad03c"} style={{ alignSelf: "center" }} />
                 <View style={{ marginLeft: 18 }}>
                     <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000" }}>Durum</Text>
-                    <Text style={{ fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>Yol çalışması sürüyor</Text>
+                    <Text style={{ fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>{item.ended==1?"Yol çalışması bitti":"Yol çalışması sürüyor"}</Text>
                 </View>
             </View>
 
@@ -88,7 +90,7 @@ const WorkDetails = ({ navigation, route }) => {
                 </View>
             </View>
 
-            <Text style={{ color: isDark ? "#a8a8a8" : "#575757", marginLeft: 30, fontSize: 20, marginTop: 20 }}>{item.hasPhoto ? "FOTOĞRAFLAR" : "Fotoğraf yok"}</Text>
+            <Text style={{ color: isDark ? "#a8a8a8" : "#575757", marginLeft: 30, fontSize: 20, marginTop: 20 }}>{item.hasPhoto && item.ended != 1 ? "FOTOĞRAFLAR" : "Fotoğraf yok"}</Text>
             {
                 item.hasPhoto ?
                     <View>
