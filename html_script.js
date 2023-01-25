@@ -17,7 +17,7 @@ const html_script = `
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
 	<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
 	<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-
+	<script src="lrm-graphhopper.js"></script>
 	<style>
 	.leaflet-container {
 		background: #000;
@@ -25,6 +25,10 @@ const html_script = `
 	.leaflet-control-container .leaflet-routing-container-hide {
 		display: none;
 	}
+	.leaflet-popup-content-wrapper, .leaflet-popup.tip {
+		background-color: #1b1b1b;
+		color: #fff;
+	  }
 	html body .leaflet-control-container .leaflet-top .leaflet-control-zoom a.leaflet-control-zoom-in { background-color: #121212;  color:#ebdbb2}
 	a.leaflet-control-zoom-out {background-color:#121212; color:#ebdbb2;}
 	a.leaflet-bottom {background-color:#121212; color:#ebdbb2;}
@@ -52,6 +56,9 @@ const html_script = `
 		maxZoom: 18,
 		id: 'mapbox/dark-v11'
 	}).addTo(mymap);
+
+	mymap.on('click', (a)=>window.ReactNativeWebView.postMessage(a.latlng.lat.toString()+','+a.latlng.lng.toString()))
+
 </script>
 
 </body>

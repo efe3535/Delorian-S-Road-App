@@ -18,7 +18,7 @@ import {
 
 import html_script from '../html_script';
 import html_script_light from '../html_script_light';
-import { CaretLeft, Warning, NavigationArrow, PlusCircle } from 'phosphor-react-native';
+import { CaretLeft, Warning, NavigationArrow, PlusCircle, Calendar } from 'phosphor-react-native';
 
 import { useIsFocused } from '@react-navigation/native';
 
@@ -31,6 +31,11 @@ const isDark = Appearance.getColorScheme() == "dark"
 
 
 var MQTTClient: IMqttClient
+
+const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+    "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+];
+const days = ["Pazar","Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"]
 
 const WorkDetails = ({ navigation, route }) => {
     const { item, koor, photo } = route.params;
@@ -64,7 +69,7 @@ const WorkDetails = ({ navigation, route }) => {
         })
     return (
         <ScrollView overScrollMode='never' style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }} fadingEdgeLength={160}>
-            <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 24 }} onPress={() => navigation.navigate("Home")}>
+            <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 24 }} onPress={() => navigation.goBack()}>
                 <CaretLeft color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />
                 <Text style={{ color: isDark ? "#fff" : "#000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
             </TouchableOpacity>
@@ -74,6 +79,7 @@ const WorkDetails = ({ navigation, route }) => {
                         `)}} containerStyle={{ flex: 1, borderRadius:16 , minWidth: 200, minHeight: 200, margin:30, }} ref={mapRef} source={{ html: isDark ? html_script : html_script_light }} />
 
             <Text style={{ fontSize: 18, marginLeft: 32, marginRight: 32, color: isDark ? "#fff" : "#000" }}>{item.reason}</Text>
+            
             <View style={{ marginLeft: 32, flexDirection: "row", marginTop: 20 }}>
                 <Warning size={36} color={item.ended==1?"#43f680":"#fad03c"} style={{ alignSelf: "center" }} />
                 <View style={{ marginLeft: 18 }}>
@@ -90,7 +96,15 @@ const WorkDetails = ({ navigation, route }) => {
                 </View>
             </View>
 
-            <Text style={{ color: isDark ? "#a8a8a8" : "#575757", marginLeft: 30, fontSize: 20, marginTop: 20 }}>{item.hasPhoto && item.ended != 1 ? "FOTOĞRAFLAR" : "Fotoğraf yok"}</Text>
+            <View style={{ marginLeft: 32, flexDirection: "row", marginTop: 20 }}>
+                <Calendar size={36} color={isDark?"#fff":"#000"} style={{ alignSelf: "center" }} />
+                <View style={{ marginLeft: 18 }}>
+                    <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000" }}>Tarihler</Text>
+                    <Text style={{ fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>{(new Date(parseInt(item.timestamp)).getDate() + " " + (monthNames[new Date(parseInt(item.timestamp)).getMonth()]) + " " + days[new Date(parseInt(item.timestamp)).getDay()])} {item.ended!=1?"- Devam ediyor":""}</Text>
+                </View>
+            </View>
+
+            <Text style={{ color: isDark ? "#a8a8a8" : "#575757", marginLeft: 30, fontSize: 20, marginTop: 20 }}>{item.hasPhoto  ? "FOTOĞRAFLAR" : "Fotoğraf yok"}</Text>
             {
                 item.hasPhoto ?
                     <View>
@@ -105,19 +119,19 @@ const WorkDetails = ({ navigation, route }) => {
                             style={{ marginLeft: 30, marginTop: 15, flexDirection: "row", marginBottom: 15 }}
                             onPress={
                                 () => {
-                                    (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.003) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.003) ? navigation.navigate("AddPhoto", { id: item.id }) : null
+                                    (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.005) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.005) && item.ended != 1 ? navigation.navigate("AddPhoto", { id: item.id }) : null
                                 }}>
                             <PlusCircle size={32} color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} />
-                            <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.003) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.003) ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
+                            <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.005) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.005) && item.ended != 1 ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
                         </TouchableOpacity>
                     </View>
                     : <TouchableOpacity style={{ marginLeft: 30, marginTop: 15, flexDirection: "row" }} onPress={
                         () => {
                             console.log(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)));
-                            (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.003) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.003) ? navigation.navigate("AddPhoto", { id: item.id }) : null
+                            (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.005) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.005) && item.ended != 1 ? navigation.navigate("AddPhoto", { id: item.id }) : null
                         }}>
                         <PlusCircle size={32} color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} />
-                        <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.003) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.003) ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
+                        <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.005) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.005) && item.ended != 1 ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
                     </TouchableOpacity>
             }
         </ScrollView>

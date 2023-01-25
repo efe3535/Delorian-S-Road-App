@@ -80,7 +80,7 @@ const HomePage = ({ navigation, route }) => {
 
                     if (msg.topic == "esp32/responsekoorbyid") {
                         try {
-                            console.log(msg.data)
+                            msg.data
                         } catch (err) {
                             console.log(err);
                         }
@@ -88,11 +88,16 @@ const HomePage = ({ navigation, route }) => {
 
                     if (msg.topic == "esp32/responsephotobyid") {
                         setPhoto([])
-                        msg.data.split("📷").forEach(
-                            (elm, ind, arr) => {
-                                setPhoto(photo => [...photo, { id: photo.length - 1, photo: elm }])
-                            }
-                        )
+                        if(msg.data.includes("📷")) {
+                            msg.data.split("📷").forEach(
+                                (elm, ind, arr) => {
+                                    setPhoto(photo => [...photo, { id: photo.length, photo: elm }])
+                                }
+                            )
+                        } else {
+                            console.log("else")
+                            setPhoto([{id:photo.length, photo:msg.data[0]}])
+                        }
                     }
 
                 });
@@ -154,9 +159,11 @@ const HomePage = ({ navigation, route }) => {
                                     client.on("message", (msg) => {
                                    if (msg.topic == "esp32/responsephotobyid") {
                                             console.log("GOT RESPONSE");
+                                            let photo = [];
                                             setPhoto([])
                                             var ll = []
-                                            if(msg.data.includes("📷")) {
+                                            if(msg.data.includes("📷")==true) {
+                                                console.log(msg.data.split("📷"));
                                                 msg.data.split("📷").forEach(
                                                     (elm, ind, arr) => {
                                                         setPhoto(photo => [...photo, { id: photo.length, photo: elm }]);
@@ -164,7 +171,9 @@ const HomePage = ({ navigation, route }) => {
                                                     }
                                                 )
                                             } else {
-                                                setPhoto([{id:photo.length,photo:msg.data}])
+                                                console.log(msg.data.slice(2,-2));
+                                                
+                                                ll = [ {id:photo.length,photo:msg.data.slice(2,-2) } ] 
                                             }
                                             if (koor) {
                                                 console.log("ALIVE2");
@@ -174,7 +183,6 @@ const HomePage = ({ navigation, route }) => {
 
                                             }
                                     }
-                                        console.log(msg.data);
                                     })
                                     client.on('connect', function () {
                                         client.subscribe("esp32/responsephotobyid", 0);

@@ -13,6 +13,8 @@ import type { Node } from 'react';
 
 import HomePage from "./pages/homePage"
 import CameraPage from './pages/cameraPage';
+import AddRoutePage from './pages/addRoutePage';
+import RouteDetails from './pages/routeDetails';
 
 import html_script from "./html_script"
 
@@ -114,6 +116,9 @@ const App: () => Node = () => {
           <Stack.Screen name="Settings" component={SettingsPage} options={{ tabBarButton: SettingsButton }} />
           <Stack.Screen name="WorkDetails" component={WorkDetails} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
           <Stack.Screen name="AddPhoto" component={CameraPage} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
+          <Stack.Screen name="AddRoute" component={AddRoutePage} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
+          <Stack.Screen name="RouteDetails" component={RouteDetails} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
+
         </Stack.Navigator>
 
       </NavigationContainer>

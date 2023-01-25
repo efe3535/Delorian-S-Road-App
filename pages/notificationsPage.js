@@ -34,11 +34,11 @@ const isDark = Appearance.getColorScheme() == "dark"
 const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
     "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
 ];
+const days = ["Pazar","Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"]
 
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 let STORAGE_KEY = '@sroad';
-const days = ["Pazar","Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"]
 const NotificationsPage = ({ navigation, route }) => {
     const [koor, setKoor] = useState(null);
     const [invalidWarningVisible, setInvalidWarningVisible] = useState(false);
@@ -117,7 +117,8 @@ const NotificationsPage = ({ navigation, route }) => {
                             groupedData.push(group);
                         }
                         //console.log(calismalar);
-                        console.log(groupedData);
+                        //console.log(groupedData);
+                        groupedData.reverse()
                         setCalismalar(groupedData)
 
 
@@ -154,7 +155,7 @@ const NotificationsPage = ({ navigation, route }) => {
 
                         for (let calisma in JSON.parse(msg.data)["calismalar"]) {
                             var date = new Date(parseInt(JSON.parse(msg.data)["calismalar"][calisma][5]))
-                            var timestamp = (date.getDate() + " " + (monthNames[date.getMonth()]) + " " + days[date.getDay() - 1]).toLocaleUpperCase("tr")
+                            var timestamp = (date.getDate() + " " + (monthNames[date.getMonth()]) + " " + days[date.getDay()]).toLocaleUpperCase("tr")
                             setCalismalar(
                                 calismalar => [...calismalar,
                                 {
@@ -189,11 +190,11 @@ const NotificationsPage = ({ navigation, route }) => {
                                         ended: JSON.parse(msg.data)["calismalar"][calisma][6],
                                         hasPhoto: JSON.parse(msg.data)["calismalar"][calisma][7],
                                         date: date,
-                                        day: date.getDate()
+                                        day: date.getDate(),
+                                        timestamp: JSON.parse(msg.data)["calismalar"][calisma][5],
                                     }
                                 ]
                             })
-                            calismaList = calismaList.sort((a,b) => {return a.date - b.date})
                             console.log("_");
                             const groupedByTitle = array.groupBy(calismaList, "timestamp");
                             const groupedData = [];
@@ -203,10 +204,10 @@ const NotificationsPage = ({ navigation, route }) => {
                                 const group = { timestamp: key, data: values };
                                 groupedData.push(group);
                             }
-                            //console.log(calismalar);
-                            console.log(groupedData);
+                            groupedData.reverse()
+                            
                             setCalismalar(groupedData)
-
+                            
 
 
                         }

@@ -18,6 +18,7 @@ const html_script_light = `
 
 	<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
 	<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+	<script src="lrm-graphhopper.js"></script>
 
 
 	<style>
@@ -54,6 +55,8 @@ const html_script_light = `
 		maxZoom: 18,
 		id: 'mapbox/light-v11'
 	}).addTo(mymap);
+
+	mymap.on('click', (a)=>window.ReactNativeWebView.postMessage(a.latlng.lat.toString()+','+a.latlng.lng.toString()))
 </script>
 
 </body>
