@@ -22,7 +22,7 @@ import { useIsFocused } from '@react-navigation/native';
 import MQTT from "sp-react-native-mqtt";
 import Spinner from "react-native-loading-spinner-overlay"
 const ip = require("../ip").default
-
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { CaretLeft, Camera as CamIcon, CameraRotate, Image as ImageIcon } from 'phosphor-react-native';
 
 import RNFS from "react-native-fs"
@@ -91,6 +91,23 @@ const CameraPage = ({ navigation, route }) => {
         
     }
 
+    const base64FotografGonder = (data) => {
+        const client = MQTT.createClient({
+            uri: `mqtt://${ip}:1883`,
+            clientId: Platform.OS == "android" ? 'teknofest' + Platform.OS : "teknofest"
+        }).then(function (client) {
+            client.on('connect', function () {
+                client.subscribe("esp32/sendphoto",0);
+                client.publish("esp32/sendphoto",route.params["id"] + "," + data,0,false);
+                console.log("done");
+                loading = false
+            });
+            client.connect();
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
+
     if (device == null) return <Text>LOADING</Text>
     return (
         <SafeAreaView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }}>
@@ -113,7 +130,12 @@ const CameraPage = ({ navigation, route }) => {
                 video={isFocused} />
                 <View style={{flexDirection:"row", marginTop:10, alignContent:"center", alignItems:"center", gap: 10}}>
                     
-                    <TouchableOpacity onPress={()=>setIsFront(!isFront)} style={{justifyContent:"center", alignItems:"center",alignSelf:"center"}}>
+                    <TouchableOpacity onPress={()=>{
+                        launchImageLibrary({includeBase64:true}, (response)=>{
+                            //console.log(response);
+                            base64FotografGonder(response.assets[0].base64)
+                        })
+                    }} style={{justifyContent:"center", alignItems:"center",alignSelf:"center"}}>
                         <ImageIcon size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000"} />
                     </TouchableOpacity>            
 

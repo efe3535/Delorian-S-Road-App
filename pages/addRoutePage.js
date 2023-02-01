@@ -78,7 +78,7 @@ const AddRoutePage = ({ navigation, route }) => {
 
     const mapRef = useRef(null)
     const mapRef2 = useRef(null)
-
+    
 
     let dateLet;
     let repeatLet = repeatText;
