@@ -283,8 +283,9 @@ const AddRoutePage = ({ navigation, route }) => {
                 <TouchableOpacity style={{ flexDirection: "row", marginLeft: 20, marginTop: 60, position: 'absolute', right: 30 }} 
                 onPress={
                     () => { 
+                       
                         console.log({
-                            id:listRoute!=[]?listRoute.length:0, 
+                            id:listRoute!=null && listRoute.length>0?listRoute[listRoute.length-1].id + 1:0, 
                             x:first[0],
                             y:first[1],
                             x2:x2, 
@@ -297,7 +298,7 @@ const AddRoutePage = ({ navigation, route }) => {
                         setListRoute(listRoute => [
                             ...listRoute,
                             {
-                                id:listRoute!=[]?listRoute.length:0, 
+                                id:listRoute!=[] && listRoute.length>0?listRoute[listRoute.length-1].id + 1:0, 
                                 x:first[0],
                                 y:first[1],
                                 x2:x2, 
@@ -315,7 +316,7 @@ const AddRoutePage = ({ navigation, route }) => {
                         setRepeatText("")
                         
                         addValue({
-                            id:listRoute!=[]?listRoute.length:0,
+                            id:listRoute.length>0 && listRoute !=[]?listRoute[listRoute.length-1].id + 1:0, 
                             x:first[0],
                             y:first[1],
                             x2:x2,
@@ -324,11 +325,10 @@ const AddRoutePage = ({ navigation, route }) => {
                             name:routeName,
                             repeat:repeatText,
                             date:dateStr
-                        
                         })
 
                         navigation.navigate("Routes", {extraRoutes:[...listRoute, {
-                            id:listRoute!=[]?listRoute.length:0,
+                            id:listRoute!=[] && listRoute.length>0 ?listRoute[listRoute.length-1].id + 1:0, 
                             x:first[0],
                             y:first[1],
                             x2:x2,

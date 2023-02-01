@@ -74,7 +74,7 @@ const CameraPage = ({ navigation, route }) => {
         //    console.log(str)
         const client = MQTT.createClient({
             uri: `mqtt://${ip}:1883`,
-            clientId: 'teknofest' + Platform.OS
+            clientId: Platform.OS == "android" ? 'teknofest' + Platform.OS : "teknofest"
         }).then(function (client) {
             client.on('connect', function () {
                 client.subscribe("esp32/sendphoto",0);

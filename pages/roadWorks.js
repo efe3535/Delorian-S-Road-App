@@ -67,7 +67,7 @@ const RoadPage = ({ navigation, route }) => {
 
             MQTT.createClient({
                 uri: `mqtt://${ip}:1883`,
-                clientId: 'teknofest' + Platform.OS
+            clientId: Platform.OS == "android" ? 'teknofest' + Platform.OS : "teknofest"
             }).then((client) => {
                 client.on('message', function (msg) {
                     if (msg.topic == "esp32/responsecalismalar" && JSON.parse(msg.data) != [] && once == false) {

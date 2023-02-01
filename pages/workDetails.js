@@ -25,10 +25,11 @@ import { useIsFocused } from '@react-navigation/native';
 import { WebView } from "react-native-webview"
 import { useFocusEffect } from '@react-navigation/native';
 import MQTT, { IMqttClient } from 'sp-react-native-mqtt';
+import { Svg, Path } from 'react-native-svg';
+
+
 
 const isDark = Appearance.getColorScheme() == "dark"
-
-
 
 var MQTTClient: IMqttClient
 
@@ -49,7 +50,7 @@ const WorkDetails = ({ navigation, route }) => {
     const [_, forceUpdate] = useReducer((x) => x + 1, 0);
     let done = []
     let connected = false
-
+    console.log("workDetails Item -> ", route.params);
     const renderItem = ({ item, index }) => {
         return (
             <View style={{ marginTop: 15, marginLeft: 30 }}>
@@ -59,7 +60,8 @@ const WorkDetails = ({ navigation, route }) => {
             </View>
         )
     }
-    console.log(item.hasPhoto);
+    console.log("ITEM ->",route.params)
+    
     useFocusEffect(
         () => {
             if(mapRef)
@@ -81,8 +83,10 @@ const WorkDetails = ({ navigation, route }) => {
             <Text style={{ fontSize: 18, marginLeft: 32, marginRight: 32, color: isDark ? "#fff" : "#000" }}>{item.reason}</Text>
             
             <View style={{ marginLeft: 32, flexDirection: "row", marginTop: 20 }}>
-                <Warning size={36} color={item.ended==1?"#43f680":"#fad03c"} style={{ alignSelf: "center" }} />
-                <View style={{ marginLeft: 18 }}>
+                <Svg width="43" height="37" viewBox="0 0 43 37" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ alignSelf: "center" }}>
+                    <Path d="M3.67852 34.4123L21.5 4.57167L39.3215 34.4123H3.67852Z" fill={item.ended == 1 ? "#43f680" : "#FAD03C"} stroke="black" strokeWidth={isDark?"0":"4.17543"} />
+                </Svg>
+                               <View style={{ marginLeft: 18 }}>
                     <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000" }}>Durum</Text>
                     <Text style={{ fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>{item.ended==1?"Yol çalışması bitti":"Yol çalışması sürüyor"}</Text>
                 </View>

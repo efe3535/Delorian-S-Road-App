@@ -19,7 +19,7 @@ import {
 import { WebView } from "react-native-webview"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Calendar, Plus, Repeat } from 'phosphor-react-native';
+import { Calendar, Plus, PlusCircle, Repeat, WarningCircle } from 'phosphor-react-native';
 
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
@@ -63,7 +63,7 @@ const RoutesPage = ({ navigation, route }) => {
 
     const renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity onPress={()=>{navigation.navigate("RouteDetails", {item:item,allRoutes:displayRoutes })}} style={{ flexDirection: "row", marginTop: 30, marginLeft: 30, alignItems: "center" }}>
+            <TouchableOpacity onPress={()=>{setDisplayRoutes([]) ; navigation.navigate("RouteDetails", {item:item,allRoutes:displayRoutes })}} style={{ flexDirection: "row", marginTop: 30, marginLeft: 30, alignItems: "center" }}>
                 <WebView
                     androidHardwareAccelerationDisabled
                     androidLayerType='software'
@@ -116,6 +116,14 @@ const RoutesPage = ({ navigation, route }) => {
     return (
         <SafeAreaView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", justifyContent: "center", flex: 1 }}>        
             <Text style={{ fontWeight: "700", fontSize: 36, marginTop: 32, marginLeft: 30, color: isDark ? "#fff" : "#000" }}>Rotalarınız</Text>
+            {
+                displayRoutes?.length==0?
+                <View style={{flex:1, alignItems:"center", marginHorizontal:60, marginTop:15, flexDirection:"row", flexShrink:1}}>
+                    <WarningCircle size={48} style={{opacity:0.5, alignSelf:"center"}} color={isDark?"#a8a8a8":"#575757"} weight="thin" />
+                    <Text style={{color:isDark?"#a8a8a8":"#575757", textAlign:"center", flexShrink:1 }}>Henüz rota bulunmuyor. Rota eklemek için <Text style={{fontWeight:"700", flexShrink:1, color:isDark?"#a8a8a8":"#575757"}}>Yeni Rota Oluştur</Text> butonuna basın.</Text>
+                    
+                </View>
+                :null}
             <FlatList
                 data={displayRoutes}
                 fadingEdgeLength={60}
