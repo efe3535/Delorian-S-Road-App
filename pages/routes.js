@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useState, useRef } from "react";
 import type { Node } from 'react';
 import { readFile } from "react-native-fs"
@@ -23,7 +23,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { Calendar, Plus, PlusCircle, Repeat, WarningCircle } from 'phosphor-react-native';
 
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-
+import { useFocusEffect } from '@react-navigation/native';
 import html_script from '../html_script';
 import html_script_light from '../html_script_light';
 
@@ -50,17 +50,23 @@ const RoutesPage = ({ navigation, route }) => {
 
     const [value, setValue] = useState(null);
     const { getItem, setItem } = useAsyncStorage(STORAGE_KEY);
-    let routes = getItems()
+   // let routes = getItems()
     const cellRefs = useRef({})
 
 
 
-    useEffect(
-        () => {
+    useFocusEffect(
+        useCallback(() => {
             routes = displayRoutes
             getItems()
         },
-        [])
+        []))
+        useEffect(
+            () => {
+                routes = displayRoutes
+                getItems()
+            },
+            [])
 
     const renderItem = ({ item, index }) => {
         return (
@@ -74,6 +80,7 @@ const RoutesPage = ({ navigation, route }) => {
                     .then(json2 => {
                         //setSecDescr(json[0]["display_name"])
                         //console.log(json);
+                        console.log("IITTEEMM", item);
                         navigation.navigate("RouteDetails", { item: item, allRoutes: displayRoutes, firstDescr:json[0]["display_name"], secDescr:json2[0]["display_name"] })
                         //setDisplayRoutes([]); 
                         setLoading(false)

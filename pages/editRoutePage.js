@@ -76,7 +76,8 @@ const EditRoutePage = ({ navigation, route }) => {
     let dateLet;
     let repeatLet = repeatText;
     let dateNav = dateStr;
-    const item = route.params.item;
+    const [item,setItem] = useState(route.params.routes[route.params.routes.indexOf(route.params.routes.find(a=>a.id==route.params.id))]);
+    console.log("rotues:",route.params.routes);
     const textRef = useRef(null)
     const text2Ref = useRef(null)
     const [routeName, setRouteName] = useState("")
@@ -105,13 +106,38 @@ const EditRoutePage = ({ navigation, route }) => {
     const mapRef2 = useRef(null)
 console.log("REPEAT",repeatText);
 
+    const getItems = async () => {
+        let items = await AsyncStorage.getItem(STORAGE_KEY)
+        items = JSON.parse(items)
+        setItem(items.routes.find(a=>a.id==route.params.id))
+        setRepeatText(items.routes.find(a=>a.id==route.params.id).repeat)
+        setDateStr(items.routes.find(a=>a.id==route.params.id).date);
+        setRouteDescr(items.routes.find(a=>a.id==route.params.id).descr)
+        setRouteName(items.routes.find(a=>a.id==route.params.id).name)
+        setFirst([items.routes.find(a=>a.id==route.params.id).x,items.routes.find(a=>a.id==route.params.id).y])
+    }
+
     useFocusEffect( useCallback(()=>{
-        setRepeatText(item.repeat)
+        /*setRepeatText(item.repeat)
         setDateStr(item.date);
         setRouteDescr(item.descr)
         setRouteName(item.name)
-        setFirst([item.x,item.y])
+        console.log("routes received :",route.params.routes);
+        console.log("item received :",item);
+        setFirst([item.x,item.y])*/
+        getItems()
     },[]))
+
+    useEffect(()=>{
+       /* setRepeatText(item.repeat)
+        setDateStr(item.date);
+        setRouteDescr(item.descr)
+        setRouteName(item.name)
+        console.log("routes received :",route.params.routes);
+        console.log("item received :",item);
+        setFirst([item.x,item.y])*/
+        getItems()
+    },[])
 
 
     return (
@@ -307,7 +333,7 @@ console.log("REPEAT",repeatText);
                    // console.log(dateStr);
                    // console.log(storage);
                    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(storage))
-                    
+                    navigation.navigate("Routes", {extraRoutes:[]})
                 }
             }>
                 <Check color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />

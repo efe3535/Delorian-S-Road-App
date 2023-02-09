@@ -91,7 +91,8 @@ const RouteDetails = ({ navigation, route }) => {
     const [match, setMatch] = useState(false)
     const [expecting, setExpecting] = useState(false)
     //const [secDescr, setSecDescr] = useState(route.params.secDescr)
-    const item = route.params.item
+    let item = route.params.item
+    const [displayRoutes, setDisplayRoutes] = useState([])
 
     const deleteItem = async (id) => {
         let items = await AsyncStorage.getItem(STORAGE_KEY)
@@ -104,6 +105,19 @@ const RouteDetails = ({ navigation, route }) => {
         console.log(items);
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(items))
     }
+
+    const getItems = async () => {
+
+        let val = await AsyncStorage.getItem(STORAGE_KEY)
+        if (val) {
+            //console.log("VALUES", JSON.parse(val).routes);
+            routes = JSON.parse(val).routes
+            setDisplayRoutes(routes)
+        } else {
+            return undefined
+        }
+    }
+
     console.log("ITEM->",item);
     const onMessageArrived = (msg) => {
         console.log("topic", msg.topic);
@@ -135,6 +149,7 @@ const RouteDetails = ({ navigation, route }) => {
     client.onMessageArrived = onMessageArrived
     useEffect(() => {
         setMatch(false)
+        getItems()
         console.log("useFocusEffect");
         mapRef.current.reload()
         client.send("esp32/calismalar", "GET", 0, false)
@@ -173,6 +188,7 @@ const RouteDetails = ({ navigation, route }) => {
     }, [])
 
     useFocusEffect(useCallback(() => {
+        getItems()
         setMatch(false)
         console.log("useFocusEffect");
         mapRef.current.reload()
@@ -225,7 +241,8 @@ const RouteDetails = ({ navigation, route }) => {
                         deleteItem(item.id)
                         navigation.navigate("Routes", {extraRoutes: route.params.allRoutes.filter(arr=>arr.id!=item.id)})
                     } else if(e.nativeEvent.index == 0) {
-                        navigation.navigate("EditRoutes", {routes:route.params.allRoutes, item:item})
+                        console.log("displayRoutes:", displayRoutes);
+                        navigation.navigate("EditRoutes", {routes:displayRoutes, id:item.id})
                     }
                 }} style={{ alignSelf: "center", top: 12, right: 30, position: "absolute" }} actions={[{ title: "Düzenle" }, { title: "Sil" }]}>
                     <DotsThreeVertical size={32} color={isDark ? "#fff" : "#000"} />
