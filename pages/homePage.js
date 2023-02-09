@@ -23,7 +23,7 @@ import {
 import Spinner from 'react-native-loading-spinner-overlay';
 import { WebView } from 'react-native-webview';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { CaretRight, NavigationArrow, Warning } from "phosphor-react-native"
+import { CaretRight, NavigationArrow, Warning, Calendar,CalendarBlank, Repeat } from "phosphor-react-native"
 import { Svg, Path } from "react-native-svg"
 
 
@@ -35,6 +35,7 @@ import html_script_light from '../html_script_light';
 
 import Geolocation from '@react-native-community/geolocation';
 import { useFocusEffect } from '@react-navigation/native';
+
 Geolocation.requestAuthorization()
 let once = false
 var MQTTClient: IMqttClient;
@@ -42,6 +43,7 @@ const isDark = Appearance.getColorScheme() == "dark"
 
 
 import init from "react_native_mqtt"
+let STORAGE_KEY = '@routes-item';
 
 
 init({
@@ -100,6 +102,90 @@ const HomePage = ({ navigation, route }) => {
     const [marked, setMarked] = useState(false)
     const [attr, setAttr] = useState([])
     const [expecting, setExpecting] = useState(true)
+    const [displayRoutes, setDisplayRoutes] = useState([])
+
+    const cellRefs = useRef({})
+    const getItems = async () => {
+        
+        let val = await AsyncStorage.getItem(STORAGE_KEY)
+        if(val) {
+            //console.log("VALUES", JSON.parse(val).routes);
+            routes = JSON.parse(val).routes
+            setDisplayRoutes(routes)
+        } else {
+            return undefined
+        }
+    }
+
+    useFocusEffect(useCallback(()=>{
+        routes = displayRoutes
+        getItems()
+    },[]))
+
+    const renderItemRoutes = ({ item, index }) => {
+        return (
+            <TouchableOpacity onPress={()=>{
+                setLoading(true)
+                fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x},${item.y}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } })
+                .then(response => response.json())
+                .then(json => {
+                    //setFirstDescr(json[0]["display_name"])
+                    fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json())
+                        .then(json2 => {
+                            //setSecDescr(json[0]["display_name"])
+                            //console.log(json);
+                            navigation.navigate("RouteDetails", { item: item, allRoutes: displayRoutes, firstDescr:json[0]["display_name"], secDescr:json2[0]["display_name"] })
+                            setLoading(false)
+
+                        })
+                })
+               // setDisplayRoutes([]); 
+    
+                }} style={{  marginTop: 30, borderWidth:1, padding:0, borderRadius:10, marginLeft:30, alignSelf:"baseline", borderColor:isDark?"#262626":"#d9d9d9" }}>
+
+                    <WebView
+                        androidHardwareAccelerationDisabled
+                        androidLayerType='software'
+                        renderToHardwareTextureAndroid={true}
+                        containerStyle={{ minWidth: 170, minHeight: 130, maxWidth: 170, maxHeight: 130, borderRadius: 8, }}
+                        ref={ref => {
+                            cellRefs.current[item.id] = ref;
+                        }}
+                        source={{ html: isDark ? html_script : html_script_light }}
+                        onLoad={() => {
+                            cellRefs.current[item.id].injectJavaScript(`
+                                mymap.setView([${item.x}, ${item.y}],14);
+
+                                L.Routing.control({
+                                    waypoints: [
+                                    L.latLng(${item.x}, ${item.y}),
+                                    L.latLng(${item.x2}, ${item.y2})
+                                    ],
+                                    show:false,
+                                    draggableWaypoints:false,
+                                    lineOptions : {
+                                        addWaypoints: false
+                                    },
+                                    routeWhileDragging: false,
+                                    createMarker:()=>{return null},
+                                }).addTo(mymap);
+
+
+                            `)
+
+                        }}
+                    />
+                    <View style={{marginLeft:15, marginBottom:15 }}>
+                        <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000" }}>Rota</Text>
+                        <View style={{ flexDirection: "row", flexShrink:1, marginTop:8 }}>
+                            <CalendarBlank size={24} color={isDark ? "#fff" : "#000"} />
+                            <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000" , flexShrink:1}}>{item.repeat}</Text>
+                        </View>
+                       
+                    </View>
+            </TouchableOpacity>
+        )
+    }
 
     const onMessageArrived = (msg) => {
         if(expecting) {
@@ -252,7 +338,7 @@ const HomePage = ({ navigation, route }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(false)
     return (
-        <SafeAreaView style={{
+        <ScrollView style={{
             backgroundColor: isDark ? "#1b1b1b" : "#fff",
             flex: 1,
             flexDirection: "column"
@@ -279,8 +365,16 @@ const HomePage = ({ navigation, route }) => {
                     <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000", fontWeight: "300", flexShrink: 1, marginRight: 30 }}>{location?.toString()}</Text>
                 </View>
             </View>
-
-            <Text style={{ marginLeft: 30, marginTop: 30, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>YAKININIZDAKİ YOL ÇALIŞMALARI</Text>
+            <Text style={{ marginLeft: 30, marginTop: 30, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757", display:displayRoutes.length!="0"?null:'none' }}>ROTALARINIZ</Text>
+            <FlatList
+                data={displayRoutes}
+                fadingEdgeLength={60}
+                horizontal
+                style={{  display:displayRoutes.length!=0?null:"none", marginRight:30, height:240}}
+                renderItem={renderItemRoutes}
+                keyExtractor={item => item.id}
+            />
+            <Text style={{ marginLeft: 30, marginTop: 10, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>YAKININIZDAKİ YOL ÇALIŞMALARI</Text>
             <FlatList
                 data={calismalar}
                 renderItem={renderItem}
@@ -290,7 +384,7 @@ const HomePage = ({ navigation, route }) => {
                 refreshing={refreshing}
 
             />
-        </SafeAreaView>
+        </ScrollView>
     );
 }
 

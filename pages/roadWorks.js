@@ -23,8 +23,9 @@ const ip = require("../ip").default
 
 import LinearGradient from 'react-native-linear-gradient';
 
-import { CaretRight, NavigationArrow, Warning, ArrowLeft } from "phosphor-react-native"
+import { CaretRight, NavigationArrow, Warning, ArrowLeft, Calendar, MagnifyingGlass } from "phosphor-react-native"
 import { getDistance, getPreciseDistance } from 'geolib';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 
 import Geolocation from '@react-native-community/geolocation';
@@ -35,12 +36,14 @@ import html_script_light from '../html_script_light';
 
 import BottomSheet, { BottomSheetView, BottomSheetModalProvider, BottomSheetFlatList } from "@gorhom/bottom-sheet"
 
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, TextInput } from 'react-native-gesture-handler';
 import MQTT, { IMqttClient } from 'sp-react-native-mqtt';
+import { useFocusEffect } from '@react-navigation/native';
 
 const isDark = Appearance.getColorScheme() == "dark"
 
 var MQTTClient: IMqttClient
+
 
 const RoadPage = ({ navigation, route }) => {
 
@@ -48,13 +51,30 @@ const RoadPage = ({ navigation, route }) => {
     const bottomSheetRef = useRef(null);
     const snapPoints = ['20%', '40%', '80%'];
     const [calismalar, setCalismalar] = useState([])
+    const [picker, setPicker] = useState(false)
+    const [value, setValue] = useState("a");
+    const [searchValue, setSearchValue] = useState("")
+    const [items, setItems] = useState(
+        [
+            { label: "Bugün", value: "t" },
+            { label: "Bu ay", value: "m" },
+            { label: "Bu yıl", value: "y" },
+            { label: "Tümü", value: "a" }
+        ]
+    )
     const [once, setOnce] = useState(false)
     const [refreshing, setRefreshing] = useState(false);
+    const [fullCalismalar, setFullCalismalar] = useState([])
     const [tinyFont, setTinyFont] = useState(false);
     const [arrowVisible, setArrowVisible] = useState(false);
 
     const [location, setLocation] = useState([])
     let coords = [];
+
+
+    const isSameDay = (firstTimeStamp, secondTimeStamp) => {
+        return (new Date(firstTimeStamp).getDate() === (new Date(secondTimeStamp).getDate()))
+    }
 
     useEffect(
         () => {
@@ -64,50 +84,66 @@ const RoadPage = ({ navigation, route }) => {
                     coords = [info.coords.latitude, info.coords.longitude]
                 }
             )
-
-            MQTT.createClient({
-                uri: `mqtt://${ip}:1883`,
-            clientId: Platform.OS == "android" ? 'teknofest' + Platform.OS : "teknofest"
-            }).then((client) => {
-                client.on('message', function (msg) {
-                    if (msg.topic == "esp32/responsecalismalar" && JSON.parse(msg.data) != [] && once == false) {
-                        setOnce(true)
-                        setCalismalar([])
-                        console.log(msg.data);
-                        for (let calisma in JSON.parse(msg.data)["calismalar"]) {
-                            setCalismalar(
-                                calismalar => [...calismalar,
-                                {
-                                    id: JSON.parse(msg.data)["calismalar"][calisma][0],
-                                    koorX: JSON.parse(msg.data)["calismalar"][calisma][1],
-                                    koorY: JSON.parse(msg.data)["calismalar"][calisma][2],
-                                    reason: JSON.parse(msg.data)["calismalar"][calisma][3],
-                                    descr: JSON.parse(msg.data)["calismalar"][calisma][4],
-                                    timestamp: JSON.parse(msg.data)["calismalar"][calisma][5],
-                                    ended: JSON.parse(msg.data)["calismalar"][calisma][6],
-                                    hasPhoto: JSON.parse(msg.data)["calismalar"][calisma][7],
-                                    distance: getPreciseDistance({ latitude: coords[0], longitude: coords[1] }, { latitude: JSON.parse(msg.data)["calismalar"][calisma][1], longitude: JSON.parse(msg.data)["calismalar"][calisma][2] }) / 1000
-                                }]
-                            )
-                            console.log(calismalar);
-                        }
-                    }
-                });
-
-                client.on('connect', function () {
-                    //console.log('connected');
-                    client.subscribe('esp32/coordinates', 0);
-
-                    client.subscribe('esp32/responsecalismalar', 0);
-                    client.publish("esp32/calismalar", "GET", 0, true)
-                    MQTTClient = client;
-
-                });
-                client.connect();
-            })
         },
         []
     )
+
+    useFocusEffect(useCallback(() => {
+        MQTT.createClient({
+            uri: `mqtt://${ip}:1883`,
+            clientId: Platform.OS == "android" ? 'teknofest' + Platform.OS : "teknofest"
+        }).then((client) => {
+            client.on('message', function (msg) {
+                if (msg.topic == "esp32/responsecalismalar" && JSON.parse(msg.data) != [] && once == false) {
+                    setOnce(true)
+                    setCalismalar([])
+                    console.log(msg.data);
+                    for (let calisma in JSON.parse(msg.data)["calismalar"]) {
+                        setCalismalar(
+                            calismalar => [...calismalar,
+                            {
+                                id: JSON.parse(msg.data)["calismalar"][calisma][0],
+                                koorX: JSON.parse(msg.data)["calismalar"][calisma][1],
+                                koorY: JSON.parse(msg.data)["calismalar"][calisma][2],
+                                reason: JSON.parse(msg.data)["calismalar"][calisma][3],
+                                descr: JSON.parse(msg.data)["calismalar"][calisma][4],
+                                timestamp: JSON.parse(msg.data)["calismalar"][calisma][5],
+                                ended: JSON.parse(msg.data)["calismalar"][calisma][6],
+                                hasPhoto: JSON.parse(msg.data)["calismalar"][calisma][7],
+                                distance: getPreciseDistance({ latitude: coords[0], longitude: coords[1] }, { latitude: JSON.parse(msg.data)["calismalar"][calisma][1], longitude: JSON.parse(msg.data)["calismalar"][calisma][2] }) / 1000
+                            }]
+                        )
+                        setFullCalismalar(
+                            fullCalismalar => [...fullCalismalar,
+                            {
+                                id: JSON.parse(msg.data)["calismalar"][calisma][0],
+                                koorX: JSON.parse(msg.data)["calismalar"][calisma][1],
+                                koorY: JSON.parse(msg.data)["calismalar"][calisma][2],
+                                reason: JSON.parse(msg.data)["calismalar"][calisma][3],
+                                descr: JSON.parse(msg.data)["calismalar"][calisma][4],
+                                timestamp: JSON.parse(msg.data)["calismalar"][calisma][5],
+                                ended: JSON.parse(msg.data)["calismalar"][calisma][6],
+                                hasPhoto: JSON.parse(msg.data)["calismalar"][calisma][7],
+                                distance: getPreciseDistance({ latitude: coords[0], longitude: coords[1] }, { latitude: JSON.parse(msg.data)["calismalar"][calisma][1], longitude: JSON.parse(msg.data)["calismalar"][calisma][2] }) / 1000
+                            }]
+                        )
+                        console.log(calismalar);
+                    }
+                }
+            });
+
+            client.on('connect', function () {
+                //console.log('connected');
+                client.subscribe('esp32/coordinates', 0);
+
+                client.subscribe('esp32/responsecalismalar', 0);
+                client.publish("esp32/calismalar", "GET", 0, true)
+                MQTTClient = client;
+
+            });
+            client.connect();
+        })
+    }, []))
 
 
     const handleSheetChanges = useCallback((index: number) => {
@@ -151,7 +187,7 @@ const RoadPage = ({ navigation, route }) => {
 
     return (
         <GestureHandlerRootView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <WebView onMessage={(m)=>console.log(m.nativeEvent.data)} onLoad={() => mapRef.current.injectJavaScript("mymap.setView([38.9637,35.2433],5)")} containerStyle={{ flex: 1, minWidth: "100%", minHeight: 200 }} ref={mapRef} source={{ html: isDark ? html_script : html_script_light }} />
+            <WebView onMessage={(m) => console.log(m.nativeEvent.data)} onLoad={() => mapRef.current.injectJavaScript("mymap.setView([38.9637,35.2433],5)")} containerStyle={{ flex: 1, minWidth: "100%", minHeight: 200 }} ref={mapRef} source={{ html: isDark ? html_script : html_script_light }} />
             <BottomSheetModalProvider>
                 <BottomSheet
 
@@ -171,21 +207,85 @@ const RoadPage = ({ navigation, route }) => {
                     ref={bottomSheetRef}
                     snapPoints={snapPoints}
                     backgroundStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff" }}
-                    handleIndicatorStyle={{ backgroundColor: isDark ? "#262626" : "#d9d9d9", width: 72 }}
+                    handleIndicatorStyle={{ backgroundColor: isDark ? "#262626" : "#d9d9d9", width: 72, height:6 }}
                 >
+                    <View style={{ alignItems: "center", flexDirection: "row", flexShrink: 1 }}>
+                        <Calendar size={24} color={isDark ? "#fff" : "#000"} style={{ marginLeft: 30, alignSelf: "center", marginTop: 12 }} />
+                        <DropDownPicker
+                            theme='DARK'
+                            style={{ zIndex: 2, marginTop: 15, width: 100, backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0 }}
+                            containerStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0, zIndex: 2 }}
+                            badgeStyle={{ borderWidth: 0 }}
+                            textStyle={{ color: isDark ? "#fff" : "#000", }}
+                            labelStyle={{ color: isDark ? "#fff" : "#000" }}
+                            showArrowIcon={true}
+                            placeholder={value}
+                            open={picker}
+                            onChangeValue={
+                                (val) => {
+
+                                    if (val == "t") {
+                                        setCalismalar(fullCalismalar.filter(item => isSameDay(parseFloat(item.timestamp), Date.now())));
+                                    }
+                                    else if (val == "a") {
+                                        setCalismalar(fullCalismalar)
+                                    }
+
+                                    else if (val == "y") {
+                                        setCalismalar(fullCalismalar.filter(
+                                            item => new Date(parseFloat(item.timestamp)).getFullYear() == new Date(Date.now()).getFullYear()
+                                        )
+                                        )
+                                    }
+                                    else if (val == "m") {
+                                        setCalismalar(fullCalismalar.filter(
+                                            item => new Date(parseFloat(item.timestamp)).getMonth() == new Date(Date.now()).getMonth()
+                                        )
+                                        )
+                                    }
+                                }
+                            }
+
+                            tickIconStyle={{ color: "#ff0000" }}
+                            showBadgeDot={false}
+                            listParentContainerStyle={{ borderWidth: 0, }}
+                            listChildContainerStyle={{ borderWidth: 0, }}
+                            itemSeparator
+                            itemSeparatorStyle={{ backgroundColor: "#1d1d1d", height: 1 }}
+                            dropDownContainerStyle={{ borderWidth: 0, borderRadius: 6, shadowOpacity: 1, shadowColor: "#000", shadowRadius: 16, elevation: 5, width: "90%", alignSelf: "center" }}
+                            setOpen={setPicker}
+                            listItemContainerStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0, }}
+                            listItemLabelStyle={{ color: isDark ? "#fff" : "#000" }}
+                            value={value}
+                            setValue={setValue}
+                            items={items}
+                            setItems={setItems}
+                        />
+                    </View>
+
+                    <View style={{borderRadius:25, borderWidth:2, borderColor:isDark?"#262626":"#d9d9d9", width:"90%", alignSelf:"center", flexDirection:"row"}}>
+                        <MagnifyingGlass size={26} style={{alignSelf:"center", marginLeft:13}} color={isDark?"#fff":"#000"} />
+                        <TextInput value={searchValue} onChangeText={
+                            (text)=>{
+                                setSearchValue(text)
+                                setCalismalar(fullCalismalar.filter(item=>item.descr.toLocaleLowerCase()?.includes(text.toLocaleLowerCase())))
+                            }
+                        } placeholder='Yol veya bölge adı aratın...' placeholderTextColor={isDark?"#fff":"#000"} style={{paddingLeft:13}}/>
+                    </View>
+                    
                     <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignItems: "center" }}>
                         <BottomSheetFlatList
                             data={calismalar}
+                            style={{ zIndex: 0 }}
                             fadingEdgeLength={60}
                             renderItem={renderItem}
                             keyExtractor={item => item["id"]}
                             refreshControl={<RefreshControl progressBackgroundColor={isDark ? "#1d1d1d" : "#eee"} colors={[isDark ? "#fff" : "#000"]} refreshing={refreshing} onRefresh={markKoor}></RefreshControl>}
                             onRefresh={markKoor}
                             refreshing={refreshing}
-
                         />
 
-                   
+
                     </View>
 
                 </BottomSheet>

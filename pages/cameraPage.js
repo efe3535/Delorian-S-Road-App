@@ -58,11 +58,11 @@ const CameraPage = ({ navigation, route }) => {
     const [selected, setSelected] = useState(false)
     const [photoPath, setPhotoPath] = useState("");
     const isFocused = useIsFocused()
-    var loading = false
+    const [loading,setLoading] = useState(false)
     console.log(route.params["id"])
     const fotografGonder = async () => {
         //  console.log(camRef);
-        loading = true
+        
         const photo = await camRef.current.takePhoto(
             {
             
@@ -80,7 +80,7 @@ const CameraPage = ({ navigation, route }) => {
                 client.subscribe("esp32/sendphoto",0);
                 client.publish("esp32/sendphoto",route.params["id"] + "," + str,0,false);
                 console.log("done");
-                loading = false
+                setLoading(false)
             });
             client.connect();
         }).catch(function (err) {
@@ -100,7 +100,7 @@ const CameraPage = ({ navigation, route }) => {
                 client.subscribe("esp32/sendphoto",0);
                 client.publish("esp32/sendphoto",route.params["id"] + "," + data,0,false);
                 console.log("done");
-                loading = false
+                setLoading(false)
             });
             client.connect();
         }).catch(function (err) {
@@ -111,7 +111,7 @@ const CameraPage = ({ navigation, route }) => {
     if (device == null) return <Text>LOADING</Text>
     return (
         <SafeAreaView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }}>
-                        <Spinner  animation='fade' visible={loading} textContent={"Yükleniyor"} overlayColor={"#000000aa"} textStyle={{fontSize:24, fontWeight:"300"}} />
+                        <Spinner  animation='fade' visible={loading} textContent={"Fotoğraf yükleniyor"} overlayColor={"#000000aa"} textStyle={{fontSize:24, fontWeight:"300"}} />
 
             <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 60 }} onPress={() => navigation.goBack()}>
                 <CaretLeft color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />
@@ -131,6 +131,7 @@ const CameraPage = ({ navigation, route }) => {
                 <View style={{flexDirection:"row", marginTop:10, alignContent:"center", alignItems:"center", gap: 10}}>
                     
                     <TouchableOpacity onPress={()=>{
+                        setLoading(true)
                         launchImageLibrary({includeBase64:true}, (response)=>{
                             //console.log(response);
                             base64FotografGonder(response.assets[0].base64)
@@ -139,7 +140,7 @@ const CameraPage = ({ navigation, route }) => {
                         <ImageIcon size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000"} />
                     </TouchableOpacity>            
 
-                    <TouchableOpacity onPress={fotografGonder} style={{justifyContent:"center", alignItems:"center", width:32,height:32, alignSelf:"center", borderRadius:360,borderWidth:5,borderColor:"#e05003", padding:32, marginLeft:50 }}>
+                    <TouchableOpacity onPress={()=>{setLoading(true);fotografGonder()}} style={{justifyContent:"center", alignItems:"center", width:32,height:32, alignSelf:"center", borderRadius:360,borderWidth:5,borderColor:"#e05003", padding:32, marginLeft:50 }}>
                         <CamIcon size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000"} />
                     </TouchableOpacity>            
 

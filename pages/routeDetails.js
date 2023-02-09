@@ -81,12 +81,16 @@ const between = (min, x, max) => {
 let found
 
 const RouteDetails = ({ navigation, route }) => {
+    
+    const firstDescr = route.params.firstDescr
+    const secDescr = route.params.secDescr
+    
     const mapRef = useRef(null)
-    const [firstDescr, setFirstDescr] = useState("")
+    //const [firstDescr, setFirstDescr] = useState(route.params.firstDescr)
     const [calismalar, setCalismalar] = useState([])
     const [match, setMatch] = useState(false)
     const [expecting, setExpecting] = useState(false)
-    const [secDescr, setSecDescr] = useState("")
+    //const [secDescr, setSecDescr] = useState(route.params.secDescr)
     const item = route.params.item
 
     const deleteItem = async (id) => {
@@ -100,7 +104,7 @@ const RouteDetails = ({ navigation, route }) => {
         console.log(items);
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(items))
     }
-
+    console.log("ITEM->",item);
     const onMessageArrived = (msg) => {
         console.log("topic", msg.topic);
         if (msg.topic == "esp32/responsecalismalar" && JSON.parse(msg.payloadString) != []) {
@@ -130,11 +134,12 @@ const RouteDetails = ({ navigation, route }) => {
 
     client.onMessageArrived = onMessageArrived
     useEffect(() => {
-        fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x},${item.y}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json()).then(json => setFirstDescr(json[0]["display_name"]))
-        fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json()).then(json => setSecDescr(json[0]["display_name"]))
-        console.log("useeffect");
+        setMatch(false)
+        console.log("useFocusEffect");
+        mapRef.current.reload()
         client.send("esp32/calismalar", "GET", 0, false)
-        //mapRef.current.reload()
+        console.log(item.x,item.y,item.x2,item.y2);
+        
         mapRef.current.injectJavaScript(
             `mymap.setView([${item.x},${item.y}],14);
             L.Routing.control({
@@ -153,15 +158,27 @@ const RouteDetails = ({ navigation, route }) => {
             true
             `
         )
+        /*fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x},${item.y}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } })
+        .then(response => response.json())
+        .then(json => {
+            setFirstDescr(json[0]["display_name"])
+            console.log(json);
+        })
+       
+        fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json())
+        .then(json => {
+            setSecDescr(json[0]["display_name"])
+            console.log(json);
+        })*/
     }, [])
 
     useFocusEffect(useCallback(() => {
         setMatch(false)
-        console.log("usecallback");
+        console.log("useFocusEffect");
         mapRef.current.reload()
         client.send("esp32/calismalar", "GET", 0, false)
-        fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x},${item.y}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json()).then(json => setFirstDescr(json[0]["display_name"]))
-        fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json()).then(json => setSecDescr(json[0]["display_name"]))
+        console.log(item.x,item.y,item.x2,item.y2);
+       
         mapRef.current.injectJavaScript(
             `mymap.setView([${item.x},${item.y}],14);
             L.Routing.control({
@@ -180,7 +197,18 @@ const RouteDetails = ({ navigation, route }) => {
             true
             `
         )
-        
+        /*fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x},${item.y}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } })
+        .then(response => response.json())
+        .then(json => {
+            setFirstDescr(json[0]["display_name"])
+            console.log(json);
+        })
+       
+        fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json())
+        .then(json => {
+            setSecDescr(json[0]["display_name"])
+            console.log(json);
+        })*/
     }, []))
 
     return (
@@ -196,6 +224,8 @@ const RouteDetails = ({ navigation, route }) => {
                     if (e.nativeEvent.index == 1) {
                         deleteItem(item.id)
                         navigation.navigate("Routes", {extraRoutes: route.params.allRoutes.filter(arr=>arr.id!=item.id)})
+                    } else if(e.nativeEvent.index == 0) {
+                        navigation.navigate("EditRoutes", {routes:route.params.allRoutes, item:item})
                     }
                 }} style={{ alignSelf: "center", top: 12, right: 30, position: "absolute" }} actions={[{ title: "Düzenle" }, { title: "Sil" }]}>
                     <DotsThreeVertical size={32} color={isDark ? "#fff" : "#000"} />
