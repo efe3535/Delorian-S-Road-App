@@ -22,6 +22,10 @@ import {
 
 const isDark = Appearance.getColorScheme() == "dark"
 
+
+import Geolocation from '@react-native-community/geolocation';
+Geolocation.requestAuthorization()
+
 import MQTT, { IMqttClient } from "sp-react-native-mqtt"
 
 const ip = require("../ip").default
@@ -41,6 +45,14 @@ let STORAGE_KEY = '@routes-item';
 
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
+
+const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+    "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+];
+const days = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"]
 
 
 init({
@@ -464,6 +476,7 @@ const RouteDetails = ({ navigation, route }) => {
                     <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity style={{ flexDirection: "row", marginLeft: 20, marginTop: 60 }} onPress={() => {
                             setChosen(false)
+                            setEditVisible(false)
                             setRouteDescr("")
                             setDateStr("")
                             setRouteName("")
