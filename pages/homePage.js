@@ -134,8 +134,8 @@ const HomePage = ({ navigation, route }) => {
                         .then(json2 => {
                             //setSecDescr(json[0]["display_name"])
                             //console.log(json);
-                            navigation.navigate("RouteDetails", { item: item, allRoutes: displayRoutes, firstDescr:json[0]["display_name"], secDescr:json2[0]["display_name"] })
                             setLoading(false)
+                            navigation.navigate("RouteDetails", { id:item.id, item: item, allRoutes: displayRoutes, firstDescr:json[0]["display_name"], secDescr:json2[0]["display_name"] })
 
                         })
                 })

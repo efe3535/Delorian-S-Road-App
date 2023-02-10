@@ -28,7 +28,6 @@ import RoutesPage from './pages/routes';
 import RoadPage from './pages/roadWorks';
 import SettingsPage from './pages/settingsPage';
 import NotificationsPage from './pages/notificationsPage';
-import EditRoutePage from './pages/editRoutePage';
 
 const isDark = Appearance.getColorScheme() == "dark"
 
@@ -111,7 +110,6 @@ const App: () => Node = () => {
           <Stack.Screen name="AddPhoto" component={CameraPage} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
           <Stack.Screen name="AddRoute" component={AddRoutePage} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
           <Stack.Screen name="RouteDetails" component={RouteDetails} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
-          <Stack.Screen name="EditRoutes" component={EditRoutePage} options={{tabBarStyle:{display:"none"}, tabBarShowLabel:false, tabBarItemStyle:{display:"none"}}} />
 
         </Stack.Navigator>
 

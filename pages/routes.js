@@ -50,7 +50,7 @@ const RoutesPage = ({ navigation, route }) => {
 
     const [value, setValue] = useState(null);
     const { getItem, setItem } = useAsyncStorage(STORAGE_KEY);
-   // let routes = getItems()
+    let routes = getItems()
     const cellRefs = useRef({})
 
 
@@ -81,9 +81,9 @@ const RoutesPage = ({ navigation, route }) => {
                         //setSecDescr(json[0]["display_name"])
                         //console.log(json);
                         console.log("IITTEEMM", item);
-                        navigation.navigate("RouteDetails", { item: item, allRoutes: displayRoutes, firstDescr:json[0]["display_name"], secDescr:json2[0]["display_name"] })
-                        //setDisplayRoutes([]); 
                         setLoading(false)
+                        navigation.navigate("RouteDetails", { id:item.id, item: item, allRoutes: displayRoutes, firstDescr:json[0]["display_name"], secDescr:json2[0]["display_name"] })
+                        //setDisplayRoutes([]); 
                     })
             })
             
