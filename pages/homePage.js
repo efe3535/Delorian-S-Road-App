@@ -19,22 +19,33 @@ import {
     Platform,
     ActivityIndicator
 } from 'react-native';
-
+import messaging from "@react-native-firebase/messaging"
 
 import Spinner from 'react-native-loading-spinner-overlay';
 import { WebView } from 'react-native-webview';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { CaretRight, NavigationArrow, Warning, Calendar,CalendarBlank, Repeat } from "phosphor-react-native"
 import { Svg, Path } from "react-native-svg"
-
+import {PermissionsAndroid} from 'react-native'
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION,{
+    title: 'Bildirim izni',
+    message:
+      'Yol çalışmalarından haberdar olmak için bildirimlere izin verebilirsiniz',
+    buttonNeutral: 'Daha sonra haber ver',
+    buttonNegative: 'Olmaz',
+    buttonPositive: 'Olur',
+  },);
 
 const ip = require("../ip").default
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import MQTT, { IMqttClient } from "sp-react-native-mqtt";
 import html_script_light from '../html_script_light';
+import {request, PERMISSIONS} from 'react-native-permissions';
 
-import Geolocation from '@react-native-community/geolocation';
+request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
+
+  import Geolocation from '@react-native-community/geolocation';
 import { useFocusEffect } from '@react-navigation/native';
 
 Geolocation.requestAuthorization()
@@ -106,6 +117,12 @@ const HomePage = ({ navigation, route }) => {
     const [displayRoutes, setDisplayRoutes] = useState([])
 
     const cellRefs = useRef({})
+
+    const getToken = async () => {
+        const token = await messaging().getToken()
+        console.log(token);
+    }
+
     const getItems = async () => {
         
         let val = await AsyncStorage.getItem(STORAGE_KEY)
@@ -117,9 +134,18 @@ const HomePage = ({ navigation, route }) => {
             return undefined
         }
     }
-
+    const subscribeTopic = async (topic) => {
+        messaging()
+          .subscribeToTopic(topic)
+          .then(() => console.log("Subscribed to topic:", topic))
+          .catch((e) => {
+            console.log(e);
+          });
+      };
     useFocusEffect(useCallback(()=>{
         routes = displayRoutes
+        getToken()
+        subscribeTopic("all")
         getItems()
         for (let map in cellRefs.current) {
             cellRefs.current[map].reload()
