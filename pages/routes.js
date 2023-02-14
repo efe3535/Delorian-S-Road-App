@@ -10,6 +10,7 @@ import {
     View,
     PermissionsAndroid,
     Image,
+    ActivityIndicator,
     Modal,
     FlatList,
     Platform,
@@ -59,38 +60,47 @@ const RoutesPage = ({ navigation, route }) => {
         useCallback(() => {
             routes = displayRoutes
             getItems()
+
+            for (let map in cellRefs.current) {
+                if(cellRefs.current[map]!=null)
+                    cellRefs.current[map].reload()
+            }
         },
-        []))
-        useEffect(
-            () => {
-                routes = displayRoutes
-                getItems()
-            },
-            [])
+            []))
+    useEffect(
+        () => {
+            routes = displayRoutes
+            getItems()
+
+            for (let map in cellRefs.current) {
+                cellRefs.current[map].reload()
+            }
+        },
+        [])
 
     const renderItem = ({ item, index }) => {
         return (
             <TouchableOpacity onPress={() => {
                 setLoading(true)
-        fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x},${item.y}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } })
-            .then(response => response.json())
-            .then(json => {
-                //setFirstDescr(json[0]["display_name"])
-                fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json())
-                    .then(json2 => {
-                        //setSecDescr(json[0]["display_name"])
-                        //console.log(json);
-                        console.log("IITTEEMM", item);
-                        setLoading(false)
-                        navigation.navigate("RouteDetails", { id:item.id, item: item, allRoutes: displayRoutes, firstDescr:json[0]["display_name"], secDescr:json2[0]["display_name"] })
-                        //setDisplayRoutes([]); 
+                fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x},${item.y}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } })
+                    .then(response => response.json())
+                    .then(json => {
+                        //setFirstDescr(json[0]["display_name"])
+                        fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json())
+                            .then(json2 => {
+                                //setSecDescr(json[0]["display_name"])
+                                //console.log(json);
+                                console.log("IITTEEMM", item);
+                                setLoading(false)
+                                navigation.navigate("RouteDetails", { id: item.id, item: item, allRoutes: displayRoutes, firstDescr: json[0]["display_name"], secDescr: json2[0]["display_name"] })
+                                //setDisplayRoutes([]); 
+                            })
                     })
-            })
-            
 
 
-    }
-} style = {{ flexDirection: "row", marginTop: 30, marginLeft: 30, alignItems: "center" }}>
+
+            }
+            } style={{ flexDirection: "row", marginTop: 30, marginLeft: 30, alignItems: "center" }}>
                 <WebView
                     androidHardwareAccelerationDisabled
                     androidLayerType='software'
@@ -99,6 +109,9 @@ const RoutesPage = ({ navigation, route }) => {
                     ref={ref => {
                         cellRefs.current[item.id] = ref;
                     }}
+                    renderLoading={() => (<View style={{ flex: 1, width: "100%", height: "100%", position: "absolute", alignItems: "center", justifyContent: "center", backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
+                        <ActivityIndicator color={"#e05003"} />
+                    </View>)}
                     source={{ html: isDark ? html_script : html_script_light }}
                     onLoad={() => {
                         cellRefs.current[item.id].injectJavaScript(`
@@ -109,7 +122,7 @@ const RoutesPage = ({ navigation, route }) => {
                                 L.latLng(${item.x}, ${item.y}),
                                 L.latLng(${item.x2}, ${item.y2})
                                 ],
-                                show:false,
+                                show:false,  
                                 draggableWaypoints:false,
                                 lineOptions : {
                                     addWaypoints: false
@@ -124,50 +137,50 @@ const RoutesPage = ({ navigation, route }) => {
                     }}
                 />
                 <View style={{ marginLeft: 18 }}>
-                    <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000" }}>Rota</Text>
-                    <View style={{ flexDirection: "row", flexShrink:1 }}>
-                        <Calendar size={24} color={isDark ? "#fff" : "#000"} />
-                        <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000" , flexShrink:1}}>{item.date}</Text>
+                    <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Rota</Text>
+                    <View style={{ flexDirection: "row", flexShrink: 1 }}>
+                        <Calendar size={24} color={isDark ? "#fff" : "#000000"} />
+                        <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000000", flexShrink: 1 }}>{item.date}</Text>
                     </View>
-                    <View style={{ flexDirection: "row", flexShrink:1 }}>
-                        <Repeat size={24} color={isDark ? "#fff" : "#000"} />
-                        <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000", flexShrink:1 }}>{item.repeat}</Text>
+                    <View style={{ flexDirection: "row", flexShrink: 1 }}>
+                        <Repeat size={24} color={isDark ? "#fff" : "#000000"} />
+                        <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000000", flexShrink: 1 }}>{item.repeat}</Text>
                     </View>
                 </View>
             </TouchableOpacity >
         )
     }
 
-route.params ? routes = route.params.extraRoutes : null
+    route.params ? routes = route.params.extraRoutes : null
 
-return (
-    <SafeAreaView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", justifyContent: "center", flex: 1 }}>
-        <Spinner animation='fade' visible={loading} textContent={"Yükleniyor"} overlayColor={"#000000aa"} textStyle={{ fontSize: 24, fontWeight: "300" }} />
-        <Text style={{ fontWeight: "700", fontSize: 36, marginTop: 32, marginLeft: 30, color: isDark ? "#fff" : "#000" }}>Rotalarınız</Text>
-        {
-            displayRoutes?.length == 0 ?
-                <View style={{ flex: 1, alignItems: "center", marginHorizontal: 60, marginTop: 15, flexDirection: "row", flexShrink: 1 }}>
-                    <WarningCircle size={48} style={{ opacity: 0.5, alignSelf: "center" }} color={isDark ? "#a8a8a8" : "#575757"} weight="thin" />
-                    <Text style={{ color: isDark ? "#a8a8a8" : "#575757", textAlign: "center", flexShrink: 1 }}>Henüz rota bulunmuyor. Rota eklemek için <Text style={{ fontWeight: "700", flexShrink: 1, color: isDark ? "#a8a8a8" : "#575757" }}>Yeni Rota Oluştur</Text> butonuna basın.</Text>
+    return (
+        <SafeAreaView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", justifyContent: "center", flex: 1 }}>
+            <Spinner animation='fade' visible={loading} textContent={"Yükleniyor"} overlayColor={"#000000aa"} textStyle={{ fontSize: 24, fontWeight: "300" }} />
+            <Text style={{ fontWeight: "700", fontSize: 36, marginTop: 32, marginLeft: 30, color: isDark ? "#fff" : "#000000" }}>Rotalarınız</Text>
+            {
+                displayRoutes?.length == 0 ?
+                    <View style={{ flex: 1, alignItems: "center", marginHorizontal: 60, marginTop: 15, flexDirection: "row", flexShrink: 1 }}>
+                        <WarningCircle size={48} style={{ opacity: 0.5, alignSelf: "center" }} color={isDark ? "#a8a8a8" : "#575757"} weight="thin" />
+                        <Text style={{ color: isDark ? "#a8a8a8" : "#575757", textAlign: "center", flexShrink: 1 }}>Henüz rota bulunmuyor. Rota eklemek için <Text style={{ fontWeight: "700", flexShrink: 1, color: isDark ? "#a8a8a8" : "#575757" }}>Yeni Rota Oluştur</Text> butonuna basın.</Text>
 
-                </View>
-                : null}
-        <FlatList
-            data={displayRoutes}
-            fadingEdgeLength={60}
-            style={{ marginBottom: 100 }}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-        />
-        <TouchableOpacity style={{ flexDirection: "row", flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignSelf: "flex-end", borderRadius: 56, borderWidth: 2, borderColor: isDark ? "#262626" : "#d9d9d9", padding: 16, position: "absolute", alignItems: "center", alignContent: "center", justifyContent: "center", marginRight: 28, marginBottom: 12, bottom: 0, right: 0 }}
-            onPress={() => { navigation.navigate("AddRoute", { routes: displayRoutes }) }}
-        >
-            <Plus size={36} color={isDark ? "#fff" : "#000"} />
-            <Text style={{ marginLeft: 8, alignSelf: "center", justifyContent: "center", textAlign: "center", textAlignVertical: "center", fontSize: 18, color: isDark ? "#FFF" : "#000" }}>Yeni Rota Oluştur</Text>
-        </TouchableOpacity>
+                    </View>
+                    : null}
+            <FlatList
+                data={displayRoutes}
+                fadingEdgeLength={60}
+                style={{ marginBottom: 100 }}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+            />
+            <TouchableOpacity style={{ flexDirection: "row", flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignSelf: "flex-end", borderRadius: 56, borderWidth: 2, borderColor: isDark ? "#262626" : "#d9d9d9", padding: 16, position: "absolute", alignItems: "center", alignContent: "center", justifyContent: "center", marginRight: 28, marginBottom: 12, bottom: 0, right: 0 }}
+                onPress={() => { navigation.navigate("AddRoute", { routes: displayRoutes }) }}
+            >
+                <Plus size={36} color={isDark ? "#fff" : "#000000"} />
+                <Text style={{ marginLeft: 8, alignSelf: "center", justifyContent: "center", textAlign: "center", textAlignVertical: "center", fontSize: 18, color: isDark ? "#FFF" : "#000000" }}>Yeni Rota Oluştur</Text>
+            </TouchableOpacity>
 
-    </SafeAreaView>
-);
+        </SafeAreaView>
+    );
 }
 
 export default RoutesPage;

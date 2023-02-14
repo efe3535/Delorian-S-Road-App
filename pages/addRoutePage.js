@@ -10,6 +10,7 @@ import {
     StatusBar,
     TouchableOpacity,
     View,
+    ActivityIndicator,
     FlatList,
     Modal,
     Appearance,
@@ -139,7 +140,7 @@ const AddRoutePage = ({ navigation, route }) => {
                                 textStyle={{ color: isDark ? "#d9d9d9" : "#262626" }}
                                 todayTextStyle={{ backgroundColor: isDark ? "#262626" : "#d9d9d9" }}
                                 selectedDayColor={isDark ? "#262626" : "#d9d9d9"}
-                                selectedDayTextColor={isDark ? "#fff" : "#000"}
+                                selectedDayTextColor={isDark ? "#fff" : "#000000"}
                                 onDateChange={(date, type) => {
                                     if (type == "END_DATE") {
                                         //setDateStr((date.get().getDate() + " " + (monthNames[date.get().getMonth()]) + " " + days[date.get().getDay()]))
@@ -178,18 +179,18 @@ const AddRoutePage = ({ navigation, route }) => {
                     <View style={{ width: "80%", borderRadius: 16, height: "60%", alignSelf: "center", position: "absolute", alignContent: "center", backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
 
                         <TouchableOpacity style={{ marginLeft: 20, marginTop: 20, flexDirection: "row" }} onPress={() => setRepeat(false)}>
-                            <CaretLeft size={32} color={isDark ? "#fff" : "#000"} />
-                            <Text style={{ color: isDark ? "#fff" : "#000", fontSize: 18, alignSelf: "center", marginLeft: 10, fontWeight: "600" }}>Geri</Text>
+                            <CaretLeft size={32} color={isDark ? "#fff" : "#000000"} />
+                            <Text style={{ color: isDark ? "#fff" : "#000000", fontSize: 18, alignSelf: "center", marginLeft: 10, fontWeight: "600" }}>Geri</Text>
                         </TouchableOpacity>
 
-                        <Text style={{ fontSize: 24, marginLeft: 20, marginTop: 15, color: isDark ? "#fff" : "#000", fontWeight: "700" }}>Tekrarlama sıklığı</Text>
+                        <Text style={{ fontSize: 24, marginLeft: 20, marginTop: 15, color: isDark ? "#fff" : "#000000", fontWeight: "700" }}>Tekrarlama sıklığı</Text>
                         <DropDownPicker
                             theme='DARK'
                             style={{ marginTop: 15, width: "90%", alignSelf: "center", backgroundColor: isDark ? "#262626" : "#d9d9d9", borderWidth: 0 }}
                             containerStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0 }}
                             badgeStyle={{ borderWidth: 0 }}
-                            textStyle={{ color: isDark ? "#fff" : "#000", }}
-                            labelStyle={{ color: isDark ? "#fff" : "#000" }}
+                            textStyle={{ color: isDark ? "#fff" : "#000000", }}
+                            labelStyle={{ color: isDark ? "#fff" : "#000000" }}
                             showArrowIcon={true}
                             placeholder={"Tekrarlama sıklığı seçiniz..."}
                             open={picker}
@@ -200,10 +201,10 @@ const AddRoutePage = ({ navigation, route }) => {
                             listChildContainerStyle={{ borderWidth: 0, }}
                             itemSeparator
                             itemSeparatorStyle={{ backgroundColor: "#1d1d1d", height: 1 }}
-                            dropDownContainerStyle={{ borderWidth: 0, borderRadius: 6, shadowOpacity: 1, shadowColor: "#000", shadowRadius: 16, elevation: 5, width: "90%", alignSelf: "center" }}
+                            dropDownContainerStyle={{ borderWidth: 0, borderRadius: 6, shadowOpacity: 1, shadowColor: "#000000", shadowRadius: 16, elevation: 5, width: "90%", alignSelf: "center" }}
                             setOpen={setPicker}
                             listItemContainerStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0, }}
-                            listItemLabelStyle={{ color: isDark ? "#fff" : "#000" }}
+                            listItemLabelStyle={{ color: isDark ? "#fff" : "#000000" }}
                             value={value}
                             setValue={setValue}
                             items={items}
@@ -220,8 +221,8 @@ const AddRoutePage = ({ navigation, route }) => {
                     <TouchableOpacity style={{ marginLeft: 20, marginTop: 20, flexDirection: "row" }} onPress={() => {
                         setMap(false) 
                         }}>
-                        <CaretLeft size={32} color={isDark ? "#fff" : "#000"} />
-                        <Text style={{ color: isDark ? "#fff" : "#000", fontSize: 18, alignSelf: "center", marginLeft: 10, fontWeight: "600" }}>Geri</Text>
+                        <CaretLeft size={32} color={isDark ? "#fff" : "#000000"} />
+                        <Text style={{ color: isDark ? "#fff" : "#000000", fontSize: 18, alignSelf: "center", marginLeft: 10, fontWeight: "600" }}>Geri</Text>
                     </TouchableOpacity>
                     <WebView ref={mapRef} onMessage={
                             (msg)=>{
@@ -233,7 +234,7 @@ const AddRoutePage = ({ navigation, route }) => {
                                     sety2(parseFloat(msg.nativeEvent.data.split(",")[1]))
                                     console.log(first[0],first[1],parseFloat(msg.nativeEvent.data.split(",")[0]),parseFloat(msg.nativeEvent.data.split(",")[1]));
                                     
-                                    
+                                    mapRef.current.reload()
                                     mapRef.current.injectJavaScript(`
                                     L.Routing.control({
                                         waypoints: [
@@ -250,7 +251,8 @@ const AddRoutePage = ({ navigation, route }) => {
                                     }).addTo(mymap);`)
                                     setChosen(true)
                                     chose = true
-                                    setTimeout(()=>setMap(false),500)
+                                    setTimeout(()=>setMap(false),200)
+                                    mapRef2!=null?mapRef2?.current?.reload():null
                                     /*setRouteDescr("")
                                     setRouteName("")
                                     setRepeat(null)
@@ -262,7 +264,9 @@ const AddRoutePage = ({ navigation, route }) => {
                                 
                                 }
                             }
-                        } onLoad={()=>mapRef.current.injectJavaScript(`mymap.setView([${koor[0]},${koor[1]}],18)`)} androidHardwareAccelerationDisabled androidLayerType='software' renderToHardwareTextureAndroid={true} containerStyle={{ flex: 1, borderRadius:16 , minWidth: 200, minHeight: 200, margin:30, }}  source={{ html: isDark ? html_script : html_script_light }} />
+                        }  renderLoading={()=>(<View style={{flex:1, width:"100%", height:"100%", position:"absolute", alignItems:"center", justifyContent:"center", backgroundColor:isDark?"#1b1b1b":"#fff"}}>
+                        <ActivityIndicator color={"#e05003"}/>
+                    </View>)} onLoad={()=>mapRef.current.injectJavaScript(`mymap.setView([${koor[0]},${koor[1]}],18)`)} androidHardwareAccelerationDisabled androidLayerType='software' renderToHardwareTextureAndroid={true} containerStyle={{ flex: 1, borderRadius:16 , minWidth: 200, minHeight: 200, margin:30, }}  source={{ html: isDark ? html_script : html_script_light }} />
 
                 </View>
             </Modal>
@@ -276,8 +280,8 @@ const AddRoutePage = ({ navigation, route }) => {
                     setRouteName("")
                     setRepeatText("")
                     navigation.navigate("Routes" , {extraRoutes:listRoute})}}>
-                    <CaretLeft color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />
-                    <Text style={{ color: isDark ? "#fff" : "#000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
+                    <CaretLeft color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} size={26} />
+                    <Text style={{ color: isDark ? "#fff" : "#000000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{ flexDirection: "row", marginLeft: 20, marginTop: 60, position: 'absolute', right: 30 }} 
@@ -326,7 +330,7 @@ const AddRoutePage = ({ navigation, route }) => {
                             repeat:repeatText,
                             date:dateStr
                         })
-
+                        
                         navigation.navigate("Routes", {extraRoutes:[...listRoute, {
                             id:listRoute!=[] && listRoute.length>0 ?listRoute[listRoute.length-1].id + 1:0, 
                             x:first[0],
@@ -341,13 +345,13 @@ const AddRoutePage = ({ navigation, route }) => {
                         }]}) 
                     }
                 }>
-                    <Check color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />
+                    <Check color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} size={26} />
                 </TouchableOpacity>
             </View>
             <View style={{ flexDirection: "row", flexShrink: 1, marginLeft: 20, borderWidth: 2, marginRight: 30, marginTop: 32, borderRadius: 5, borderColor: isDark ? "#262626" : "d9d9d9" }}>
-                <TextInput ref={textRef} onChangeText={text=>{setRouteName(text);}} value={routeName} caretHidden placeholder={'Bir rota adı\nseçin...'} placeholderTextColor={isDark ? "#fff" : "#000"} style={{ fontSize: 36, fontWeight: "700" }} />
+                <TextInput ref={textRef} onChangeText={text=>{setRouteName(text);}} value={routeName} caretHidden placeholder={'Bir rota adı\nseçin...'} placeholderTextColor={isDark ? "#fff" : "#000000"} style={{ fontSize: 36, fontWeight: "700" }} />
                 <TouchableOpacity onPress={() => textRef.current.focus()} style={{ alignSelf: "center", position: "absolute", right: 10 }}>
-                    <PencilSimple size={32} color={isDark ? "#fff" : "000"} style={{}} />
+                    <PencilSimple size={32} color={isDark ? "#fff" : "#000000"} style={{}} />
                 </TouchableOpacity>
             </View>
             {chosen==false ?<TouchableOpacity onPress={()=> {
@@ -355,10 +359,12 @@ const AddRoutePage = ({ navigation, route }) => {
                     (pos)=>setKoor([pos.coords.latitude, pos.coords.longitude]));
                     setMap(true) 
                 }
-            } style={{ borderColor: isDark ? "#262626" : "#d9d9d9", borderWidth: 4, marginTop: 30, width: 350, height: 250, marginLeft: 20, marginRight: 32, borderRadius: 8, borderStyle: "dashed", alignItems: "center", justifyContent: "center" }}>
-                <MapTrifold size={55} color={isDark ? "#fff" : "#000"} />
-                <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000" }}>Bir konum seçin...</Text>
-            </TouchableOpacity>: <WebView ref={mapRef2} onLoad={()=>mapRef2.current.injectJavaScript(
+            } style={{ borderColor: isDark ? "#262626" : "#d9d9d9", borderWidth: 4, marginTop: 30, width: 350, height: 250, alignSelf:"center", borderRadius: 8, borderStyle: "dashed", alignItems: "center", justifyContent: "center" }}>
+                <MapTrifold size={55} color={isDark ? "#fff" : "#000000"} />
+                <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Bir konum seçin...</Text>
+            </TouchableOpacity>: <WebView  renderLoading={()=>(<View style={{flex:1, width:"100%", height:"100%", position:"absolute", alignItems:"center", justifyContent:"center", backgroundColor:isDark?"#1b1b1b":"#fff"}}>
+                            <ActivityIndicator color={"#e05003"}/>
+                        </View>)} ref={mapRef2} onLoad={()=>mapRef2.current.injectJavaScript(
                 `mymap.setView([${first[0]},${first[1]}],18);
                 L.Routing.control({
                     waypoints: [
@@ -376,16 +382,16 @@ const AddRoutePage = ({ navigation, route }) => {
                 `)} androidHardwareAccelerationDisabled androidLayerType='software' renderToHardwareTextureAndroid={true} containerStyle={{ flex: 1, borderRadius:16 , minWidth: 350, minHeight: 250, marginTop:15, alignSelf:"center",  }}  source={{ html: isDark ? html_script : html_script_light }} />}
             
             <View style={{ flexDirection: "row", flexShrink: 1, marginLeft: 20, marginTop: 20 }}>
-                <TextInput ref={text2Ref} onChangeText={(text)=>setRouteDescr(text)} value={routeDescr} caretHidden placeholder={'Bir açıklama yazın...'} placeholderTextColor={isDark ? "#fff" : "#000"} style={{ fontSize: 18, fontWeight: "400" }} />
+                <TextInput ref={text2Ref} onChangeText={(text)=>setRouteDescr(text)} value={routeDescr} caretHidden placeholder={'Bir açıklama yazın...'} placeholderTextColor={isDark ? "#fff" : "#000000"} style={{ fontSize: 18, fontWeight: "400" }} />
                 <TouchableOpacity onPress={() => text2Ref.current.focus()} style={{ alignSelf: "center", position: "absolute", right: 25 }}>
-                    <PencilSimple size={32} color={isDark ? "#fff" : "000"} style={{}} />
+                    <PencilSimple size={32} color={isDark ? "#fff" : "#000000"} style={{}} />
                 </TouchableOpacity>
             </View>
 
             <View style={{ flexDirection: "row", flexShrink: 1, marginLeft: 20, borderWidth: 2, marginRight: 30, marginTop: 20, borderRadius: 5, borderColor: isDark ? "#262626" : "d9d9d9", padding: 10 }}>
-                <NavigationArrow size={32} color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} />
+                <NavigationArrow size={32} color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} />
                 <View style={{ marginLeft: 10 }}>
-                    <Text style={{ fontSize: 18, fontWeight: "700", color: isDark ? "#fff" : "#000" }}>Konumu</Text>
+                    <Text style={{ fontSize: 18, fontWeight: "700", color: isDark ? "#fff" : "#000000" }}>Konumu</Text>
                     <Text style={{ color: isDark ? "#a8a8a8" : "#575757", fontSize: 18 }}>Bir konum girin...</Text>
                 </View>
                 <TouchableOpacity onPress={() => {
@@ -393,29 +399,29 @@ const AddRoutePage = ({ navigation, route }) => {
                     setMap(true)
                     }
                 } style={{ alignSelf: "center", position: "absolute", right: 10 }}>
-                    <PencilSimple size={32} color={isDark ? "#fff" : "000"} style={{}} />
+                    <PencilSimple size={32} color={isDark ? "#fff" : "#000000"} style={{}} />
                 </TouchableOpacity>
             </View>
 
             <View style={{ flexDirection: "row", flexShrink: 1, marginLeft: 20, borderWidth: 2, marginRight: 30, marginTop: 20, borderRadius: 5, borderColor: isDark ? "#262626" : "d9d9d9", padding: 10 }}>
-                <CalendarIcon size={32} color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} />
+                <CalendarIcon size={32} color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} />
                 <View style={{ marginLeft: 10 }}>
-                    <Text style={{ fontSize: 18, fontWeight: "700", color: isDark ? "#fff" : "#000" }}>Günler</Text>
+                    <Text style={{ fontSize: 18, fontWeight: "700", color: isDark ? "#fff" : "#000000" }}>Günler</Text>
                     <Text style={{ color: isDark ? "#a8a8a8" : "#575757", fontSize: 18 }}>{dateStr != "" ? dateStr : "Bir gün veya gün aralığı seçin..."}</Text>
                 </View>
                 <TouchableOpacity onPress={() => { setOpen(true) }} style={{ alignSelf: "center", position: "absolute", right: 10 }}>
-                    <PencilSimple size={32} color={isDark ? "#fff" : "000"} style={{}} />
+                    <PencilSimple size={32} color={isDark ? "#fff" : "#000000"} style={{}} />
                 </TouchableOpacity>
             </View>
 
             <View style={{ flexDirection: "row", flexShrink: 1, marginLeft: 20, borderWidth: 2, marginRight: 30, marginTop: 20, marginBottom: 32, borderRadius: 5, borderColor: isDark ? "#262626" : "d9d9d9", padding: 10 }}>
-                <Repeat size={32} color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} />
+                <Repeat size={32} color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} />
                 <View style={{ marginLeft: 10 }}>
-                    <Text style={{ fontSize: 18, fontWeight: "700", color: isDark ? "#fff" : "#000" }}>Tekrarlama sıklığı</Text>
+                    <Text style={{ fontSize: 18, fontWeight: "700", color: isDark ? "#fff" : "#000000" }}>Tekrarlama sıklığı</Text>
                     <Text style={{ color: isDark ? "#a8a8a8" : "#575757", fontSize: 18 }}>{repeatText != "" ? repeatText : "Bir tekrarlama sıklığı seçin..."}</Text>
                 </View>
                 <TouchableOpacity onPress={() => { setRepeat(true) }} style={{ alignSelf: "center", position: "absolute", right: 10 }}>
-                    <PencilSimple size={32} color={isDark ? "#fff" : "000"} style={{}} />
+                    <PencilSimple size={32} color={isDark ? "#fff" : "#000000"} style={{}} />
                 </TouchableOpacity>
             </View>
 

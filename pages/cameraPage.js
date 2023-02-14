@@ -114,10 +114,10 @@ const CameraPage = ({ navigation, route }) => {
                         <Spinner  animation='fade' visible={loading} textContent={"Fotoğraf yükleniyor"} overlayColor={"#000000aa"} textStyle={{fontSize:24, fontWeight:"300"}} />
 
             <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 60 }} onPress={() => navigation.goBack()}>
-                <CaretLeft color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />
-                <Text style={{ color: isDark ? "#fff" : "#000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
+                <CaretLeft color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} size={26} />
+                <Text style={{ color: isDark ? "#fff" : "#000000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
             </TouchableOpacity>
-            <Text style={{marginLeft:30, color:isDark?"#fff":"#000", fontSize:36, fontWeight:"700"}}>Fotoğraf Yükleme</Text>
+            <Text style={{marginLeft:30, color:isDark?"#fff":"#000000", fontSize:36, fontWeight:"700"}}>Fotoğraf Yükleme</Text>
             <View style={{alignItems:"center"}}>
                 <Camera 
                 
@@ -137,15 +137,15 @@ const CameraPage = ({ navigation, route }) => {
                             base64FotografGonder(response.assets[0].base64)
                         })
                     }} style={{justifyContent:"center", alignItems:"center",alignSelf:"center"}}>
-                        <ImageIcon size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000"} />
+                        <ImageIcon size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000000"} />
                     </TouchableOpacity>            
 
                     <TouchableOpacity onPress={()=>{setLoading(true);fotografGonder()}} style={{justifyContent:"center", alignItems:"center", width:32,height:32, alignSelf:"center", borderRadius:360,borderWidth:5,borderColor:"#e05003", padding:32, marginLeft:50 }}>
-                        <CamIcon size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000"} />
+                        <CamIcon size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000000"} />
                     </TouchableOpacity>            
 
                     <TouchableOpacity onPress={()=>setIsFront(!isFront)} style={{justifyContent:"center", alignItems:"center",alignSelf:"center", marginLeft:50}}>
-                        <CameraRotate size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000"} />
+                        <CameraRotate size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000000"} />
                     </TouchableOpacity>    
                 </View>        
             </View>

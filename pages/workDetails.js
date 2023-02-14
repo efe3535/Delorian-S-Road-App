@@ -72,22 +72,22 @@ const WorkDetails = ({ navigation, route }) => {
     return (
         <ScrollView overScrollMode='never' style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }} fadingEdgeLength={160}>
             <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 24 }} onPress={() => navigation.goBack()}>
-                <CaretLeft color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} size={26} />
-                <Text style={{ color: isDark ? "#fff" : "#000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
+                <CaretLeft color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} size={26} />
+                <Text style={{ color: isDark ? "#fff" : "#000000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
             </TouchableOpacity>
-            <Text style={{ marginLeft: 32, color: isDark ? "#fff" : "#000", marginTop: 15, fontSize: 19, marginRight:16 }} adjustsFontSizeToFit>{item.descr}</Text>
+            <Text style={{ marginLeft: 32, color: isDark ? "#fff" : "#000000", marginTop: 15, fontSize: 19, marginRight:16 }} adjustsFontSizeToFit>{item.descr}</Text>
                             <WebView androidHardwareAccelerationDisabled androidLayerType='software' renderToHardwareTextureAndroid={true}  onLoad={() => {mapRef.current.injectJavaScript(`   var marker = L.marker([${item.koorX}, ${item.koorY}],{icon:greenIcon}).addTo(mymap)
                                                         ;    mymap.setView([${item.koorX}, ${item.koorY}], 18) ; true
                         `)}} containerStyle={{ flex: 1, borderRadius:16 , minWidth: 200, minHeight: 200, margin:30, }} ref={mapRef} source={{ html: isDark ? html_script : html_script_light }} />
 
-            <Text style={{ fontSize: 18, marginLeft: 32, marginRight: 32, color: isDark ? "#fff" : "#000" }}>{item.reason}</Text>
+            <Text style={{ fontSize: 18, marginLeft: 32, marginRight: 32, color: isDark ? "#fff" : "#000000" }}>{item.reason}</Text>
             
             <View style={{ marginLeft: 32, flexDirection: "row", marginTop: 20 }}>
                 <Svg width="43" height="37" viewBox="0 0 43 37" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ alignSelf: "center" }}>
                     <Path d="M3.67852 34.4123L21.5 4.57167L39.3215 34.4123H3.67852Z" fill={item.ended == 1 ? "#43f680" : "#FAD03C"} stroke="black" strokeWidth={isDark?"0":"4.17543"} />
                 </Svg>
                                <View style={{ marginLeft: 18 }}>
-                    <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000" }}>Durum</Text>
+                    <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000000" }}>Durum</Text>
                     <Text style={{ fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>{item.ended==1?"Yol çalışması bitti":"Yol çalışması sürüyor"}</Text>
                 </View>
             </View>
@@ -95,15 +95,15 @@ const WorkDetails = ({ navigation, route }) => {
             <View style={{ marginLeft: 32, flexDirection: "row", marginTop: 20 }}>
                 <NavigationArrow size={36} color={isDark ? "white" : "black"} style={{ alignSelf: "center" }} />
                 <View style={{ marginLeft: 18, flexShrink: 1 }}>
-                    <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000" }}>Konumu</Text>
+                    <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000000" }}>Konumu</Text>
                     <Text style={{ fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>{item.descr}</Text>
                 </View>
             </View>
 
             <View style={{ marginLeft: 32, flexDirection: "row", marginTop: 20 }}>
-                <Calendar size={36} color={isDark?"#fff":"#000"} style={{ alignSelf: "center" }} />
+                <Calendar size={36} color={isDark?"#fff":"#000000"} style={{ alignSelf: "center" }} />
                 <View style={{ marginLeft: 18 }}>
-                    <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000" }}>Tarihler</Text>
+                    <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000000" }}>Tarihler</Text>
                     <Text style={{ fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>{(new Date(parseInt(item.timestamp)).getDate() + " " + (monthNames[new Date(parseInt(item.timestamp)).getMonth()]) + " " + days[new Date(parseInt(item.timestamp)).getDay()])} {item.ended!=1?"- Devam ediyor":""}</Text>
                 </View>
             </View>
@@ -125,8 +125,8 @@ const WorkDetails = ({ navigation, route }) => {
                                 () => {
                                     (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.005) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.005) && item.ended != 1 ? navigation.navigate("AddPhoto", { id: item.id }) : null
                                 }}>
-                            <PlusCircle size={32} color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} />
-                            <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.005) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.005) && item.ended != 1 ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
+                            <PlusCircle size={32} color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} />
+                            <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.005) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.005) && item.ended != 1 ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
                         </TouchableOpacity>
                     </View>
                     : <TouchableOpacity style={{ marginLeft: 30, marginTop: 15, flexDirection: "row" }} onPress={
@@ -134,8 +134,8 @@ const WorkDetails = ({ navigation, route }) => {
                             console.log(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)));
                             (Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.005) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.005) && item.ended != 1 ? navigation.navigate("AddPhoto", { id: item.id }) : null
                         }}>
-                        <PlusCircle size={32} color={isDark ? "#fff" : "#000"} style={{ alignSelf: "center" }} />
-                        <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.005) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.005) && item.ended != 1 ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
+                        <PlusCircle size={32} color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} />
+                        <Text style={{ fontWeight: "500", color: isDark ? "#fff" : "#000000", alignSelf: "center", marginLeft: 15 }}>{(Math.abs(parseFloat(koor.x) - parseFloat(item.koorX)) < 0.005) && (Math.abs(parseFloat(koor.y) - parseFloat(item.koorY)) < 0.005) && item.ended != 1 ? "Fotoğraf ekle" : "Fotoğraf eklenemez"}</Text>
                     </TouchableOpacity>
             }
         </ScrollView>

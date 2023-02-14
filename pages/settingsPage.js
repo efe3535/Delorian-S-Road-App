@@ -28,7 +28,7 @@ const SettingsPage = ({ navigation, route }) => {
             <View style={{ width: "100%", height: 300, padding: 15, marginLeft: 30, marginTop: 30, flexDirection: "row" }}>
                 {(props.leftComponent)}
                 <View style={{ marginLeft: 18 }}>
-                    <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000" }}>{props.header}</Text>
+                    <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>{props.header}</Text>
                     <Text style={{ fontWeight: "400", color: isDark ? "#a8a8a8" : "#575757" }}>{props.description}</Text>
                 </View>
             </View>
@@ -42,7 +42,7 @@ const SettingsPage = ({ navigation, route }) => {
                     <View style={{ width: "100%", height: 60, padding: 15, marginLeft: 30, marginTop: 30, flexDirection: "row" }}>
                         <Image source={require("../pp.png")} style={{ width: 37, height: 37 }} />
                         <View style={{ marginLeft: 18 }}>
-                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000" }}>test</Text>
+                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>test</Text>
                             <Text style={{ fontWeight: "400", color: isDark ? "#a8a8a8" : "#575757" }}>S-Road Kullanıcısı</Text>
                         </View>
                     </View>
@@ -50,9 +50,9 @@ const SettingsPage = ({ navigation, route }) => {
 
                 <TouchableOpacity>
                     <View style={{ width: "100%", height: 60, padding: 15, marginLeft: 30, marginTop: 30, flexDirection: "row" }}>
-                        <Faders size={43} color={isDark ? "#fff" : "#000"} />
+                        <Faders size={43} color={isDark ? "#fff" : "#000000"} />
                         <View style={{ marginLeft: 18 }}>
-                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000" }}>Tercihler</Text>
+                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Tercihler</Text>
                             <Text style={{ fontWeight: "400", color: isDark ? "#a8a8a8" : "#575757" }}>Ölçü birimi</Text>
                         </View>
                     </View>
@@ -60,9 +60,9 @@ const SettingsPage = ({ navigation, route }) => {
 
                 <TouchableOpacity>
                     <View style={{ width: "100%", height: 60, padding: 15, marginLeft: 30, marginTop: 30, flexDirection: "row" }}>
-                        <Bell size={43} color={isDark ? "#fff" : "#000"} />
+                        <Bell size={43} color={isDark ? "#fff" : "#000000"} />
                         <View style={{ marginLeft: 18 }}>
-                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000" }}>Bildirimler</Text>
+                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Bildirimler</Text>
                             <Text style={{ fontWeight: "400", color: isDark ? "#a8a8a8" : "#575757" }}>Bildirimler</Text>
                         </View>
                     </View>
@@ -70,9 +70,9 @@ const SettingsPage = ({ navigation, route }) => {
 
                 <TouchableOpacity>
                     <View style={{ width: "100%", height: 60, padding: 15, marginLeft: 30, marginTop: 30, flexDirection: "row" }}>
-                        <NavigationArrow size={43} color={isDark ? "#fff" : "#000"} />
+                        <NavigationArrow size={43} color={isDark ? "#fff" : "#000000"} />
                         <View style={{ marginLeft: 18 }}>
-                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000" }}>Konum</Text>
+                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Konum</Text>
                             <Text style={{ fontWeight: "400", color: isDark ? "#a8a8a8" : "#575757" }}>Yenileme sıklığı</Text>
                         </View>
                     </View>
@@ -80,27 +80,27 @@ const SettingsPage = ({ navigation, route }) => {
 
                 <TouchableOpacity>
                     <View style={{ width: "100%", height: 60, padding: 15, marginLeft: 30, marginTop: 30, flexDirection: "row" }}>
-                        <Envelope size={43} color={isDark ? "#fff" : "#000"} />
+                        <Envelope size={43} color={isDark ? "#fff" : "#000000"} />
                         <View style={{ marginLeft: 18, justifyContent:"center", alignItems:"center", paddingTop:10 }}>
-                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000" }}>Bize Ulaşın</Text>
+                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Bize Ulaşın</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity>
                     <View style={{ width: "100%", height: 60, padding: 15, marginLeft: 30, marginTop: 30, flexDirection: "row" }}>
-                        <Lifebuoy size={43} color={isDark ? "#fff" : "#000"} />
+                        <Lifebuoy size={43} color={isDark ? "#fff" : "#000000"} />
                         <View style={{ marginLeft: 18, alignItems:"center", justifyContent:"center", marginTop:10 }}>
-                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000",textAlignVertical:"center" }}>Yardım Merkezi</Text>
+                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000",textAlignVertical:"center" }}>Yardım Merkezi</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity>
                     <View style={{ width: "100%", height: 60, padding: 15, marginLeft: 30, marginTop: 30, flexDirection: "row" }}>
-                        <SignOut size={43} color={isDark ? "#fff" : "#000"} />
+                        <SignOut size={43} color={isDark ? "#fff" : "#000000"} />
                         <View style={{ marginLeft: 18, alignSelf:"center" }}>
-                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000",paddingTop:10 }}>Çıkış yap</Text>
+                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000",paddingTop:10 }}>Çıkış yap</Text>
                         </View>
                     </View>
                 </TouchableOpacity>

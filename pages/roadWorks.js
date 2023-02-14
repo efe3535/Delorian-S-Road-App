@@ -171,15 +171,15 @@ const RoadPage = ({ navigation, route }) => {
                         var latlng = L.latLng(${item.koorX},${item.koorY});
                         var popup = L.popup()
                         .setLatLng(latlng)
-                        .setContent('<p style="color:${isDark ? "#d9d9d9" : "#000"}">${item.descr} konumunda yol çalışması</p>Neden: ${item.reason}</p>')
+                        .setContent('<p style="color:${isDark ? "#d9d9d9" : "#000000"}">${item.descr} konumunda yol çalışması</p>Neden: ${item.reason}</p>')
                         .openOn(mymap);
                         `)
                         }}>
-                            <Text style={{ color: isDark ? "#fff" : "#000", fontWeight: "600" }}>{item.descr?.toString()}</Text>
-                            <Text style={{ color: isDark ? "#fff" : "#000", fontWeight: "400" }}>{item.distance} km uzaklıkta</Text>
+                            <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "600" }}>{item.descr?.toString()}</Text>
+                            <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "400" }}>{item.distance} km uzaklıkta</Text>
                         </TouchableOpacity>
                     </View>
-                    <CaretRight size={38} color={isDark ? "#fff" : "#000"} style={{ alignSelf: 'center', justifyContent: "center" }} />
+                    <CaretRight size={38} color={isDark ? "#fff" : "#000000"} style={{ alignSelf: 'center', justifyContent: "center" }} />
                 </View>
             )
         }
@@ -210,14 +210,14 @@ const RoadPage = ({ navigation, route }) => {
                     handleIndicatorStyle={{ backgroundColor: isDark ? "#262626" : "#d9d9d9", width: 72, height:6 }}
                 >
                     <View style={{ alignItems: "center", flexDirection: "row", flexShrink: 1 }}>
-                        <Calendar size={24} color={isDark ? "#fff" : "#000"} style={{ marginLeft: 30, alignSelf: "center", marginTop: 12 }} />
+                        <Calendar size={24} color={isDark ? "#fff" : "#000000"} style={{ marginLeft: 30, alignSelf: "center", marginTop: 12 }} />
                         <DropDownPicker
                             theme='DARK'
                             style={{ zIndex: 2, marginTop: 15, width: 100, backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0 }}
                             containerStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0, zIndex: 2 }}
                             badgeStyle={{ borderWidth: 0 }}
-                            textStyle={{ color: isDark ? "#fff" : "#000", }}
-                            labelStyle={{ color: isDark ? "#fff" : "#000" }}
+                            textStyle={{ color: isDark ? "#fff" : "#000000", }}
+                            labelStyle={{ color: isDark ? "#fff" : "#000000" }}
                             showArrowIcon={true}
                             placeholder={value}
                             open={picker}
@@ -252,10 +252,10 @@ const RoadPage = ({ navigation, route }) => {
                             listChildContainerStyle={{ borderWidth: 0, }}
                             itemSeparator
                             itemSeparatorStyle={{ backgroundColor: "#1d1d1d", height: 1 }}
-                            dropDownContainerStyle={{ borderWidth: 0, borderRadius: 6, shadowOpacity: 1, shadowColor: "#000", shadowRadius: 16, elevation: 5, width: "90%", alignSelf: "center" }}
+                            dropDownContainerStyle={{ borderWidth: 0, borderRadius: 6, shadowOpacity: 1, shadowColor: "#000000", shadowRadius: 16, elevation: 5, width: "90%", alignSelf: "center" }}
                             setOpen={setPicker}
                             listItemContainerStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0, }}
-                            listItemLabelStyle={{ color: isDark ? "#fff" : "#000" }}
+                            listItemLabelStyle={{ color: isDark ? "#fff" : "#000000" }}
                             value={value}
                             setValue={setValue}
                             items={items}
@@ -264,13 +264,13 @@ const RoadPage = ({ navigation, route }) => {
                     </View>
 
                     <View style={{borderRadius:25, borderWidth:2, borderColor:isDark?"#262626":"#d9d9d9", width:"90%", alignSelf:"center", flexDirection:"row"}}>
-                        <MagnifyingGlass size={26} style={{alignSelf:"center", marginLeft:13}} color={isDark?"#fff":"#000"} />
+                        <MagnifyingGlass size={26} style={{alignSelf:"center", marginLeft:13}} color={isDark?"#fff":"#000000"} />
                         <TextInput value={searchValue} onChangeText={
                             (text)=>{
                                 setSearchValue(text)
                                 setCalismalar(fullCalismalar.filter(item=>item.descr.toLocaleLowerCase()?.includes(text.toLocaleLowerCase())))
                             }
-                        } placeholder='Yol veya bölge adı aratın...' placeholderTextColor={isDark?"#fff":"#000"} style={{paddingLeft:13}}/>
+                        } placeholder='Yol veya bölge adı aratın...' placeholderTextColor={isDark?"#fff":"#000000"} style={{paddingLeft:13}}/>
                     </View>
                     
                     <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignItems: "center" }}>
@@ -280,7 +280,7 @@ const RoadPage = ({ navigation, route }) => {
                             fadingEdgeLength={60}
                             renderItem={renderItem}
                             keyExtractor={item => item["id"]}
-                            refreshControl={<RefreshControl progressBackgroundColor={isDark ? "#1d1d1d" : "#eee"} colors={[isDark ? "#fff" : "#000"]} refreshing={refreshing} onRefresh={markKoor}></RefreshControl>}
+                            refreshControl={<RefreshControl progressBackgroundColor={isDark ? "#1d1d1d" : "#eee"} colors={[isDark ? "#fff" : "#000000"]} refreshing={refreshing} onRefresh={markKoor}></RefreshControl>}
                             onRefresh={markKoor}
                             refreshing={refreshing}
                         />

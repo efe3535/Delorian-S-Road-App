@@ -250,8 +250,8 @@ const NotificationsPage = ({ navigation, route }) => {
                     </Svg>
 
 
-                    <Text style={{ color: isDark ? "#fff" : "#000", fontWeight: "600", flexShrink: 1, marginLeft: 10 }}>{item.descr?.toString()} konumundaki yol çalışması {item.ended ? "sona erdi." : "devam ediyor."}</Text>
-                    <CaretRight size={38} color={isDark ? "#fff" : "#000"} style={{ marginLeft: 10, alignSelf: "center", marginRight: 10 }} />
+                    <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "600", flexShrink: 1, marginLeft: 10 }}>{item.descr?.toString()} konumundaki yol çalışması {item.ended ? "sona erdi." : "devam ediyor."}</Text>
+                    <CaretRight size={38} color={isDark ? "#fff" : "#000000"} style={{ marginLeft: 10, alignSelf: "center", marginRight: 10 }} />
 
                 </TouchableOpacity>
             </View>
@@ -262,7 +262,7 @@ const NotificationsPage = ({ navigation, route }) => {
         <SafeAreaView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }}>
             <Spinner animation='fade' visible={loading} textContent={"Yükleniyor"} overlayColor={"#000000aa"} textStyle={{ fontSize: 24, fontWeight: "300" }} />
 
-            <Text style={{ color: isDark ? "#fff" : "#000", fontWeight: "700", fontSize: 36, marginTop: 60, marginLeft: 30 }}>Bildirimler</Text>
+            <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "700", fontSize: 36, marginTop: 60, marginLeft: 30 }}>Bildirimler</Text>
             <SectionList
                 refreshing={refreshing}
                 onRefresh={refreshList}
@@ -274,8 +274,8 @@ const NotificationsPage = ({ navigation, route }) => {
             <TouchableOpacity style={{ flexDirection: "row", flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignSelf: "flex-end", borderRadius: 56, borderWidth: 2, borderColor: isDark ? "#262626" : "#d9d9d9", padding: 16, position: "absolute", alignItems: "center", alignContent: "center", justifyContent: "center", marginRight: 28, marginBottom: 12, bottom: 0, right: 0 }}
                 onPress={() => { setCalismalar([]) }}
             >
-                <ArrowRight size={36} color={isDark ? "#fff" : "#000"} />
-                <Text style={{ marginLeft: 8, alignSelf: "center", justifyContent: "center", textAlign: "center", textAlignVertical: "center", fontSize: 18, color: isDark ? "#FFF" : "#000" }}>Tümünü sil</Text>
+                <ArrowRight size={36} color={isDark ? "#fff" : "#000000"} />
+                <Text style={{ marginLeft: 8, alignSelf: "center", justifyContent: "center", textAlign: "center", textAlignVertical: "center", fontSize: 18, color: isDark ? "#FFF" : "#000000" }}>Tümünü sil</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );

@@ -16,7 +16,8 @@ import {
     Alert,
     ScrollView,
     RefreshControl,
-    Platform
+    Platform,
+    ActivityIndicator
 } from 'react-native';
 
 
@@ -120,6 +121,9 @@ const HomePage = ({ navigation, route }) => {
     useFocusEffect(useCallback(()=>{
         routes = displayRoutes
         getItems()
+        for (let map in cellRefs.current) {
+            cellRefs.current[map].reload()
+        }
     },[]))
 
     const renderItemRoutes = ({ item, index }) => {
@@ -151,6 +155,9 @@ const HomePage = ({ navigation, route }) => {
                         ref={ref => {
                             cellRefs.current[item.id] = ref;
                         }}
+                        renderLoading={()=>(<View style={{flex:1, width:"100%", height:"100%", position:"absolute", alignItems:"center", justifyContent:"center", backgroundColor:isDark?"#1b1b1b":"#fff"}}>
+                            <ActivityIndicator color={"#e05003"}/>
+                        </View>)}
                         source={{ html: isDark ? html_script : html_script_light }}
                         onLoad={() => {
                             cellRefs.current[item.id].injectJavaScript(`
@@ -176,10 +183,10 @@ const HomePage = ({ navigation, route }) => {
                         }}
                     />
                     <View style={{marginLeft:15, marginBottom:15 }}>
-                        <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000" }}>Rota</Text>
+                        <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Rota</Text>
                         <View style={{ flexDirection: "row", flexShrink:1, marginTop:8 }}>
-                            <CalendarBlank size={24} color={isDark ? "#fff" : "#000"} />
-                            <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000" , flexShrink:1}}>{item.repeat}</Text>
+                            <CalendarBlank size={24} color={isDark ? "#fff" : "#000000"} />
+                            <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000000" , flexShrink:1}}>{item.repeat}</Text>
                         </View>
                        
                     </View>
@@ -325,11 +332,11 @@ const HomePage = ({ navigation, route }) => {
                             }
                         }
                     }}>
-                        <Text style={{ color: isDark ? "#fff" : "#000", fontWeight: "600" }}>{item.descr?.toString()} konumunda yol çalışması</Text>
-                        <Text style={{ color: isDark ? "#fff" : "#000", fontWeight: "400" }}>{item.reason}</Text>
+                        <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "600" }}>{item.descr?.toString()} konumunda yol çalışması</Text>
+                        <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "400" }}>{item.reason}</Text>
                     </TouchableOpacity>
                 </View>
-                <CaretRight size={38} color={isDark ? "#fff" : "#000"} style={{ alignSelf: 'center', justifyContent: "center" }} />
+                <CaretRight size={38} color={isDark ? "#fff" : "#000000"} style={{ alignSelf: 'center', justifyContent: "center" }} />
             </View>
         )
     }
@@ -359,10 +366,10 @@ const HomePage = ({ navigation, route }) => {
             </View>
 
             <View style={{ flexDirection: "row", }}>
-                <NavigationArrow style={{ marginLeft: 32, marginTop: 15 }} size={48} color={isDark ? "#fff" : "#000"} />
+                <NavigationArrow style={{ marginLeft: 32, marginTop: 15 }} size={48} color={isDark ? "#fff" : "#000000"} />
                 <View style={{ flexDirection: "column", justifyContent: "center", marginLeft: 20, marginTop: 15, flexShrink: 1 }}>
-                    <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000", fontWeight: "600" }}>Konumunuz</Text>
-                    <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000", fontWeight: "300", flexShrink: 1, marginRight: 30 }}>{location?.toString()}</Text>
+                    <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000000", fontWeight: "600" }}>Konumunuz</Text>
+                    <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000000", fontWeight: "300", flexShrink: 1, marginRight: 30 }}>{location?.toString()}</Text>
                 </View>
             </View>
             <Text style={{ marginLeft: 30, marginTop: 30, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757", display:displayRoutes.length!="0"?null:'none' }}>ROTALARINIZ</Text>
@@ -379,7 +386,7 @@ const HomePage = ({ navigation, route }) => {
                 data={calismalar}
                 renderItem={renderItem}
                 keyExtractor={item => item["id"]}
-                refreshControl={<RefreshControl progressBackgroundColor={isDark ? "#1d1d1d" : "#eee"} colors={[isDark ? "#fff" : "#000"]} refreshing={refreshing} onRefresh={markKoor}></RefreshControl>}
+                refreshControl={<RefreshControl progressBackgroundColor={isDark ? "#1d1d1d" : "#eee"} colors={[isDark ? "#fff" : "#000000"]} refreshing={refreshing} onRefresh={markKoor}></RefreshControl>}
                 onRefresh={markKoor}
                 refreshing={refreshing}
 
