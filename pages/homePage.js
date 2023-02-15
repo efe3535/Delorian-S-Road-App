@@ -39,7 +39,6 @@ PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION,{
 const ip = require("../ip").default
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import MQTT, { IMqttClient } from "sp-react-native-mqtt";
 import html_script_light from '../html_script_light';
 import {request, PERMISSIONS} from 'react-native-permissions';
 
@@ -119,8 +118,9 @@ const HomePage = ({ navigation, route }) => {
     const cellRefs = useRef({})
 
     const getToken = async () => {
+        await messaging().registerDeviceForRemoteMessages()
         const token = await messaging().getToken()
-        console.log(token);
+        console.log("token:",token);
     }
 
     const getItems = async () => {

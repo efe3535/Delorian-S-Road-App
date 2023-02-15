@@ -16,7 +16,7 @@ import {
     FlatList,
     Appearance,
 } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { WebView } from "react-native-webview"
 const ip = require("../ip").default
@@ -37,13 +37,49 @@ import html_script_light from '../html_script_light';
 import BottomSheet, { BottomSheetView, BottomSheetModalProvider, BottomSheetFlatList } from "@gorhom/bottom-sheet"
 
 import { GestureHandlerRootView, TextInput } from 'react-native-gesture-handler';
-import MQTT, { IMqttClient } from 'sp-react-native-mqtt';
 import { useFocusEffect } from '@react-navigation/native';
 
 const isDark = Appearance.getColorScheme() == "dark"
 
-var MQTTClient: IMqttClient
 
+import init from "react_native_mqtt"
+
+
+init({
+    size: 10000,
+    storageBackend: AsyncStorage,
+    defaultExpires: 1000 * 3600 * 24,
+    enableCache: false,
+    reconnect: true,
+    sync: {
+    }
+});
+
+const client = new Paho.MQTT.Client(ip, 1923, 'uname_notif'+ (Math.random() * 10000).toString());
+
+function onConnect() {
+    console.log("onConnect");
+    client.subscribe("esp32/test")
+    client.subscribe('esp32/coordinates');
+    client.subscribe('esp32/responsecalismalar');
+    client.subscribe('esp32/responsephotobyid');
+
+    client.send("esp32/calismalar", "GET", 0, false)
+}
+
+function onConnectionLost(responseObject) {
+    if (responseObject.errorCode !== 0) {
+        console.log("onConnectionLost:" + responseObject.errorMessage);
+    }
+    client.connect({ onSuccess: onConnect, onFailure: fail })
+}
+
+function fail(err) {
+    console.log(err);
+}
+
+client.connect({ onSuccess: onConnect, onFailure: fail });
+client.onConnectionLost = onConnectionLost;
 
 const RoadPage = ({ navigation, route }) => {
 
@@ -87,62 +123,54 @@ const RoadPage = ({ navigation, route }) => {
         },
         []
     )
+    
+    const onMessageArrived = (msg) => {
+        if (msg.topic == "esp32/responsecalismalar" && JSON.parse(msg.payloadString) != [] && once == false) {
+            setOnce(true)
+            setCalismalar([])
+            console.log(msg.payloadString);
+            for (let calisma in JSON.parse(msg.payloadString)["calismalar"]) {
+                
+                console.log("coords",location);
+                setCalismalar(
+                    calismalar => [...calismalar,
+                    {
+                        id: JSON.parse(msg.payloadString)["calismalar"][calisma][0],
+                        koorX: JSON.parse(msg.payloadString)["calismalar"][calisma][1],
+                        koorY: JSON.parse(msg.payloadString)["calismalar"][calisma][2],
+                        reason: JSON.parse(msg.payloadString)["calismalar"][calisma][3],
+                        descr: JSON.parse(msg.payloadString)["calismalar"][calisma][4],
+                        timestamp: JSON.parse(msg.payloadString)["calismalar"][calisma][5],
+                        ended: JSON.parse(msg.payloadString)["calismalar"][calisma][6],
+                        hasPhoto: JSON.parse(msg.payloadString)["calismalar"][calisma][7],
+                        distance: getPreciseDistance({ latitude: location[0], longitude: location[1] }, { latitude: JSON.parse(msg.payloadString)["calismalar"][calisma][1], longitude: JSON.parse(msg.payloadString)["calismalar"][calisma][2] }) / 1000
+                    }]
+                )
+                setFullCalismalar(
+                    fullCalismalar => [...fullCalismalar,
+                    {
+                        id: JSON.parse(msg.payloadString)["calismalar"][calisma][0],
+                        koorX: JSON.parse(msg.payloadString)["calismalar"][calisma][1],
+                        koorY: JSON.parse(msg.payloadString)["calismalar"][calisma][2],
+                        reason: JSON.parse(msg.payloadString)["calismalar"][calisma][3],
+                        descr: JSON.parse(msg.payloadString)["calismalar"][calisma][4],
+                        timestamp: JSON.parse(msg.payloadString)["calismalar"][calisma][5],
+                        ended: JSON.parse(msg.payloadString)["calismalar"][calisma][6],
+                        hasPhoto: JSON.parse(msg.payloadString)["calismalar"][calisma][7],
+                        distance: getPreciseDistance({ latitude: location[0], longitude: location[1] }, { latitude: JSON.parse(msg.payloadString)["calismalar"][calisma][1], longitude: JSON.parse(msg.payloadString)["calismalar"][calisma][2] }) / 1000
+                    }]
+                )
+                console.log(calismalar);
+            }
+        }
+    }
+    client.onMessageArrived = onMessageArrived
 
     useFocusEffect(useCallback(() => {
-        MQTT.createClient({
-            uri: `mqtt://${ip}:1883`,
-            clientId: Platform.OS == "android" ? 'teknofest' + Platform.OS : "teknofest"
-        }).then((client) => {
-            client.on('message', function (msg) {
-                if (msg.topic == "esp32/responsecalismalar" && JSON.parse(msg.data) != [] && once == false) {
-                    setOnce(true)
-                    setCalismalar([])
-                    console.log(msg.data);
-                    for (let calisma in JSON.parse(msg.data)["calismalar"]) {
-                        setCalismalar(
-                            calismalar => [...calismalar,
-                            {
-                                id: JSON.parse(msg.data)["calismalar"][calisma][0],
-                                koorX: JSON.parse(msg.data)["calismalar"][calisma][1],
-                                koorY: JSON.parse(msg.data)["calismalar"][calisma][2],
-                                reason: JSON.parse(msg.data)["calismalar"][calisma][3],
-                                descr: JSON.parse(msg.data)["calismalar"][calisma][4],
-                                timestamp: JSON.parse(msg.data)["calismalar"][calisma][5],
-                                ended: JSON.parse(msg.data)["calismalar"][calisma][6],
-                                hasPhoto: JSON.parse(msg.data)["calismalar"][calisma][7],
-                                distance: getPreciseDistance({ latitude: coords[0], longitude: coords[1] }, { latitude: JSON.parse(msg.data)["calismalar"][calisma][1], longitude: JSON.parse(msg.data)["calismalar"][calisma][2] }) / 1000
-                            }]
-                        )
-                        setFullCalismalar(
-                            fullCalismalar => [...fullCalismalar,
-                            {
-                                id: JSON.parse(msg.data)["calismalar"][calisma][0],
-                                koorX: JSON.parse(msg.data)["calismalar"][calisma][1],
-                                koorY: JSON.parse(msg.data)["calismalar"][calisma][2],
-                                reason: JSON.parse(msg.data)["calismalar"][calisma][3],
-                                descr: JSON.parse(msg.data)["calismalar"][calisma][4],
-                                timestamp: JSON.parse(msg.data)["calismalar"][calisma][5],
-                                ended: JSON.parse(msg.data)["calismalar"][calisma][6],
-                                hasPhoto: JSON.parse(msg.data)["calismalar"][calisma][7],
-                                distance: getPreciseDistance({ latitude: coords[0], longitude: coords[1] }, { latitude: JSON.parse(msg.data)["calismalar"][calisma][1], longitude: JSON.parse(msg.data)["calismalar"][calisma][2] }) / 1000
-                            }]
-                        )
-                        console.log(calismalar);
-                    }
-                }
-            });
+           
+        client.send("esp32/calismalar", "GET", 0, false)
 
-            client.on('connect', function () {
-                //console.log('connected');
-                client.subscribe('esp32/coordinates', 0);
-
-                client.subscribe('esp32/responsecalismalar', 0);
-                client.publish("esp32/calismalar", "GET", 0, true)
-                MQTTClient = client;
-
-            });
-            client.connect();
-        })
+        
     }, []))
 
 
@@ -152,9 +180,8 @@ const RoadPage = ({ navigation, route }) => {
 
     const markKoor = () => {
         setCalismalar([])
-        MQTTClient.connect()
         setOnce(false)
-        MQTTClient.publish("esp32/calismalar", "GET", 0, true)
+        client.send("esp32/calismalar", "GET", 0, false)
         setRefreshing(false)
     }
 

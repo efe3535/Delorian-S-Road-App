@@ -253,11 +253,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    //implementation ':sp-react-native-mqtt'
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+" // From node_modules
-    implementation project(':sp-react-native-mqtt')
+
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation platform('com.google.firebase:firebase-bom:31.2.1')

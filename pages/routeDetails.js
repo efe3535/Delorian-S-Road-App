@@ -27,7 +27,6 @@ const isDark = Appearance.getColorScheme() == "dark"
 import Geolocation from '@react-native-community/geolocation';
 Geolocation.requestAuthorization()
 
-import MQTT, { IMqttClient } from "sp-react-native-mqtt"
 
 const ip = require("../ip").default
 

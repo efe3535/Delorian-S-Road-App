@@ -19,16 +19,53 @@ import {
 import { IOSPermission } from 'react-native-permissions';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { useIsFocused } from '@react-navigation/native';
-import MQTT from "sp-react-native-mqtt";
 import Spinner from "react-native-loading-spinner-overlay"
 const ip = require("../ip").default
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { CaretLeft, Camera as CamIcon, CameraRotate, Image as ImageIcon } from 'phosphor-react-native';
 
 import RNFS from "react-native-fs"
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const isDark = Appearance.getColorScheme() == "dark"
+import init from "react_native_mqtt"
 
+
+init({
+    size: 10000,
+    storageBackend: AsyncStorage,
+    defaultExpires: 1000 * 3600 * 24,
+    enableCache: false,
+    reconnect: true,
+    sync: {
+    }
+});
+
+const client = new Paho.MQTT.Client(ip, 1923, 'uname' + (Math.random() * 10000).toString());
+let connected;
+function onConnect() {
+    console.log("onConnect");
+    console.log("ISCONNECTED\t",client.isConnected());
+    connected = true
+    client.subscribe("esp32/test")
+    client.subscribe('esp32/coordinates');
+    client.subscribe('esp32/responsecalismalar');
+    client.subscribe('esp32/responsephotobyid');
+}
+
+function onConnectionLost(responseObject) {
+    if (responseObject.errorCode !== 0) {
+        console.log("onConnectionLost:" + responseObject.errorMessage);
+        client.connect({ onSuccess: onConnect, onFailure: fail })
+    }
+}
+
+
+function fail(err) {
+    console.log(err);
+}
+
+client.onConnectionLost = onConnectionLost;
+client.connect({ onSuccess: onConnect, onFailure: fail });
 const CameraPage = ({ navigation, route }) => {
     
     if(Platform.OS == "android") {
@@ -63,49 +100,27 @@ const CameraPage = ({ navigation, route }) => {
     const fotografGonder = async () => {
         //  console.log(camRef);
         
-        const photo = await camRef.current.takePhoto(
+        const photo = await camRef.current.takeSnapshot(
             {
-            
+                quality: 85,
+                skipMetadata: true
             }
         )
         
         console.log(photo["path"])
         await readFile("file://" + photo["path"], "base64").then((str)=>{
-        //    console.log(str)
-        const client = MQTT.createClient({
-            uri: `mqtt://${ip}:1883`,
-            clientId: Platform.OS == "android" ? 'teknofest' + Platform.OS : "teknofest"
-        }).then(function (client) {
-            client.on('connect', function () {
-                client.subscribe("esp32/sendphoto",0);
-                client.publish("esp32/sendphoto",route.params["id"] + "," + str,0,false);
+            console.log(str)
+                client.send("esp32/sendphoto",route.params["id"] + "," + str,0,false);
                 console.log("done");
                 setLoading(false)
-            });
-            client.connect();
-        }).catch(function (err) {
-            console.log(err);
-        });
-        
     })
         
     }
 
     const base64FotografGonder = (data) => {
-        const client = MQTT.createClient({
-            uri: `mqtt://${ip}:1883`,
-            clientId: Platform.OS == "android" ? 'teknofest' + Platform.OS : "teknofest"
-        }).then(function (client) {
-            client.on('connect', function () {
-                client.subscribe("esp32/sendphoto",0);
-                client.publish("esp32/sendphoto",route.params["id"] + "," + data,0,false);
+                client.send("esp32/sendphoto",route.params["id"] + "," + data,0,false);
                 console.log("done");
                 setLoading(false)
-            });
-            client.connect();
-        }).catch(function (err) {
-            console.log(err);
-        });
     }
 
     if (device == null) return <Text>LOADING</Text>
@@ -140,7 +155,7 @@ const CameraPage = ({ navigation, route }) => {
                         <ImageIcon size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000000"} />
                     </TouchableOpacity>            
 
-                    <TouchableOpacity onPress={()=>{setLoading(true);fotografGonder()}} style={{justifyContent:"center", alignItems:"center", width:32,height:32, alignSelf:"center", borderRadius:360,borderWidth:5,borderColor:"#e05003", padding:32, marginLeft:50 }}>
+                    <TouchableOpacity onPress={()=>{/*setLoading(true);*/fotografGonder()}} style={{justifyContent:"center", alignItems:"center", width:32,height:32, alignSelf:"center", borderRadius:360,borderWidth:5,borderColor:"#e05003", padding:32, marginLeft:50 }}>
                         <CamIcon size={32} style={{ alignSelf:"center"}} color={isDark?"#fff":"#000000"} />
                     </TouchableOpacity>            
 

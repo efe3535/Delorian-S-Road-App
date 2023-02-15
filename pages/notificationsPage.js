@@ -16,7 +16,6 @@ import {
     SectionList,
 } from 'react-native';
 
-import MQTT, { IMqttClient } from 'sp-react-native-mqtt';
 import { CaretRight, Warning, ArrowRight } from 'phosphor-react-native';
 
 import { Svg, Path } from 'react-native-svg';

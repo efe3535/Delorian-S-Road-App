@@ -12,7 +12,6 @@ import com.facebook.soloader.SoLoader;
 import com.fullstack.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import com.tuanpm.RCTMqtt.*;
 
 public class MainApplication extends Application implements ReactApplication {
 

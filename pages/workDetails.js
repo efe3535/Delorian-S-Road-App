@@ -24,7 +24,6 @@ import { useIsFocused } from '@react-navigation/native';
 
 import { WebView } from "react-native-webview"
 import { useFocusEffect } from '@react-navigation/native';
-import MQTT, { IMqttClient } from 'sp-react-native-mqtt';
 import { Svg, Path } from 'react-native-svg';
 
 
