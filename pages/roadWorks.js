@@ -103,13 +103,13 @@ const RoadPage = ({ navigation, route }) => {
     const [fullCalismalar, setFullCalismalar] = useState([])
     const [tinyFont, setTinyFont] = useState(false);
     const [arrowVisible, setArrowVisible] = useState(false);
-
+    const [sheetIndex, setSheetIndex] = useState(1);
     const [location, setLocation] = useState([])
     let coords = [];
 
 
     const isSameDay = (firstTimeStamp, secondTimeStamp) => {
-        return (new Date(firstTimeStamp).getDate() === (new Date(secondTimeStamp).getDate()))
+        return (new Date(firstTimeStamp).getDate() === (new Date(secondTimeStamp).getDate()) && new Date(firstTimeStamp).getMonth() == new Date(secondTimeStamp).getMonth())
     }
 
     useEffect(
@@ -132,6 +132,7 @@ const RoadPage = ({ navigation, route }) => {
             for (let calisma in JSON.parse(msg.payloadString)["calismalar"]) {
                 
                 console.log("coords",location);
+                mapRef.current.injectJavaScript(`L.marker([${JSON.parse(msg.payloadString)["calismalar"][calisma][1]}, ${JSON.parse(msg.payloadString)["calismalar"][calisma][2]}],{icon:greenIcon}).addTo(mymap);`);
                 setCalismalar(
                     calismalar => [...calismalar,
                     {
@@ -192,6 +193,7 @@ const RoadPage = ({ navigation, route }) => {
                     <Warning size={38} color={"orange"} style={{ alignSelf: "center", marginLeft: 30 }} />
                     <View style={{ margin: 10.5, flexShrink: 1 }}>
                         <TouchableOpacity onPress={() => {
+                            setSheetIndex(1)
                             mapRef.current.injectJavaScript(`
                         mymap.setView([${item.koorX},${item.koorY}],20) ;  
                         L.marker([${item.koorX}, ${item.koorY}],{icon:greenIcon}).addTo(mymap);
@@ -218,9 +220,10 @@ const RoadPage = ({ navigation, route }) => {
             <BottomSheetModalProvider>
                 <BottomSheet
 
-                    index={1}
+                    index={sheetIndex}
                     onChange={
                         (ind) => {
+                            setSheetIndex(ind)
                             if (ind == 2) {
                                 console.log("büyük");
                                 setArrowVisible(true)

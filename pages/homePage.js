@@ -24,27 +24,27 @@ import messaging from "@react-native-firebase/messaging"
 import Spinner from 'react-native-loading-spinner-overlay';
 import { WebView } from 'react-native-webview';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { CaretRight, NavigationArrow, Warning, Calendar,CalendarBlank, Repeat } from "phosphor-react-native"
+import { CaretRight, NavigationArrow, Warning, Calendar, CalendarBlank, Repeat } from "phosphor-react-native"
 import { Svg, Path } from "react-native-svg"
-import {PermissionsAndroid} from 'react-native'
-PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION,{
+import { PermissionsAndroid } from 'react-native'
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION, {
     title: 'Bildirim izni',
     message:
-      'Yol çalışmalarından haberdar olmak için bildirimlere izin verebilirsiniz',
+        'Yol çalışmalarından haberdar olmak için bildirimlere izin verebilirsiniz',
     buttonNeutral: 'Daha sonra haber ver',
     buttonNegative: 'Olmaz',
     buttonPositive: 'Olur',
-  },);
+},);
 
 const ip = require("../ip").default
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import html_script_light from '../html_script_light';
-import {request, PERMISSIONS} from 'react-native-permissions';
+import { request, PERMISSIONS } from 'react-native-permissions';
 
 request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
 
-  import Geolocation from '@react-native-community/geolocation';
+import Geolocation from '@react-native-community/geolocation';
 import { useFocusEffect } from '@react-navigation/native';
 
 Geolocation.requestAuthorization()
@@ -54,6 +54,7 @@ const isDark = Appearance.getColorScheme() == "dark"
 
 
 import init from "react_native_mqtt"
+import { Swipeable } from 'react-native-gesture-handler';
 let STORAGE_KEY = '@routes-item';
 
 
@@ -71,7 +72,7 @@ const client = new Paho.MQTT.Client(ip, 1923, 'uname' + (Math.random() * 10000).
 let connected;
 function onConnect() {
     console.log("onConnect");
-    console.log("ISCONNECTED\t",client.isConnected());
+    console.log("ISCONNECTED\t", client.isConnected());
     connected = true
     client.subscribe("esp32/test")
     client.subscribe('esp32/coordinates');
@@ -95,6 +96,7 @@ function fail(err) {
 client.onConnectionLost = onConnectionLost;
 client.connect({ onSuccess: onConnect, onFailure: fail });
 
+messaging().registerDeviceForRemoteMessages()
 
 
 const HomePage = ({ navigation, route }) => {
@@ -114,19 +116,21 @@ const HomePage = ({ navigation, route }) => {
     const [attr, setAttr] = useState([])
     const [expecting, setExpecting] = useState(true)
     const [displayRoutes, setDisplayRoutes] = useState([])
+    const [username,setUsername] = useState("")
+
+    const [loggedIn, setLoggedIn] = useState(false)
 
     const cellRefs = useRef({})
 
     const getToken = async () => {
-        await messaging().registerDeviceForRemoteMessages()
         const token = await messaging().getToken()
-        console.log("token:",token);
+        console.log("token:", token);
     }
 
     const getItems = async () => {
-        
+
         let val = await AsyncStorage.getItem(STORAGE_KEY)
-        if(val) {
+        if (val) {
             //console.log("VALUES", JSON.parse(val).routes);
             routes = JSON.parse(val).routes
             setDisplayRoutes(routes)
@@ -135,58 +139,76 @@ const HomePage = ({ navigation, route }) => {
         }
     }
     const subscribeTopic = async (topic) => {
-        messaging()
-          .subscribeToTopic(topic)
-          .then(() => console.log("Subscribed to topic:", topic))
-          .catch((e) => {
-            console.log(e);
-          });
-      };
-    useFocusEffect(useCallback(()=>{
-        routes = displayRoutes
-        getToken()
-        subscribeTopic("all")
-        getItems()
-        for (let map in cellRefs.current) {
-            cellRefs.current[map].reload()
+        const bildirim = AsyncStorage.getItem("bildirim")
+        if (bildirim == "true") {
+            messaging()
+                .subscribeToTopic(topic)
+                .then(() => console.log("Subscribed to topic:", topic))
+                .catch((e) => {
+                    console.log(e);
+                });
         }
-    },[]))
+    };
+
+    const checkLogin = async (topic) => {
+        const login = await AsyncStorage.getItem("login");
+        await setLoggedIn(login!=null);
+        if (login!=null) {
+            routes = displayRoutes
+            getToken()
+            subscribeTopic("all")
+            getItems()
+            if (Platform.OS != "ios") {
+                for (let map in cellRefs.current) {
+                    cellRefs.current[map].reload()
+                }
+            }
+            setUsername(JSON.parse(login).username)
+        } else {
+            console.log("loggedIn",loggedIn);
+            navigation.navigate("LoginPage")
+        }
+    }
+
+    useFocusEffect(useCallback(() => {
+        checkLogin()
+    }, []))
 
     const renderItemRoutes = ({ item, index }) => {
         return (
-            <TouchableOpacity onPress={()=>{
+            <TouchableOpacity onPress={async () => {
                 setLoading(true)
                 fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x},${item.y}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } })
-                .then(response => response.json())
-                .then(json => {
-                    //setFirstDescr(json[0]["display_name"])
-                    fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json())
-                        .then(json2 => {
-                            //setSecDescr(json[0]["display_name"])
-                            //console.log(json);
-                            setLoading(false)
-                            navigation.navigate("RouteDetails", { id:item.id, item: item, allRoutes: displayRoutes, firstDescr:json[0]["display_name"], secDescr:json2[0]["display_name"] })
+                    .then(response => response.json())
+                    .then(json => {
+                        //setFirstDescr(json[0]["display_name"])
+                        fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json())
+                            .then(json2 => {
+                                //setSecDescr(json[0]["display_name"])
+                                //console.log(json);
+                                setLoading(false)
+                                navigation.navigate("RouteDetails", { id: item.id, item: item, allRoutes: displayRoutes, firstDescr: json[0] ? json[0]["display_name"] : "Adres bulunamadı", secDescr: json2[0] ? json[0]["display_name"] : "Adres bulunamadı" })
 
-                        })
-                })
-               // setDisplayRoutes([]); 
-    
-                }} style={{  marginTop: 30, borderWidth:1, padding:0, borderRadius:10, marginLeft:30, alignSelf:"baseline", borderColor:isDark?"#262626":"#d9d9d9" }}>
+                            })
+                    })
+                // setDisplayRoutes([]); 
 
-                    <WebView
-                        androidHardwareAccelerationDisabled
-                        androidLayerType='software'
-                        renderToHardwareTextureAndroid={true}
-                        containerStyle={{ minWidth: 170, minHeight: 130, maxWidth: 170, maxHeight: 130, borderRadius: 8, }}
-                        ref={ref => {
-                            cellRefs.current[item.id] = ref;
-                        }}
-                        renderLoading={()=>(<View style={{flex:1, width:"100%", height:"100%", position:"absolute", alignItems:"center", justifyContent:"center", backgroundColor:isDark?"#1b1b1b":"#fff"}}>
-                            <ActivityIndicator color={"#e05003"}/>
-                        </View>)}
-                        source={{ html: isDark ? html_script : html_script_light }}
-                        onLoad={() => {
-                            cellRefs.current[item.id].injectJavaScript(`
+            }} style={{ marginTop: 30, borderWidth: 1, padding: 0, borderRadius: 10, marginLeft: 30, alignSelf: "baseline", borderColor: isDark ? "#262626" : "#d9d9d9" }}>
+
+                <WebView
+                    androidHardwareAccelerationDisabled
+                    androidLayerType='software'
+                    renderToHardwareTextureAndroid={true}
+                    containerStyle={{ minWidth: 170, minHeight: 130, maxWidth: 170, maxHeight: 130, borderRadius: 8, }}
+                    ref={ref => {
+                        cellRefs.current[item.id] = ref;
+                    }}
+                    renderLoading={() => (<View style={{ flex: 1, width: "100%", height: "100%", position: "absolute", alignItems: "center", justifyContent: "center", backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
+                        <ActivityIndicator color={"#e05003"} />
+                    </View>)}
+                    source={{ html: isDark ? html_script : html_script_light }}
+                    onLoad={() => {
+                        cellRefs.current[item.id].injectJavaScript(`
                                 mymap.setView([${item.x}, ${item.y}],14);
 
                                 L.Routing.control({
@@ -206,22 +228,22 @@ const HomePage = ({ navigation, route }) => {
 
                             `)
 
-                        }}
-                    />
-                    <View style={{marginLeft:15, marginBottom:15 }}>
-                        <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Rota</Text>
-                        <View style={{ flexDirection: "row", flexShrink:1, marginTop:8 }}>
-                            <CalendarBlank size={24} color={isDark ? "#fff" : "#000000"} />
-                            <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000000" , flexShrink:1}}>{item.repeat}</Text>
-                        </View>
-                       
+                    }}
+                />
+                <View style={{ marginLeft: 15, marginBottom: 15 }}>
+                    <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Rota</Text>
+                    <View style={{ flexDirection: "row", flexShrink: 1, marginTop: 8 }}>
+                        <CalendarBlank size={24} color={isDark ? "#fff" : "#000000"} />
+                        <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000000", flexShrink: 1 }}>{item.repeat}</Text>
                     </View>
+
+                </View>
             </TouchableOpacity>
         )
     }
 
     const onMessageArrived = (msg) => {
-        if(expecting) {
+        if (expecting) {
             console.log("onmessage");
             if (msg.topic == "esp32/responsecalismalar" && JSON.parse(msg.payloadString) != []) {
                 setCalismalar([])
@@ -251,20 +273,20 @@ const HomePage = ({ navigation, route }) => {
                     console.log(err);
                 }
             }
-    /*
-            if (msg.topic == "esp32/responsephotobyid") {
-                setPhoto([])
-                if (msg.payloadString.includes("📷")) {
-                    msg.payloadString.split("📷").forEach(
-                        (elm, ind, arr) => {
-                            setPhoto(photo => [...photo, { id: photo.length, photo: elm }])
+            /*
+                    if (msg.topic == "esp32/responsephotobyid") {
+                        setPhoto([])
+                        if (msg.payloadString.includes("📷")) {
+                            msg.payloadString.split("📷").forEach(
+                                (elm, ind, arr) => {
+                                    setPhoto(photo => [...photo, { id: photo.length, photo: elm }])
+                                }
+                            )
+                        } else {
+                            console.log("else")
+                            setPhoto([{ id: photo.length, photo: msg.payloadString[0] }])
                         }
-                    )
-                } else {
-                    console.log("else")
-                    setPhoto([{ id: photo.length, photo: msg.payloadString[0] }])
-                }
-            }*/
+                    }*/
 
             if (msg.topic == "esp32/responsephotobyid") {
                 console.log("GOT RESPONSE");
@@ -289,7 +311,7 @@ const HomePage = ({ navigation, route }) => {
                     if (once == false)
                         once = true
                     console.log("navigate");
-                    navigation.navigate("WorkDetails", { item:itemState, koor: { x: koor[0], y: koor[1] }, photo: ll })
+                    navigation.navigate("WorkDetails", { item: itemState, koor: { x: koor[0], y: koor[1] }, photo: ll })
                     setLoading(false)
                     console.log("ALIVE3");
 
@@ -303,13 +325,13 @@ const HomePage = ({ navigation, route }) => {
 
     const markKoor = () => {
         const connected = client.isConnected()
-        console.log("IS CONNECTED\t",connected==true);
-        if(connected==true) {
+        console.log("IS CONNECTED\t", connected == true);
+        if (connected == true) {
             setExpecting(true)
             client.send("esp32/calismalar", "GET", 0, false)
         }
         console.log("send");
-        
+
         setCalismalar([])
         setMarked(true)
         setRefreshing(false)
@@ -318,10 +340,10 @@ const HomePage = ({ navigation, route }) => {
     useFocusEffect(
         useCallback(() => {
 
-           
+
             Geolocation.getCurrentPosition(
                 info => {
-                    fetch(`https://nominatim.openstreetmap.org/search.php?q=${info.coords.latitude},${info.coords.longitude}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json()).then(json => setLocation(json[0]["display_name"]))
+                    fetch(`https://nominatim.openstreetmap.org/search.php?q=${info.coords.latitude},${info.coords.longitude}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json()).then(json => setLocation(json[0] ? json[0]["display_name"] : "Yalnızca koordinatlarınız tespit edildi."))
                         .catch((e) => console.log(e))
                     setKoor([info.coords.latitude, info.coords.longitude])
                 })
@@ -345,7 +367,7 @@ const HomePage = ({ navigation, route }) => {
                         setLoading(true)
 
                         if (item.hasPhoto) {
-                            console.log("item.id\t"+item.id);
+                            console.log("item.id\t" + item.id);
                             //console.log(client);
                             setExpecting(true)
                             client.send("esp32/photobyid", item.id.toString(), 0, false)
@@ -354,7 +376,7 @@ const HomePage = ({ navigation, route }) => {
                         } else {
                             setLoading(false)
                             if (koor) {
-                                navigation.navigate("WorkDetails", { item:item, koor: { x: koor[0], y: koor[1] }, photo: null })
+                                navigation.navigate("WorkDetails", { item: item, koor: { x: koor[0], y: koor[1] }, photo: null })
                             }
                         }
                     }}>
@@ -385,7 +407,7 @@ const HomePage = ({ navigation, route }) => {
                     {
                         fontSize: 36, color: isDark ? "#FFFFFF" : "#000000", marginLeft: 32,
                         marginTop: 20, fontWeight: "700"
-                    }}>Selam, test!</Text>
+                    }}>Selam, {username}!</Text>
                 <View style={{ alignContent: "center", justifyContent: "center", alignItems: "stretch", alignSelf: "center", flex: 1, flexDirection: "row" }}>
                     <Image source={require("../pp.png")} style={{ width: 37, height: 37, justifyContent: "flex-end", marginRight: 0, marginTop: 18, alignSelf: "center" }} />
                 </View>
@@ -398,12 +420,12 @@ const HomePage = ({ navigation, route }) => {
                     <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000000", fontWeight: "300", flexShrink: 1, marginRight: 30 }}>{location?.toString()}</Text>
                 </View>
             </View>
-            <Text style={{ marginLeft: 30, marginTop: 30, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757", display:displayRoutes.length!="0"?null:'none' }}>ROTALARINIZ</Text>
+            <Text style={{ marginLeft: 30, marginTop: 30, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757", display: displayRoutes.length != "0" ? null : 'none' }}>ROTALARINIZ</Text>
             <FlatList
                 data={displayRoutes}
                 fadingEdgeLength={60}
                 horizontal
-                style={{  display:displayRoutes.length!=0?null:"none", marginRight:30, height:240}}
+                style={{ display: displayRoutes.length != 0 ? null : "none", marginRight: 30, height: 240 }}
                 renderItem={renderItemRoutes}
                 keyExtractor={item => item.id}
             />

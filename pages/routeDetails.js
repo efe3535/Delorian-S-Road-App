@@ -226,13 +226,14 @@ const RouteDetails = ({ navigation, route }) => {
     }
 
     client.onMessageArrived = onMessageArrived
-    useEffect(() => {
+   /* useEffect(() => {
         setId(item.id)
         console.log("itemid", item.id);
         setMatch(false)
         getItems()
         console.log("useFocusEffect");
-        mapRef2.current.reload()
+        //Platform.OS != "ios" ? mapRef2.current.reload() : null
+        //mapRef2.current.reload()
         client.send("esp32/calismalar", "GET", 0, false)
         console.log(item.x, item.y, item.x2, item.y2);
 
@@ -266,20 +267,23 @@ const RouteDetails = ({ navigation, route }) => {
             setSecDescr(json[0]["display_name"])
             console.log(json);
         })*/
-    }, [])
+    //}, [])
 
     useFocusEffect(useCallback(() => {
         getItems()
         setId(item.id)
         console.log("itemid", item.id);
         setMatch(false)
+        getItems()
         console.log("useFocusEffect");
-        mapRef2.current.reload()
+        Platform.OS != "ios" ? mapRef2.current.reload() : null
         client.send("esp32/calismalar", "GET", 0, false)
-        console.log(item.x, item.y, item.x2, item.y2);
+        console.log("routeDetailsKoor",item.x, item.y, item.x2, item.y2);
 
         mapRef2.current.injectJavaScript(
-            `mymap.setView([${item.x},${item.y}],14);
+            `
+            //mymap.invalidateSize();
+            mymap.setView([${item.x},${item.y}],14);
             L.Routing.control({
                 waypoints: [
                 L.latLng(${item.x}, ${item.y}),
