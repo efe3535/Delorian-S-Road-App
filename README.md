@@ -7,6 +7,7 @@
 ## Server kurulumu
 
 ip.js dosyasına server ip'nizi giriniz, port 1883 alınmıştır (default) websockets bağlantıları için 1923 portu kullanılmıştır.
+giriş kısmı için 3366 portu kullanılmaktadır.
 
 build etmek için
 `npx react-native start` ile metro sunucunuzu baslatin
