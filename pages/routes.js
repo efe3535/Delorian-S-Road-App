@@ -122,7 +122,7 @@ const RoutesPage = ({ navigation, route }) => {
                                     //console.log(json);
                                     console.log("IITTEEMM", item);
                                     setLoading(false)
-                                    navigation.navigate("RouteDetails", { id: item.id, item: item, allRoutes: displayRoutes, firstDescr: json[0] ? json[0]["display_name"] : "Adres bulunamadı", secDescr: json2[0] ? json[0]["display_name"] : "Adres bulunamadı"})
+                                    navigation.navigate("RouteDetails", { id: item.id, item: item, allRoutes: displayRoutes, firstDescr: json[0] ? json[0]["display_name"] : "Adres bulunamadı", secDescr: json2[0] ? json2[0]["display_name"] : "Adres bulunamadı"})
                                     //setDisplayRoutes([]); 
                                 })
                         })

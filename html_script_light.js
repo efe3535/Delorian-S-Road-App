@@ -51,9 +51,11 @@ const html_script_light = `
 		iconAnchor:   [20, 40], // point of the icon which will correspond to marker's location
 		popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 	});
-	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+	//L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+	L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=5709a21d-f2cf-44d9-9faa-1e4965438c20', {
 		maxZoom: 18,
-		id: 'mapbox/light-v11'
+		//id: 'mapbox/light-v11',
+		
 	}).addTo(mymap);
 
 	mymap.on('click', (a)=>window.ReactNativeWebView.postMessage(a.latlng.lat.toString()+','+a.latlng.lng.toString()))

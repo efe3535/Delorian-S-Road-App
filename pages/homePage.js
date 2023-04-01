@@ -116,7 +116,7 @@ const HomePage = ({ navigation, route }) => {
     const [attr, setAttr] = useState([])
     const [expecting, setExpecting] = useState(true)
     const [displayRoutes, setDisplayRoutes] = useState([])
-    const [username,setUsername] = useState("")
+    const [username, setUsername] = useState("")
 
     const [loggedIn, setLoggedIn] = useState(false)
 
@@ -152,8 +152,8 @@ const HomePage = ({ navigation, route }) => {
 
     const checkLogin = async (topic) => {
         const login = await AsyncStorage.getItem("login");
-        await setLoggedIn(login!=null);
-        if (login!=null) {
+        await setLoggedIn(login != null);
+        if (login != null) {
             routes = displayRoutes
             getToken()
             subscribeTopic("all")
@@ -165,7 +165,7 @@ const HomePage = ({ navigation, route }) => {
             }
             setUsername(JSON.parse(login).username)
         } else {
-            console.log("loggedIn",loggedIn);
+            console.log("loggedIn", loggedIn);
             navigation.navigate("LoginPage")
         }
     }
@@ -187,7 +187,7 @@ const HomePage = ({ navigation, route }) => {
                                 //setSecDescr(json[0]["display_name"])
                                 //console.log(json);
                                 setLoading(false)
-                                navigation.navigate("RouteDetails", { id: item.id, item: item, allRoutes: displayRoutes, firstDescr: json[0] ? json[0]["display_name"] : "Adres bulunamadı", secDescr: json2[0] ? json[0]["display_name"] : "Adres bulunamadı" })
+                                navigation.navigate("RouteDetails", { id: item.id, item: item, allRoutes: displayRoutes, firstDescr: json[0] ? json[0]["display_name"] : "Adres bulunamadı", secDescr: json2[0] ? json2[0]["display_name"] : "Adres bulunamadı" })
 
                             })
                     })
@@ -196,6 +196,13 @@ const HomePage = ({ navigation, route }) => {
             }} style={{ marginTop: 30, borderWidth: 1, padding: 0, borderRadius: 10, marginLeft: 30, alignSelf: "baseline", borderColor: isDark ? "#262626" : "#d9d9d9" }}>
 
                 <WebView
+                    injectedJavaScriptBeforeContentLoaded={`
+                window.onerror = function(message, sourcefile, lineno, colno, error) {
+                  alert("Message: " + message + " - Source: " + sourcefile + " Line: " + lineno + ":" + colno);
+                  return true;
+                };
+                true;
+              `}
                     androidHardwareAccelerationDisabled
                     androidLayerType='software'
                     renderToHardwareTextureAndroid={true}

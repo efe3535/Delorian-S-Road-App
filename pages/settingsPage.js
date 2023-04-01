@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useState, useRef } from "react";
 import type { Node } from 'react';
 import { readFile } from "react-native-fs"
@@ -17,6 +17,8 @@ import {
     Platform,
     Appearance,
 } from 'react-native';
+
+import { useFocusEffect } from '@react-navigation/native';
 
 import { Faders, Bell, NavigationArrow, Envelope, Lifebuoy, SignOut } from 'phosphor-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -50,10 +52,10 @@ const SettingsPage = ({ navigation, route }) => {
         setUsername(JSON.parse(login).username)
     }
 
-    useEffect(() => {
+    useFocusEffect(useCallback(() => {
         handleBildirim()
         handleUsername()
-    }, [])
+    }, []))
 
     const signOut = async ( ) => {
         await AsyncStorage.removeItem("login");
