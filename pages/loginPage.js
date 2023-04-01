@@ -32,6 +32,7 @@ import { PermissionsAndroid } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { sha256 } from "react-native-sha256"
 import LinearGradient from 'react-native-linear-gradient';
+import ip from "../ip"
 
 const LoginPage = ({ navigation, route }) => {
 
@@ -44,7 +45,7 @@ const LoginPage = ({ navigation, route }) => {
     const handleRegister = async () => {
         console.log(sha256(passInput))
         const shasum = await sha256(passInput)
-        const resp = await fetch("http://100.25.205.61:3366/register", {
+        const resp = await fetch(`http://${ip}:3366/register`, {
             method: "POST", // or 'PUT'
             headers: {
                 "Content-Type": "application/json",
@@ -66,7 +67,7 @@ const LoginPage = ({ navigation, route }) => {
     const handleLogin = async () => {
         console.log(passInput)
         const shasum = await sha256(passInput)
-        const resp = await fetch("http://100.25.205.61:3366/login", {
+        const resp = await fetch(`http://${ip}:3366/login`, {
             method: "POST", // or 'PUT'
             headers: {
                 "Content-Type": "application/json",
