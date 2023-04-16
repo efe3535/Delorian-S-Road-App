@@ -58,7 +58,7 @@ const AddRoutePage = ({ navigation, route }) => {
     const [routeName, setRouteName] = useState("")
     const [routeDescr, setRouteDescr] = useState("")
     
-    const [date, setDate] = useState(new Date())
+    const [firstDate, setFirstDate] = useState(new Date())
     const [endDate, setEndDate] = useState(new Date())
     const [dateStr, setDateStr] = useState("")
     const [value, setValue] = useState(null);
@@ -79,9 +79,6 @@ const AddRoutePage = ({ navigation, route }) => {
 
     const mapRef = useRef(null)
     const mapRef2 = useRef(null)
-    
-
-    let dateLet;
     let repeatLet = repeatText;
     let dateNav = dateStr;
 
@@ -145,22 +142,22 @@ const AddRoutePage = ({ navigation, route }) => {
                                     if (type == "END_DATE") {
                                         //setDateStr((date.get().getDate() + " " + (monthNames[date.get().getMonth()]) + " " + days[date.get().getDay()]))
                                         if(date!=null) {
-                                            if ( dateLet.date() != date.date()) {
-                                                setDateStr(dateLet.date().toString() + " " + monthNames[dateLet.month()] + " - " + date.date().toString() + " " + monthNames[date.month()])
-                                                dateNav = dateLet.date().toString() + " " + monthNames[dateLet.month()] + " - " + date.date().toString() + " " + monthNames[date.month()] 
+                                            if ( firstDate.date() != date.date()) {
+                                                setDateStr(firstDate.date().toString() + " " + monthNames[firstDate.month()] + " - " + date.date().toString() + " " + monthNames[date.month()])
+                                                dateNav = firstDate.date().toString() + " " + monthNames[firstDate.month()] + " - " + date.date().toString() + " " + monthNames[date.month()] 
                                             } else {
                                                 setDateStr(date.date().toString() + " " + monthNames[date.month()])
                                                 dateNav = date.date().toString() + " " + monthNames[date.month()] 
                                             }
                                         } else {
-                                            setDateStr(dateLet.date().toString() + " " + monthNames[dateLet.month()])
-                                            dateNav = dateLet.date().toString() + " " + monthNames[dateLet.month()]
+                                            setDateStr(firstDate.date().toString() + " " + monthNames[firstDate.month()])
+                                            dateNav = firstDate.date().toString() + " " + monthNames[firstDate.month()]
                                         }
-                                        
+                                        setEndDate(date)
                                         setTimeout(()=>setOpen(false),500)
 
                                     } else if (type = "START_DATE") {
-                                        dateLet = date
+                                        setFirstDate(date)
                                     }
                                 }}
                                 todayBackgroundColor='#1b1b1b'
@@ -297,6 +294,8 @@ const AddRoutePage = ({ navigation, route }) => {
                             descr: routeDescr,
                             name: routeName,
                             repeat:repeatText,
+                            startDate: firstDate,
+                                endDate:endDate,
                             date:dateStr
                         }); 
                         setListRoute(listRoute => [
@@ -310,6 +309,8 @@ const AddRoutePage = ({ navigation, route }) => {
                                 descr: routeDescr,
                                 name: routeName,
                                 repeat:repeatText,
+                                startDate: firstDate,
+                                endDate:endDate,
                                 date:dateStr
                             }
                         ])
@@ -328,6 +329,8 @@ const AddRoutePage = ({ navigation, route }) => {
                             descr:routeDescr,
                             name:routeName,
                             repeat:repeatText,
+                            startDate: firstDate,
+                                endDate:endDate,
                             date:dateStr
                         })
                         
@@ -340,6 +343,8 @@ const AddRoutePage = ({ navigation, route }) => {
                             descr:routeDescr,
                             name:routeName,
                             repeat:repeatText,
+                            startDate: firstDate,
+                                endDate:endDate,
                             date:dateStr
                         
                         }]}) 
