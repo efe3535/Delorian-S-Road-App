@@ -18,6 +18,7 @@ const checkBildirim = async ( ) => {
     messaging().subscribeToTopic("all")
   } else {
     console.log("Bildirim yok.")
+    messaging().unsubscribeFromTopic("all")
   }
 }
 

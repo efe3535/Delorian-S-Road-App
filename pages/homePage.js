@@ -118,6 +118,8 @@ const HomePage = ({ navigation, route }) => {
     const [displayRoutes, setDisplayRoutes] = useState([])
     const [username, setUsername] = useState("")
 
+    const [asyncIsci, setAsyncIsci] = useState(false)
+
     const [loggedIn, setLoggedIn] = useState(false)
 
     const cellRefs = useRef({})
@@ -163,6 +165,8 @@ const HomePage = ({ navigation, route }) => {
                     cellRefs.current[map].reload()
                 }
             }
+            const isciStorage = await AsyncStorage.getItem("isci")
+            setAsyncIsci(isciStorage == "true")
             setUsername(JSON.parse(login).username)
         } else {
             console.log("loggedIn", loggedIn);
@@ -305,13 +309,13 @@ const HomePage = ({ navigation, route }) => {
                     msg.payloadString.split("📷").forEach(
                         (elm, ind, arr) => {
                             //setPhoto(photo => [...photo, { id: photo.length, photo: elm }]);
-                            ll.push({ id: ll.length, photo: elm })
+                            ll.push({ id: ll.length, photo: elm.replace(/[\[\]']+/g,'') })
                         }
                     )
                 } else {
-                    console.log(msg.payloadString.slice(2, -2));
+                    console.log(msg.payloadString.replace(/[\[\]']+/g,''));
 
-                    ll = [{ id: photo.length, photo: msg.payloadString.slice(2, -2) }]
+                    ll = [{ id: photo.length, photo: msg.payloadString }]
                 }
                 if (koor) {
                     console.log("ALIVE2");
@@ -414,7 +418,7 @@ const HomePage = ({ navigation, route }) => {
                     {
                         fontSize: 36, color: isDark ? "#FFFFFF" : "#000000", marginLeft: 32,
                         marginTop: 20, fontWeight: "700"
-                    }}>Selam, {username}!</Text>
+                    }}>{(route.params ? route.params.isci : asyncIsci)?"Kolay gelsin":"Selam"}, {username}!</Text>
                 <View style={{ alignContent: "center", justifyContent: "center", alignItems: "stretch", alignSelf: "center", flex: 1, flexDirection: "row" }}>
                     <Image source={require("../pp.png")} style={{ width: 37, height: 37, justifyContent: "flex-end", marginRight: 0, marginTop: 18, alignSelf: "center" }} />
                 </View>
@@ -436,6 +440,18 @@ const HomePage = ({ navigation, route }) => {
                 renderItem={renderItemRoutes}
                 keyExtractor={item => item.id}
             />
+
+            <View style={{display: (route.params ? route.params.isci : asyncIsci) ? null : "none", marginLeft:30,}}>
+                <Text style={{ marginTop: 10, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>ÇALIŞAN MENÜSÜ</Text>
+                <TouchableOpacity 
+                onPress={()=>{
+                    navigation.navigate("CalismaEkle", {koor})
+                }}
+                style={{padding:5, backgroundColor:isDark?"#262626":"#d9d9d9", width:"40%", paddingVertical:20, alignItems:"center", justifyContent:"center", borderRadius:6, marginTop:16}}>
+                    <Text style={{color:isDark?"#fff":"#000"}}>Yol çalışması ekle</Text>
+                </TouchableOpacity>
+            </View>
+
             <Text style={{ marginLeft: 30, marginTop: 10, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>YAKININIZDAKİ YOL ÇALIŞMALARI</Text>
             <FlatList
                 data={calismalar}

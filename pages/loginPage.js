@@ -33,6 +33,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import { sha256 } from "react-native-sha256"
 import LinearGradient from 'react-native-linear-gradient';
 import ip from "../ip"
+import { log } from 'react-native-reanimated';
 
 const LoginPage = ({ navigation, route }) => {
 
@@ -57,11 +58,15 @@ const LoginPage = ({ navigation, route }) => {
 
         if (json.status == "success") {
             await AsyncStorage.setItem("login", JSON.stringify({ username: unameInput }))
-            navigation.navigate("Home");
+            navigation.navigate("Home", {isci:false});
         }
         console.log(JSON.stringify(json), { username: unameInput, pass: shasum })
         await setUnameInput("")
         await setPassInput("");
+    }
+
+    const setIsciAsyncStorage = async (status) => {
+        await AsyncStorage.setItem("isci", status==true ? "true" : "false")
     }
 
     const handleLogin = async () => {
@@ -79,8 +84,26 @@ const LoginPage = ({ navigation, route }) => {
 
         if (json.status == "success") {
             await AsyncStorage.setItem("login", JSON.stringify({ username: unameInput }))
+            fetch(
+                `http://${ip}:3366/isci`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+
+                    body: JSON.stringify({
+                        username: unameInput
+                    })
+                }
+            ).then(resp => resp.json())
+                .then(json => {
+                    console.log("json.isci",json.isci)
+                    setIsciAsyncStorage(json.isci)
+                navigation.navigate("Home", {isci:json.isci});
+                })
             setLoginVisible(false)
-            navigation.navigate("Home");
         } else {
 
         }
@@ -89,16 +112,16 @@ const LoginPage = ({ navigation, route }) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignItems: "center", height: "100%" }}>            
-            <ImageBackground style={{flex:1, height:Dimensions.get("screen").height, width:Dimensions.get("screen").width, alignItems:"center", zIndex:0}} source={require("../assets/background.png")}>
-                <StatusBar tranlucent backgroundColor={"transparent"} barStyle={"light-content"}/>
+        <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignItems: "center", height: "100%" }}>
+            <ImageBackground style={{ flex: 1, height: Dimensions.get("screen").height, width: Dimensions.get("screen").width, alignItems: "center", zIndex: 0 }} source={require("../assets/background.png")}>
+                <StatusBar tranlucent backgroundColor={"transparent"} barStyle={"light-content"} />
                 <Modal visible={loginVisible}>
-                    <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", padding: 16, justifyContent:"center" }}>
+                    <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", padding: 16, justifyContent: "center" }}>
                         <Text style={{ fontSize: 36, color: isDark ? "#fff" : "#000", fontWeight: "bold" }}>Giriş Yap</Text>
                         <Text style={{ fontSize: 20, color: isDark ? "#fff" : "#000", marginTop: 10 }} >Giriş için Kullanıcı adı</Text>
-                        <TextInput autoCapitalize='none' placeholder='Kullanıcı adı' value={unameInput} onChangeText={t => setUnameInput(t)} style={{ color:isDark?"#fff":"#000", borderWidth: 2, marginTop: 10, padding: 15, borderRadius: 16, borderColor: isDark ? "#262626" : "#d9d9d9" }} />
+                        <TextInput autoCapitalize='none' placeholder='Kullanıcı adı' value={unameInput} onChangeText={t => setUnameInput(t)} style={{ color: isDark ? "#fff" : "#000", borderWidth: 2, marginTop: 10, padding: 15, borderRadius: 16, borderColor: isDark ? "#262626" : "#d9d9d9" }} />
                         <Text style={{ fontSize: 20, color: isDark ? "#fff" : "#000", marginTop: 10 }} >Giriş için şifre</Text>
-                        <TextInput placeholder='Şifreniz' value={passInput} secureTextEntry autoCapitalize='none' importantForAutofill='no' onChangeText={t => setPassInput(t)} style={{ color:isDark?"#fff":"#000", borderWidth: 2, marginTop: 10, padding: 15, borderRadius: 16, borderColor: isDark ? "#262626" : "#d9d9d9" }} />
+                        <TextInput placeholder='Şifreniz' value={passInput} secureTextEntry autoCapitalize='none' importantForAutofill='no' onChangeText={t => setPassInput(t)} style={{ color: isDark ? "#fff" : "#000", borderWidth: 2, marginTop: 10, padding: 15, borderRadius: 16, borderColor: isDark ? "#262626" : "#d9d9d9" }} />
                         <View style={{ alignItems: "center", marginTop: 32 }}>
                             <TouchableOpacity onPress={() => { handleLogin(); }} style={{ backgroundColor: "#e05003", height: 60, flexDirection: "row", marginBottom: 16, borderWidth: 2, borderColor: isDark ? "#262626" : "#d9d9d9", borderRadius: 56, width: "80%", alignItems: "center", justifyContent: "center" }}>
                                 <Text style={{ color: "#fff", fontSize: 18, fontWeight: "500" }}>Giriş Yap</Text>
@@ -109,12 +132,12 @@ const LoginPage = ({ navigation, route }) => {
                 </Modal>
 
                 <Modal visible={registerVisible}>
-                    <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", padding: 16, justifyContent:"center" }}>
+                    <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", padding: 16, justifyContent: "center" }}>
                         <Text style={{ fontSize: 36, color: isDark ? "#fff" : "#000", fontWeight: "bold" }}>Kayıt Ol</Text>
                         <Text style={{ fontSize: 20, color: isDark ? "#fff" : "#000", marginTop: 10 }} >Kayıt için Kullanıcı adı</Text>
-                        <TextInput autoCapitalize='none' placeholder='Kullanıcı adı' value={unameInput} onChangeText={t => setUnameInput(t)} style={{color:isDark?"#fff":"#000", borderWidth: 2, marginTop: 10, padding: 15, borderRadius: 16, borderColor: isDark ? "#262626" : "#d9d9d9" }} />
+                        <TextInput autoCapitalize='none' placeholder='Kullanıcı adı' value={unameInput} onChangeText={t => setUnameInput(t)} style={{ color: isDark ? "#fff" : "#000", borderWidth: 2, marginTop: 10, padding: 15, borderRadius: 16, borderColor: isDark ? "#262626" : "#d9d9d9" }} />
                         <Text style={{ fontSize: 20, color: isDark ? "#fff" : "#000", marginTop: 10 }} >Kayıt için şifre</Text>
-                        <TextInput placeholder='Şifreniz' value={passInput} secureTextEntry autoCapitalize='none' importantForAutofill='no' onChangeText={t => setPassInput(t)} style={{ color:isDark?"#fff":"#000", borderWidth: 2, marginTop: 10, padding: 15, borderRadius: 16, borderColor: isDark ? "#262626" : "#d9d9d9" }} />
+                        <TextInput placeholder='Şifreniz' value={passInput} secureTextEntry autoCapitalize='none' importantForAutofill='no' onChangeText={t => setPassInput(t)} style={{ color: isDark ? "#fff" : "#000", borderWidth: 2, marginTop: 10, padding: 15, borderRadius: 16, borderColor: isDark ? "#262626" : "#d9d9d9" }} />
                         <View style={{ alignItems: "center", marginTop: 32 }}>
                             <TouchableOpacity onPress={() => { setRegisterVisible(false); handleRegister(); }} style={{ backgroundColor: "#e05003", height: 60, flexDirection: "row", marginBottom: 16, borderWidth: 2, borderColor: isDark ? "#262626" : "#d9d9d9", borderRadius: 56, width: "80%", alignItems: "center", justifyContent: "center" }}>
                                 <Text style={{ color: "#fff", fontSize: 18, fontWeight: "500" }}>Kayıt Ol</Text>
@@ -123,8 +146,8 @@ const LoginPage = ({ navigation, route }) => {
                         </View>
                     </View>
                 </Modal>
-                <LinearGradient colors={[isDark?"#1b1b1b":"#fff", isDark?"#1b1b1bdd":"#ffffffdd", "transparent"]} style={{position:"absolute", height:300}}>
-                    <View style={{width:Dimensions.get("window").width, height:200}}></View>
+                <LinearGradient colors={[isDark ? "#1b1b1b" : "#fff", isDark ? "#1b1b1bdd" : "#ffffffdd", "transparent"]} style={{ position: "absolute", height: 300 }}>
+                    <View style={{ width: Dimensions.get("window").width, height: 200 }}></View>
                 </LinearGradient>
                 <View style={{ left: 0, width: "80%", height: "70%" }}>
                     <Svg
@@ -174,16 +197,16 @@ const LoginPage = ({ navigation, route }) => {
                     </Svg>
                     <Text style={{ fontSize: 36, fontWeight: "bold", color: isDark ? "#fff" : "#000" }}>A noktasından B noktasına gitmenin akıllı yolu.</Text>
                 </View>
-                
-                <TouchableOpacity onPress={() => { setRegisterVisible(true) }} style={{ position:"absolute", bottom:80, backgroundColor: "#e05003", height: 56, flexDirection: "row", marginBottom: 16, borderRadius: 56, width: "80%", alignItems: "center", justifyContent: "center", zIndex:99 }}>
+
+                <TouchableOpacity onPress={() => { setRegisterVisible(true) }} style={{ position: "absolute", bottom: 80, backgroundColor: "#e05003", height: 56, flexDirection: "row", marginBottom: 16, borderRadius: 56, width: "80%", alignItems: "center", justifyContent: "center", zIndex: 99 }}>
                     <ArrowRight size={36} color={"#fff"} />
                     <Text style={{ color: "#fff", fontSize: 18, fontWeight: "500" }}>Hesap Oluştur</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { setLoginVisible(true) }} style={{ height: 56, bottom:24, position:"absolute", backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 2, borderColor: isDark ? "#262626" : "#d9d9d9", borderRadius: 56, width: "80%", alignItems: "center", justifyContent: "center", zIndex:99 }}>
+                <TouchableOpacity onPress={() => { setLoginVisible(true) }} style={{ height: 56, bottom: 24, position: "absolute", backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 2, borderColor: isDark ? "#262626" : "#d9d9d9", borderRadius: 56, width: "80%", alignItems: "center", justifyContent: "center", zIndex: 99 }}>
                     <Text style={{ color: isDark ? "#fff" : "#000", fontSize: 18, fontWeight: "500" }}>Oturum Aç</Text>
                 </TouchableOpacity>
-                <LinearGradient colors={["transparent",isDark?"#1b1b1bdd":"#ffffffdd",isDark?"#1b1b1b":"#fff"]} style={{position:"absolute", bottom:0, zIndex:1, height:200}}>
-                    <View style={{width:Dimensions.get("window").width, height:200}}></View>
+                <LinearGradient colors={["transparent", isDark ? "#1b1b1bdd" : "#ffffffdd", isDark ? "#1b1b1b" : "#fff"]} style={{ position: "absolute", bottom: 0, zIndex: 1, height: 200 }}>
+                    <View style={{ width: Dimensions.get("window").width, height: 200 }}></View>
                 </LinearGradient>
             </ImageBackground>
         </SafeAreaView>

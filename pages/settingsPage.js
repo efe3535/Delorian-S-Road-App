@@ -22,6 +22,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { Faders, Bell, NavigationArrow, Envelope, Lifebuoy, SignOut } from 'phosphor-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
 
 const isDark = Appearance.getColorScheme() == "dark"
 
@@ -45,6 +46,7 @@ const SettingsPage = ({ navigation, route }) => {
         console.log("bildirim-",!bildirim=="true");
         await AsyncStorage.setItem("bildirim", (bildirim!="true").toString())
         setBildirimAcik(!(bildirim=="true"));
+            (!(bildirim=="true")) ? messaging().subscribeToTopic("all") : messaging().unsubscribeFromTopic("all")
     }
 
     const handleUsername = async () => {

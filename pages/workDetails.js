@@ -51,10 +51,11 @@ const WorkDetails = ({ navigation, route }) => {
     let connected = false
     console.log("workDetails Item -> ", route.params);
     const renderItem = ({ item, index }) => {
+        console.log("item.photoworkdetails", item.photo);
         return (
             <View style={{ marginTop: 15, marginLeft: 30 }}>
                 <View style={{ margin: 10.5 }}>
-                    <Image style={{ width: 80, height: 160, resizeMode: "contain", borderRadius: 12 }} source={{ uri: `data:image/png;base64,${item.photo}`, cache: "only-if-cached", }} />
+                    <Image style={{ width: 80, height: 160, resizeMode: "stretch", borderRadius: 12 }} source={{ uri: `data:image/png;base64,${item.photo}`, cache: "only-if-cached", }} />
                 </View>
             </View>
         )
@@ -103,7 +104,7 @@ const WorkDetails = ({ navigation, route }) => {
                 <Calendar size={36} color={isDark?"#fff":"#000000"} style={{ alignSelf: "center" }} />
                 <View style={{ marginLeft: 18 }}>
                     <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000000" }}>Tarihler</Text>
-                    <Text style={{ fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>{(new Date(parseInt(item.timestamp)).getDate() + " " + (monthNames[new Date(parseInt(item.timestamp)).getMonth()]) + " " + days[new Date(parseInt(item.timestamp)).getDay()])} {item.ended!=1?"- Devam ediyor":""}</Text>
+                    <Text style={{ fontSize: 18, color: isDark ? "#a8a8a8" : "#575757", flexWrap:"wrap" }}>{(new Date(parseInt(item.timestamp)).getDate() + " " + (monthNames[new Date(parseInt(item.timestamp)).getMonth()]) + " " + days[new Date(parseInt(item.timestamp)).getDay()])} {item.ended!=1?"- Devam ediyor":""}</Text>
                 </View>
             </View>
 

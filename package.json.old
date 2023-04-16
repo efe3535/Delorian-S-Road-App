@@ -12,7 +12,6 @@
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.5",
     "@react-native-async-storage/async-storage": "^1.17.11",
-    "@react-native-community/eslint-config": "^3.2.0",
     "@react-native-community/geolocation": "^3.0.4",
     "@react-native-firebase/app": "^17.1.0",
     "@react-native-firebase/messaging": "^17.1.0",
@@ -46,7 +45,7 @@
     "react-native-push-notification": "^8.1.1",
     "react-native-reanimated": "^2.14.2",
     "react-native-safe-area": "^0.5.1",
-    "react-native-safe-area-context": "^4.5.0",
+    "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
     "react-native-sha256": "^1.4.9",
     "react-native-svg": "^13.7.0",
@@ -58,20 +57,14 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@babel/preset-env": "^7.20.0",
-    "@babel/runtime": "^7.20.0",
-    "@tsconfig/react-native": "^2.0.2",
-    "@types/jest": "^29.2.1",
-    "@types/react": "^18.0.24",
-    "@types/react-test-renderer": "^18.0.0",
-    "babel-jest": "^29.2.1",
-    "eslint": "^8.19.0",
-    "jest": "^29.2.1",
-    "metro-react-native-babel-preset": "0.73.9",
-    "prettier": "^2.4.1",
-    "react-test-renderer": "18.2.0",
-    "typescript": "4.8.4"
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.5",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.32.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "0.72.3",
+    "react-test-renderer": "18.1.0"
   },
   "jest": {
     "preset": "react-native"

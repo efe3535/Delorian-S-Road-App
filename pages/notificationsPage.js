@@ -175,13 +175,13 @@ const NotificationsPage = ({ navigation, route }) => {
                     msg.payloadString.split("📷").forEach(
                         (elm, ind, arr) => {
                             //setPhoto(photo => [...photo, { id: photo.length, photo: elm }]);
-                            ll.push({ id: ll.length, photo: elm })
+                            ll.push({ id: ll.length, photo: elm.replace(/[\[\]']+/g,'') })
                         }
                     )
                 } else {
                     //console.log(msg.payloadString.slice(2, -2));
 
-                    ll = [{ id: photo.length, photo: msg.payloadString.slice(2, -2) }]
+                    ll = [{ id: photo.length, photo: msg.payloadString.replace(/[\[\]']+/g,'') }]
                 }
                 if (koor) {
                     console.log("ALIVE2");
@@ -263,6 +263,7 @@ const NotificationsPage = ({ navigation, route }) => {
 
             <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "700", fontSize: 36, marginTop: 60, marginLeft: 30 }}>Bildirimler</Text>
             <SectionList
+                stickyHeaderHiddenOnScroll
                 refreshing={refreshing}
                 onRefresh={refreshList}
                 sections={calismalar}
