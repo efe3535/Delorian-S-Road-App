@@ -19,7 +19,8 @@ import {
   StatusBar,
   TouchableOpacity,
   View,
-  Appearance
+  Appearance,
+  Platform
 } from 'react-native';
 
 import { House, MapTrifold, Warning, Bell, Gear, Camera } from "phosphor-react-native"
@@ -126,8 +127,8 @@ const App: () => Node = () => {
   }, [])
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
-      <StatusBar barStyle="light-content" backgroundColor={"#00000000"} translucent={true} showHideTransition="fade" />
+    <View style={{ flex: 1, height:"100%", backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
+      <StatusBar barStyle="light-content" backgroundColor={"red"} translucent={false}  showHideTransition="fade" />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{
           headerShown: false,
@@ -137,7 +138,8 @@ const App: () => Node = () => {
           tabBarInactiveTintColor: "#a89984",
           tabBarStyle:
           {
-            height: 80,
+            backgroundColor:isDark?"#1b1b1b":"#fff",
+            height:Platform.OS == "android" ? 80: 110,
             borderTopWidth: 0,
           },
         }}>
@@ -156,7 +158,7 @@ const App: () => Node = () => {
         </Stack.Navigator>
 
       </NavigationContainer>
-    </SafeAreaView>
+    </View>
   )
 };
 

@@ -191,7 +191,7 @@ const AddRoutePage = ({ navigation, route }) => {
                             showArrowIcon={true}
                             placeholder={"Tekrarlama sıklığı seçiniz..."}
                             open={picker}
-                            onChangeValue={(val) => { setRepeatText(valDict[val]) ; repeatLet = valDict[val] ; setTimeout(()=>setRepeat(false),200) }}
+                            onChangeValue={(val) => { setRepeatText(valDict[val]) ; repeatLet = valDict[val] ; setTimeout(()=>setRepeat(false),200) ;  }}
                             tickIconStyle={{ color: "#ff0000" }}
                             showBadgeDot={false}
                             listParentContainerStyle={{ borderWidth: 0, }}
@@ -347,14 +347,15 @@ const AddRoutePage = ({ navigation, route }) => {
                                 endDate:endDate,
                             date:dateStr
                         
-                        }]}) 
+                        }]})
+                        setValue(null) 
                     }
                 }>
                     <Check color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} size={26} />
                 </TouchableOpacity>
             </View>
             <View style={{ flexDirection: "row", flexShrink: 1, marginLeft: 20, borderWidth: 2, marginRight: 30, marginTop: 32, borderRadius: 5, borderColor: isDark ? "#262626" : "d9d9d9" }}>
-                <TextInput ref={textRef} onChangeText={text=>{setRouteName(text);}} value={routeName} caretHidden placeholder={'Bir rota adı\nseçin...'} placeholderTextColor={isDark ? "#fff" : "#000000"} style={{ fontSize: 36, fontWeight: "700" }} />
+                <TextInput ref={textRef} onChangeText={text=>{setRouteName(text);}} value={routeName} caretHidden placeholder={'Bir rota adı seç'} placeholderTextColor={isDark ? "#fff" : "#000000"} style={{ fontSize: 36, color:isDark?"#fff":"#000", fontWeight: "700" }} />
                 <TouchableOpacity onPress={() => textRef.current.focus()} style={{ alignSelf: "center", position: "absolute", right: 10 }}>
                     <PencilSimple size={32} color={isDark ? "#fff" : "#000000"} style={{}} />
                 </TouchableOpacity>
@@ -387,7 +388,7 @@ const AddRoutePage = ({ navigation, route }) => {
                 `)} androidHardwareAccelerationDisabled androidLayerType='software' renderToHardwareTextureAndroid={true} containerStyle={{ flex: 1, borderRadius:16 , minWidth: 350, minHeight: 250, marginTop:15, alignSelf:"center",  }}  source={{ html: isDark ? html_script : html_script_light }} />}
             
             <View style={{ flexDirection: "row", flexShrink: 1, marginLeft: 20, marginTop: 20 }}>
-                <TextInput ref={text2Ref} onChangeText={(text)=>setRouteDescr(text)} value={routeDescr} caretHidden placeholder={'Bir açıklama yazın...'} placeholderTextColor={isDark ? "#fff" : "#000000"} style={{ fontSize: 18, fontWeight: "400" }} />
+                <TextInput ref={text2Ref} onChangeText={(text)=>setRouteDescr(text)} value={routeDescr} caretHidden placeholder={'Bir açıklama yazın...'} placeholderTextColor={isDark ? "#fff" : "#000000"} style={{ fontSize: 18, color:isDark?"#fff":"#000", fontWeight: "400" }} />
                 <TouchableOpacity onPress={() => text2Ref.current.focus()} style={{ alignSelf: "center", position: "absolute", right: 25 }}>
                     <PencilSimple size={32} color={isDark ? "#fff" : "#000000"} style={{}} />
                 </TouchableOpacity>

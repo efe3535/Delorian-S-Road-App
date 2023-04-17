@@ -136,25 +136,28 @@ const RouteDetails = ({ navigation, route }) => {
     let repeatLet = repeatText;
     let dateNav = dateStr;
     //const [item,setItem] = useState(item)
-    console.log("rotues:",route.params.routes);
+    console.log("rotues:", route.params.routes);
     const textRef = useRef(null)
     const text2Ref = useRef(null)
     const [routeName, setRouteName] = useState("")
     const [routeDescr, setRouteDescr] = useState(item.descr)
-    
+
     const [date, setDate] = useState(new Date())
+
+    const [firstDate, setFirstDate] = useState(new Date())
     const [endDate, setEndDate] = useState(new Date())
+
     const [dateStr, setDateStr] = useState(null)
     const [value, setValue] = useState(null);
     const [open, setOpen] = useState(false)
     const [repeat, setRepeat] = useState(false)
-    const [x2,setx2] = useState(item.x2)
-    const [y2,sety2] = useState(item.y2)
+    const [x2, setx2] = useState(item.x2)
+    const [y2, sety2] = useState(item.y2)
     const [picker, setPicker] = useState(false)
     const [map, setMap] = useState(false)
     const [repeatText, setRepeatText] = useState("")
-    const [first,setFirst] = useState(null)
-    const [second,setSecond] = useState(false)
+    const [first, setFirst] = useState(null)
+    const [second, setSecond] = useState(false)
     const [chosen, setChosen] = useState(false)
     const routes = route.params.routes
     console.log(routes);
@@ -185,13 +188,13 @@ const RouteDetails = ({ navigation, route }) => {
             rotalar = JSON.parse(items).routes
             setDisplayRoutes(rotalar)
             items = JSON.parse(items)
-            setRepeatText(items.routes.find(a=>a.id==item.id).repeat)
-            setDateStr(items.routes.find(a=>a.id==item.id).date);
-            setRouteDescr(items.routes.find(a=>a.id==item.id).descr)
-            setRouteName(items.routes.find(a=>a.id==item.id).name)
-            setFirst([items.routes.find(a=>a.id==item.id).x,items.routes.find(a=>a.id==item.id).y])
-            item = items.routes.find(a=>a.id==item.id)
-    
+            setRepeatText(items.routes.find(a => a.id == item.id).repeat)
+            setDateStr(items.routes.find(a => a.id == item.id).date);
+            setRouteDescr(items.routes.find(a => a.id == item.id).descr)
+            setRouteName(items.routes.find(a => a.id == item.id).name)
+            setFirst([items.routes.find(a => a.id == item.id).x, items.routes.find(a => a.id == item.id).y])
+            item = items.routes.find(a => a.id == item.id)
+
         } else {
             return undefined
         }
@@ -226,47 +229,47 @@ const RouteDetails = ({ navigation, route }) => {
     }
 
     client.onMessageArrived = onMessageArrived
-   /* useEffect(() => {
-        setId(item.id)
-        console.log("itemid", item.id);
-        setMatch(false)
-        getItems()
-        console.log("useFocusEffect");
-        //Platform.OS != "ios" ? mapRef2.current.reload() : null
-        //mapRef2.current.reload()
-        client.send("esp32/calismalar", "GET", 0, false)
-        console.log(item.x, item.y, item.x2, item.y2);
-
-        mapRef2.current.injectJavaScript(
-            `mymap.setView([${item.x},${item.y}],14);
-            L.Routing.control({
-                waypoints: [
-                L.latLng(${item.x}, ${item.y}),
-                L.latLng(${item.x2}, ${item.y2})
-                ],
-                show:false,
-                draggableWaypoints:false,
-                lineOptions : {
-                    addWaypoints: false
-                },
-                routeWhileDragging: false,
-                createMarker:()=>{return null},
-            }).addTo(mymap);
-            true
-            `
-        )
-        /*fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x},${item.y}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } })
-        .then(response => response.json())
-        .then(json => {
-            setFirstDescr(json[0]["display_name"])
-            console.log(json);
-        })
-       
-        fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json())
-        .then(json => {
-            setSecDescr(json[0]["display_name"])
-            console.log(json);
-        })*/
+    /* useEffect(() => {
+         setId(item.id)
+         console.log("itemid", item.id);
+         setMatch(false)
+         getItems()
+         console.log("useFocusEffect");
+         //Platform.OS != "ios" ? mapRef2.current.reload() : null
+         //mapRef2.current.reload()
+         client.send("esp32/calismalar", "GET", 0, false)
+         console.log(item.x, item.y, item.x2, item.y2);
+ 
+         mapRef2.current.injectJavaScript(
+             `mymap.setView([${item.x},${item.y}],14);
+             L.Routing.control({
+                 waypoints: [
+                 L.latLng(${item.x}, ${item.y}),
+                 L.latLng(${item.x2}, ${item.y2})
+                 ],
+                 show:false,
+                 draggableWaypoints:false,
+                 lineOptions : {
+                     addWaypoints: false
+                 },
+                 routeWhileDragging: false,
+                 createMarker:()=>{return null},
+             }).addTo(mymap);
+             true
+             `
+         )
+         /*fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x},${item.y}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } })
+         .then(response => response.json())
+         .then(json => {
+             setFirstDescr(json[0]["display_name"])
+             console.log(json);
+         })
+        
+         fetch(`https://nominatim.openstreetmap.org/search.php?q=${item.x2},${item.y2}&polygon_geojson=1&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json())
+         .then(json => {
+             setSecDescr(json[0]["display_name"])
+             console.log(json);
+         })*/
     //}, [])
 
     useFocusEffect(useCallback(() => {
@@ -278,7 +281,7 @@ const RouteDetails = ({ navigation, route }) => {
         console.log("useFocusEffect");
         Platform.OS != "ios" ? mapRef2.current.reload() : null
         client.send("esp32/calismalar", "GET", 0, false)
-        console.log("routeDetailsKoor",item.x, item.y, item.x2, item.y2);
+        console.log("routeDetailsKoor", item.x, item.y, item.x2, item.y2);
 
         mapRef2.current.injectJavaScript(
             `
@@ -332,22 +335,22 @@ const RouteDetails = ({ navigation, route }) => {
                                             if (type == "END_DATE") {
                                                 //setDateStr((date.get().getDate() + " " + (monthNames[date.get().getMonth()]) + " " + days[date.get().getDay()]))
                                                 if (date != null) {
-                                                    if (dateLet.date() != date.date()) {
-                                                        setDateStr(dateLet.date().toString() + " " + monthNames[dateLet.month()] + " - " + date.date().toString() + " " + monthNames[date.month()])
-                                                        dateNav = dateLet.date().toString() + " " + monthNames[dateLet.month()] + " - " + date.date().toString() + " " + monthNames[date.month()]
+                                                    if (firstDate.date() != date.date()) {
+                                                        setDateStr(firstDate.date().toString() + " " + monthNames[firstDate.month()] + " - " + date.date().toString() + " " + monthNames[date.month()])
+                                                        dateNav = firstDate.date().toString() + " " + monthNames[firstDate.month()] + " - " + date.date().toString() + " " + monthNames[date.month()]
                                                     } else {
                                                         setDateStr(date.date().toString() + " " + monthNames[date.month()])
                                                         dateNav = date.date().toString() + " " + monthNames[date.month()]
                                                     }
                                                 } else {
-                                                    setDateStr(dateLet.date().toString() + " " + monthNames[dateLet.month()])
-                                                    dateNav = dateLet.date().toString() + " " + monthNames[dateLet.month()]
+                                                    setDateStr(firstDate.date().toString() + " " + monthNames[firstDate.month()])
+                                                    dateNav = firstDate.date().toString() + " " + monthNames[firstDate.month()]
                                                 }
-
+                                                setEndDate(date)
                                                 setTimeout(() => setOpen(false), 500)
 
                                             } else if (type = "START_DATE") {
-                                                dateLet = date
+                                                setFirstDate(date)
                                             }
                                         }}
                                         todayBackgroundColor='#1b1b1b'
@@ -381,7 +384,7 @@ const RouteDetails = ({ navigation, route }) => {
                                     showArrowIcon={true}
                                     placeholder={"Tekrarlama sıklığı seçiniz..."}
                                     open={picker}
-                                    onChangeValue={(val) => { setRepeatText(valDict[val]); repeatLet = valDict[val]; setTimeout(() => setRepeat(false), 200) }}
+                                    onChangeValue={(val) => { setRepeatText(valDict[val]); repeatLet = valDict[val]; setTimeout(() => setRepeat(false), 200); setValue(null) }}
                                     tickIconStyle={{ color: "#ff0000" }}
                                     showBadgeDot={false}
                                     listParentContainerStyle={{ borderWidth: 0, }}
@@ -411,22 +414,22 @@ const RouteDetails = ({ navigation, route }) => {
                                 <CaretLeft size={32} color={isDark ? "#fff" : "#000000"} />
                                 <Text style={{ color: isDark ? "#fff" : "#000000", fontSize: 18, alignSelf: "center", marginLeft: 10, fontWeight: "600" }}>Geri</Text>
                             </TouchableOpacity>
-                            <WebView 
-                             renderLoading={()=>(<View style={{flex:1, width:"100%", height:"100%", position:"absolute", alignItems:"center", justifyContent:"center", backgroundColor:isDark?"#1b1b1b":"#fff"}}>
-                             <ActivityIndicator color={"#e05003"}/>
-                         </View>)}
-                            ref={mapRef} onMessage={
-                                (msg) => {
-                                    console.log(msg.nativeEvent.data);
-                                    setSecond(false)
-                                    if (second == true) {
-                                        console.log(repeatText);
-                                        setx2(parseFloat(msg.nativeEvent.data.split(",")[0]))
-                                        sety2(parseFloat(msg.nativeEvent.data.split(",")[1]))
-                                        console.log(first[0], first[1], parseFloat(msg.nativeEvent.data.split(",")[0]), parseFloat(msg.nativeEvent.data.split(",")[1]));
+                            <WebView
+                                renderLoading={() => (<View style={{ flex: 1, width: "100%", height: "100%", position: "absolute", alignItems: "center", justifyContent: "center", backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
+                                    <ActivityIndicator color={"#e05003"} />
+                                </View>)}
+                                ref={mapRef} onMessage={
+                                    (msg) => {
+                                        console.log(msg.nativeEvent.data);
+                                        setSecond(false)
+                                        if (second == true) {
+                                            console.log(repeatText);
+                                            setx2(parseFloat(msg.nativeEvent.data.split(",")[0]))
+                                            sety2(parseFloat(msg.nativeEvent.data.split(",")[1]))
+                                            console.log(first[0], first[1], parseFloat(msg.nativeEvent.data.split(",")[0]), parseFloat(msg.nativeEvent.data.split(",")[1]));
 
-                                      //  mapRef.current.reload()
-                                        mapRef.current.injectJavaScript(`
+                                            //  mapRef.current.reload()
+                                            mapRef.current.injectJavaScript(`
                                 var route = L.Routing.control({
                                     waypoints: [
                                     L.latLng(${first[0]}, ${first[1]}),
@@ -444,8 +447,8 @@ const RouteDetails = ({ navigation, route }) => {
                                 L.latLng(${parseFloat(msg.nativeEvent.data.split(",")[0])}, ${parseFloat(msg.nativeEvent.data.split(",")[1])})
                                ])
                                 `)
-                                        mapRef3.current.reload()
-                                        mapRef3.current.injectJavaScript(`
+                                            mapRef3.current.reload()
+                                            mapRef3.current.injectJavaScript(`
                                 var routing = L.Routing.control({
                                     waypoints: [
                                   
@@ -461,21 +464,21 @@ const RouteDetails = ({ navigation, route }) => {
                                 routing.setWaypoints([  L.latLng(${first[0]}, ${first[1]}),
                                 L.latLng(${parseFloat(msg.nativeEvent.data.split(",")[0])}, ${parseFloat(msg.nativeEvent.data.split(",")[1])})])
                                 `)
-                                        setChosen(true)
-                                        chose = true
-                                        setTimeout(() => setMap(false), 500)
-                                        /*setRouteDescr("")
-                                        setRouteName("")
-                                        setRepeat(null)
-                                        setRepeatText("")
-                                        setDate("")*/
-                                    } else {
-                                        setFirst([parseFloat(msg.nativeEvent.data.split(",")[0]), parseFloat(msg.nativeEvent.data.split(",")[1])])
-                                        setSecond(true)
+                                            setChosen(true)
+                                            chose = true
+                                            setTimeout(() => setMap(false), 500)
+                                            /*setRouteDescr("")
+                                            setRouteName("")
+                                            setRepeat(null)
+                                            setRepeatText("")
+                                            setDate("")*/
+                                        } else {
+                                            setFirst([parseFloat(msg.nativeEvent.data.split(",")[0]), parseFloat(msg.nativeEvent.data.split(",")[1])])
+                                            setSecond(true)
 
+                                        }
                                     }
-                                }
-                            } onLoad={() => mapRef.current.injectJavaScript(`mymap.setView([${koor[0]},${koor[1]}],18)`)} androidHardwareAccelerationDisabled androidLayerType='software' renderToHardwareTextureAndroid={true} containerStyle={{ flex: 1, borderRadius: 16, minWidth: 200, minHeight: 200, margin: 30, }} source={{ html: isDark ? html_script : html_script_light }} />
+                                } onLoad={() => mapRef.current.injectJavaScript(`mymap.setView([${koor[0]},${koor[1]}],18)`)} androidHardwareAccelerationDisabled androidLayerType='software' renderToHardwareTextureAndroid={true} containerStyle={{ flex: 1, borderRadius: 16, minWidth: 200, minHeight: 200, margin: 30, }} source={{ html: isDark ? html_script : html_script_light }} />
 
                         </View>
                     </Modal>
@@ -508,6 +511,8 @@ const RouteDetails = ({ navigation, route }) => {
                                         y: first[1],
                                         x2: x2,
                                         y2: y2,
+                                        startDate:firstDate,
+                                        endDate:endDate,
                                         descr: routeDescr,
                                         name: routeName,
                                         repeat: repeatText,
@@ -614,9 +619,9 @@ const RouteDetails = ({ navigation, route }) => {
             </View>
 
             <WebView
-             renderLoading={()=>(<View style={{flex:1, width:"100%", height:"100%", position:"absolute", alignItems:"center", justifyContent:"center", backgroundColor:isDark?"#1b1b1b":"#fff"}}>
-             <ActivityIndicator color={"#e05003"}/>
-         </View>)}
+                renderLoading={() => (<View style={{ flex: 1, width: "100%", height: "100%", position: "absolute", alignItems: "center", justifyContent: "center", backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
+                    <ActivityIndicator color={"#e05003"} />
+                </View>)}
                 androidHardwareAccelerationDisabled
                 androidLayerType='software'
                 renderToHardwareTextureAndroid={true}

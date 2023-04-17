@@ -309,11 +309,11 @@ const HomePage = ({ navigation, route }) => {
                     msg.payloadString.split("📷").forEach(
                         (elm, ind, arr) => {
                             //setPhoto(photo => [...photo, { id: photo.length, photo: elm }]);
-                            ll.push({ id: ll.length, photo: elm.replace(/[\[\]']+/g,'') })
+                            ll.push({ id: ll.length, photo: elm.replace(/[\[\]']+/g, '') })
                         }
                     )
                 } else {
-                    console.log(msg.payloadString.replace(/[\[\]']+/g,''));
+                    console.log(msg.payloadString.replace(/[\[\]']+/g, ''));
 
                     ll = [{ id: photo.length, photo: msg.payloadString }]
                 }
@@ -404,65 +404,67 @@ const HomePage = ({ navigation, route }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(false)
     return (
-        <ScrollView style={{
-            backgroundColor: isDark ? "#1b1b1b" : "#fff",
-            flex: 1,
-            flexDirection: "column"
-        }
+        <SafeAreaView style={{ flex: 1, backgroundColor:isDark?"#1b1b1b":"#fff" }}>
+            <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={ isDark?"#1b1b1b":"#fff"} />
+            <ScrollView style={{
+                backgroundColor: isDark ? "#1b1b1b" : "#fff",
+                flex: 1,
+                flexDirection: "column"
+            }
 
-        }>
-            <Spinner animation='fade' visible={loading} textContent={"Yükleniyor"} overlayColor={"#000000aa"} textStyle={{ fontSize: 24, fontWeight: "300" }} />
-            <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
-            <View style={{ flexDirection: "row", marginTop: 10 }}>
-                <Text style={
-                    {
-                        fontSize: 36, color: isDark ? "#FFFFFF" : "#000000", marginLeft: 32,
-                        marginTop: 20, fontWeight: "700"
-                    }}>{(route.params ? route.params.isci : asyncIsci)?"Kolay gelsin":"Selam"}, {username}!</Text>
-                <View style={{ alignContent: "center", justifyContent: "center", alignItems: "stretch", alignSelf: "center", flex: 1, flexDirection: "row" }}>
-                    <Image source={require("../pp.png")} style={{ width: 37, height: 37, justifyContent: "flex-end", marginRight: 0, marginTop: 18, alignSelf: "center" }} />
+            }>
+                <Spinner animation='fade' visible={loading} textContent={"Yükleniyor"} overlayColor={"#000000aa"} textStyle={{ fontSize: 24, fontWeight: "300" }} />
+                <View style={{ flexDirection: "row", marginTop: 10 }}>
+                    <Text style={
+                        {
+                            fontSize: 36, color: isDark ? "#FFFFFF" : "#000000", marginLeft: 32,
+                            marginTop: 20, fontWeight: "700"
+                        }}>{(route.params ? route.params.isci : asyncIsci) ? "Kolay gelsin" : "Selam"}, {username}!</Text>
+                    <View style={{ alignContent: "center", justifyContent: "center", alignItems: "stretch", alignSelf: "center", flex: 1, flexDirection: "row" }}>
+                        <Image source={require("../pp.png")} style={{ width: 37, height: 37, justifyContent: "flex-end", marginRight: 0, marginTop: 18, alignSelf: "center" }} />
+                    </View>
                 </View>
-            </View>
 
-            <View style={{ flexDirection: "row", }}>
-                <NavigationArrow style={{ marginLeft: 32, marginTop: 15 }} size={48} color={isDark ? "#fff" : "#000000"} />
-                <View style={{ flexDirection: "column", justifyContent: "center", marginLeft: 20, marginTop: 15, flexShrink: 1 }}>
-                    <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000000", fontWeight: "600" }}>Konumunuz</Text>
-                    <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000000", fontWeight: "300", flexShrink: 1, marginRight: 30 }}>{location?.toString()}</Text>
+                <View style={{ flexDirection: "row", }}>
+                    <NavigationArrow style={{ marginLeft: 32, marginTop: 15 }} size={48} color={isDark ? "#fff" : "#000000"} />
+                    <View style={{ flexDirection: "column", justifyContent: "center", marginLeft: 20, marginTop: 15, flexShrink: 1 }}>
+                        <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000000", fontWeight: "600" }}>Konumunuz</Text>
+                        <Text style={{ fontSize: 18, textAlign: "left", color: isDark ? "#fff" : "#000000", fontWeight: "300", flexShrink: 1, marginRight: 30 }}>{location?.toString()}</Text>
+                    </View>
                 </View>
-            </View>
-            <Text style={{ marginLeft: 30, marginTop: 30, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757", display: displayRoutes.length != "0" ? null : 'none' }}>ROTALARINIZ</Text>
-            <FlatList
-                data={displayRoutes}
-                fadingEdgeLength={60}
-                horizontal
-                style={{ display: displayRoutes.length != 0 ? null : "none", marginRight: 30, height: 240 }}
-                renderItem={renderItemRoutes}
-                keyExtractor={item => item.id}
-            />
+                <Text style={{ marginLeft: 30, marginTop: 30, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757", display: displayRoutes.length != "0" ? null : 'none' }}>ROTALARINIZ</Text>
+                <FlatList
+                    data={displayRoutes}
+                    fadingEdgeLength={60}
+                    horizontal
+                    style={{ display: displayRoutes.length != 0 ? null : "none", marginRight: 30, height: 240 }}
+                    renderItem={renderItemRoutes}
+                    keyExtractor={item => item.id}
+                />
 
-            <View style={{display: (route.params ? route.params.isci : asyncIsci) ? null : "none", marginLeft:30,}}>
-                <Text style={{ marginTop: 10, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>ÇALIŞAN MENÜSÜ</Text>
-                <TouchableOpacity 
-                onPress={()=>{
-                    navigation.navigate("CalismaEkle", {koor})
-                }}
-                style={{padding:5, backgroundColor:isDark?"#262626":"#d9d9d9", width:"40%", paddingVertical:20, alignItems:"center", justifyContent:"center", borderRadius:6, marginTop:16}}>
-                    <Text style={{color:isDark?"#fff":"#000"}}>Yol çalışması ekle</Text>
-                </TouchableOpacity>
-            </View>
+                <View style={{ display: (route.params ? route.params.isci : asyncIsci) ? null : "none", marginLeft: 30, }}>
+                    <Text style={{ marginTop: 10, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>ÇALIŞAN MENÜSÜ</Text>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate("CalismaEkle", { koor })
+                        }}
+                        style={{ padding: 5, backgroundColor: isDark ? "#262626" : "#d9d9d9", width: "40%", paddingVertical: 20, alignItems: "center", justifyContent: "center", borderRadius: 6, marginTop: 16 }}>
+                        <Text style={{ color: isDark ? "#fff" : "#000" }}>Yol çalışması ekle</Text>
+                    </TouchableOpacity>
+                </View>
 
-            <Text style={{ marginLeft: 30, marginTop: 10, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>YAKININIZDAKİ YOL ÇALIŞMALARI</Text>
-            <FlatList
-                data={calismalar}
-                renderItem={renderItem}
-                keyExtractor={item => item["id"]}
-                refreshControl={<RefreshControl progressBackgroundColor={isDark ? "#1d1d1d" : "#eee"} colors={[isDark ? "#fff" : "#000000"]} refreshing={refreshing} onRefresh={markKoor}></RefreshControl>}
-                onRefresh={markKoor}
-                refreshing={refreshing}
+                <Text style={{ marginLeft: 30, marginTop: 10, fontSize: 18, color: isDark ? "#a8a8a8" : "#575757" }}>YAKININIZDAKİ YOL ÇALIŞMALARI</Text>
+                <FlatList
+                    data={calismalar}
+                    renderItem={renderItem}
+                    keyExtractor={item => item["id"]}
+                    refreshControl={<RefreshControl progressBackgroundColor={isDark ? "#1d1d1d" : "#eee"} colors={[isDark ? "#fff" : "#000000"]} refreshing={refreshing} onRefresh={markKoor}></RefreshControl>}
+                    onRefresh={markKoor}
+                    refreshing={refreshing}
 
-            />
-        </ScrollView>
+                />
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 

@@ -215,8 +215,9 @@ const RoadPage = ({ navigation, route }) => {
     }
 
     return (
-        <GestureHandlerRootView style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <WebView onMessage={(m) => console.log(m.nativeEvent.data)} onLoad={() => mapRef.current.injectJavaScript("mymap.setView([38.9637,35.2433],5)")} containerStyle={{ flex: 1, minWidth: "100%", minHeight: 200 }} ref={mapRef} source={{ html: isDark ? html_script : html_script_light }} />
+        <GestureHandlerRootView  style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1, alignItems: "center", top:0, justifyContent: "center" }}>
+            <StatusBar hidden />
+            <WebView onMessage={(m) => console.log(m.nativeEvent.data)} onLoad={() => mapRef.current.injectJavaScript("mymap.setView([38.9637,35.2433],5)")} containerStyle={{ flex: 1, minWidth: "100%", minHeight: 200, top:0 }} ref={mapRef} source={{ html: isDark ? html_script : html_script_light }} />
             <BottomSheetModalProvider>
                 <BottomSheet
 
