@@ -20,6 +20,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 import messaging from "@react-native-firebase/messaging"
+import { getDistance, getPreciseDistance, orderByDistance } from 'geolib';
 
 import Spinner from 'react-native-loading-spinner-overlay';
 import { WebView } from 'react-native-webview';
@@ -257,7 +258,7 @@ const HomePage = ({ navigation, route }) => {
         if (expecting) {
             console.log("onmessage");
             if (msg.topic == "esp32/responsecalismalar" && JSON.parse(msg.payloadString) != []) {
-                setCalismalar([])
+                /*setCalismalar([])
                 console.log(msg.topic);
                 for (let calisma in JSON.parse(msg.payloadString)["calismalar"]) {
                     setCalismalar(
@@ -273,8 +274,45 @@ const HomePage = ({ navigation, route }) => {
                             hasPhoto: JSON.parse(msg.payloadString)["calismalar"][calisma][7],
                         }]
                     )
-                }
+                }*/
 
+                /*setCalismalar(JSON.parse(msg.payloadString)["calismalar"].map(item=>{
+                    return {
+                        id: item[0],
+                            koorX: item[1],
+                            koorY: item[2],
+                            reason: item[3],
+                            descr: item[4],
+                            timestamp: item[5],
+                            ended: item[6],
+                            hasPhoto: item[7],
+                    }
+                }))*/
+                
+                let _sortedCalismalar = orderByDistance(
+                    { latitude:parseFloat(koor[0]), longitude: parseFloat(koor[1]) }, 
+                    JSON.parse(msg.payloadString)["calismalar"].map(
+                        (item) => {return {
+                            id: item[0],
+                            koorX: item[1],
+                            koorY: item[2],
+                            reason: item[3],
+                            descr: item[4],
+                            timestamp: item[5],
+                            ended: item[6],
+                            hasPhoto: item[7],
+                            //// Sort algoritması için
+                            latitude: parseFloat(item[1]),
+                            longitude: parseFloat(item[2]),
+                            distance: getDistance({latitude:koor[0], longitude:koor[1]}, {latitude:parseFloat(item[1]),longitude:parseFloat(item[2])})
+                        }}
+                    )
+                )
+
+                setCalismalar(_sortedCalismalar);
+                console.log("_sortedCalismalar",_sortedCalismalar)
+
+                
             }
 
             if (msg.topic == "esp32/responsekoorbyid") {
@@ -393,6 +431,7 @@ const HomePage = ({ navigation, route }) => {
                     }}>
                         <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "600" }}>{item.descr?.toString()} konumunda yol çalışması</Text>
                         <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "400" }}>{item.reason}</Text>
+                        <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "600" }}><Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "bold" }}>{item.distance/1000}</Text> km uzaklıkta</Text>
                     </TouchableOpacity>
                 </View>
                 <CaretRight size={38} color={isDark ? "#fff" : "#000000"} style={{ alignSelf: 'center', justifyContent: "center" }} />
