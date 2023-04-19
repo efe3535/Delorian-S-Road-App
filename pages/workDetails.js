@@ -70,6 +70,7 @@ const WorkDetails = ({ navigation, route }) => {
                 `)
         })
     return (
+        <SafeAreaView style={{flex:1, backgroundColor:isDark?"#1b1b1b":"#fff"}}>
         <ScrollView overScrollMode='never' style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", flex: 1 }} fadingEdgeLength={160}>
             <TouchableOpacity style={{ flexDirection: "row", marginLeft: 30, marginTop: 24 }} onPress={() => navigation.goBack()}>
                 <CaretLeft color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} size={26} />
@@ -139,6 +140,7 @@ const WorkDetails = ({ navigation, route }) => {
                     </TouchableOpacity>
             }
         </ScrollView>
+        </SafeAreaView>
     );
 }
 
