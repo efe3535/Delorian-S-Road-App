@@ -128,7 +128,7 @@ const App: () => Node = () => {
 
   return (
     <View style={{ flex: 1, height:"100%", backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
-      <StatusBar barStyle="light-content" backgroundColor={"red"} translucent={false}  showHideTransition="fade" />
+      <StatusBar barStyle="light-content" />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{
           headerShown: false,
