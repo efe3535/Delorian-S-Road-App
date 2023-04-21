@@ -228,7 +228,7 @@ const RouteDetails = ({ navigation, route }) => {
         }
     }
 
-    sageArrived = onMessageArrived
+    client.onMessageArrived = onMessageArrived
     /* useEffect(() => {
          setId(item.id)
          console.log("itemid", item.id);

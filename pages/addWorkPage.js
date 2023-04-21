@@ -105,12 +105,13 @@ const AddWorkPage = ({ navigation, route }) => {
     const [photoPath, setPhotoPath] = useState("");
     const [deviceId, setDeviceId] = useState("");
     const isFocused = useIsFocused()
+    const [devreKonum, setDevreKonum] = useState(null)
     const [loading, setLoading] = useState(false)
     const [camVisible, setCamVisible] = useState(false)
     const [showMap, setShowMap] = useState(false)
     const [devicePhotoHash, setDevicePhotoHash] = useState(null);
-
     const [neden, setNeden] = useState("");
+    const [devreKoor,setDevreKoor] = useState([null,null])
 
     const [calismaKoor, setCalismaKoor] = useState([null, null])
 
@@ -150,6 +151,7 @@ const AddWorkPage = ({ navigation, route }) => {
     }
 
     const rpiCalismaEkle = () => {
+        client.send("esp32/photocoordinates", `${devreKoor[0]},${devreKoor[1]},${devicePhotoHash}?${neden}`, 0, false);
     }
 
     const koor = route.params.koor
@@ -157,8 +159,15 @@ const AddWorkPage = ({ navigation, route }) => {
     const onMessageArrived = (msg) => {
         client.unsubscribe("rpi/sendphoto");
         if (msg.topic == "rpi/sendphoto") {
-            console.log("rpi/sendphoto arrived", msg.payloadString)
-            setDevicePhotoHash(msg.payloadString);
+            //console.log("rpi/sendphoto arrived", msg.payloadString.split(",")[msg.payloadString.split(",").length - 1])
+            console.log("rpi/sendphoto", msg.payloadString.split(",")[0], msg.payloadString.split(",")[1])
+            fetch(`https://nominatim.openstreetmap.org/search.php?q=${msg.payloadString.split(",")[0]},${msg.payloadString.split(",")[1]}&format=json`, { headers: { "Accept-Language": "tr" } }).then(response => response.json())
+                .then(json => {
+                    console.log("devrekonum", json[0]["display_name"]);
+                    setDevreKonum(json[0]["display_name"])
+                    setDevreKoor([parseFloat(msg.payloadString.split(",")[0]),parseFloat(msg.payloadString.split(",")[1])])
+                }).catch(e => console.log("error", e))
+            setDevicePhotoHash(msg.payloadString.split(",")[msg.payloadString.split(",").length - 1]);
             setLoading(false)
         }
     }
@@ -176,7 +185,7 @@ const AddWorkPage = ({ navigation, route }) => {
         <ScrollView alwaysBounceVertical={false} style={{ backgroundColor: isDark ? "#1b1b1b" : "#fff" }} contentContainerStyle={{ minHeight: Dimensions.get("screen").height }}>
             <Spinner animation='fade' visible={loading} textContent={"Fotoğraf yükleniyor"} overlayColor={"#000000aa"} textStyle={{ fontSize: 24, fontWeight: "300" }} />
             <Modal visible={showDevices}>
-                <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
+                <ScrollView style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
                     <TouchableOpacity style={{ marginLeft: 20, marginTop: 20, flexDirection: "row" }} onPress={() => {
                         setShowDevices(false);
                         setDeviceId("");
@@ -197,15 +206,21 @@ const AddWorkPage = ({ navigation, route }) => {
                             <Text style={{ textAlign: "center", color: isDark ? "#fff" : "#000000", fontSize: 18, alignSelf: "center", marginLeft: 4 }}>{deviceId.length > 0 ? `${deviceId} nolu cihazdan fotoğraf` : "Cihazdan fotoğraf al"}</Text>
                         </TouchableOpacity>
                         <Image style={{ width: 320, height: 320, marginLeft: 30, marginTop: 16, resizeMode: "stretch", borderRadius: 12, display: devicePhotoHash ? null : "none" }} source={{ uri: `data:image/png;base64,${devicePhotoHash}`, cache: "only-if-cached", }} />
+
+                        <View style={{marginLeft:30, marginTop:6}}>
+                            <Text style={{ fontSize: 24, fontWeight:"bold", color: isDark ? "#fff" : "#000" }}>Devre konumu:</Text>
+                            <Text style={{ fontSize: 18, color: isDark ? "#fff" : "#000" }}>{devreKonum}</Text>
+                        </View>
+
                         <Text style={{ marginLeft: 30, color: isDark ? "#fff" : "#000000", fontSize: 24, fontWeight: "700", marginTop: 16 }}>Çalışma Nedeni</Text>
                         <TextInput style={{ marginLeft: 30, borderWidth: 2, borderColor: isDark ? "#262626" : "#d9d9d9", borderRadius: 8, width: "80%", marginTop: 16, color: isDark ? "#fff" : "#000" }} placeholder='Lütfen çalışma nedenini giriniz.' value={neden} onChangeText={(t) => setNeden(t)} />
-                        <TouchableOpacity activeOpacity={(deviceId.length>0) ? null : 0.3} onPress={rpiCalismaEkle} style={{ marginLeft: 30, marginTop: 16, opacity: (deviceId.length>0) ? 1 : 0.3, flexDirection: "row", backgroundColor: isDark ? "#262626" : "#d9d9d9", width: "40%", alignItems: "center", justifyContent: "center", padding: 14, borderRadius: 6 }}>
+                        <TouchableOpacity activeOpacity={(deviceId.length > 0) ? null : 0.3} onPress={rpiCalismaEkle} style={{ marginLeft: 30, marginTop: 16, marginBottom:32, opacity: (deviceId.length > 0) ? 1 : 0.3, flexDirection: "row", backgroundColor: isDark ? "#262626" : "#d9d9d9", width: "40%", alignItems: "center", justifyContent: "center", padding: 14, borderRadius: 6 }}>
                             <Warning size={24} color={isDark ? "#fff" : "#000"} />
                             <Text style={{ marginLeft: 6, color: isDark ? "#fff" : "#000", alignSelf: "center" }}>Yol çalışması ekle</Text>
                         </TouchableOpacity>
                     </View>
 
-                </View>
+                </ScrollView>
             </Modal>
 
             <Modal visible={camVisible}>
