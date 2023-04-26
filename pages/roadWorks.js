@@ -240,12 +240,12 @@ const RoadPage = ({ navigation, route }) => {
                     backgroundStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff" }}
                     handleIndicatorStyle={{ backgroundColor: isDark ? "#262626" : "#d9d9d9", width: 72, height:6 }}
                 >
-                    <View style={{ alignItems: "center", flexDirection: "row", flexShrink: 1 }}>
+                    <View style={{ alignItems: "center", flexDirection: "row", flexShrink: 1, zIndex:10000,elevation:10000 }}>
                         <Calendar size={24} color={isDark ? "#fff" : "#000000"} style={{ marginLeft: 30, alignSelf: "center", marginTop: 12 }} />
                         <DropDownPicker
                             theme='DARK'
-                            style={{ zIndex: 2, marginTop: 15, width: 100, backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0 }}
-                            containerStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0, zIndex: 2 }}
+                            style={{ zIndex: 999, elevation:999, marginTop: 15, width: 100, backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0 }}
+                            containerStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0, left:0, zIndex: 2 }}
                             badgeStyle={{ borderWidth: 0 }}
                             textStyle={{ color: isDark ? "#fff" : "#000000", }}
                             labelStyle={{ color: isDark ? "#fff" : "#000000" }}
@@ -279,11 +279,12 @@ const RoadPage = ({ navigation, route }) => {
 
                             tickIconStyle={{ color: "#ff0000" }}
                             showBadgeDot={false}
-                            listParentContainerStyle={{ borderWidth: 0, }}
-                            listChildContainerStyle={{ borderWidth: 0, }}
+                            listParentContainerStyle={{ borderWidth: 0, backgroundColor:isDark?"#1b1b1b":"#fff"}}
+                            listChildContainerStyle={{ borderWidth: 0, backgroundColor:isDark?"#1b1b1b":"#fff"}}
                             itemSeparator
                             itemSeparatorStyle={{ backgroundColor: "#1d1d1d", height: 1 }}
-                            dropDownContainerStyle={{ borderWidth: 0, borderRadius: 6, shadowOpacity: 1, shadowColor: "#000000", shadowRadius: 16, elevation: 5, width: "90%", alignSelf: "center" }}
+                            dropDownContainerStyle={{ borderWidth: 0, zIndex:10000, borderRadius: 6, shadowOpacity: 1, shadowColor: "#000000", shadowRadius: 16, elevation: 10000, width: "90%", alignSelf: "center" }}
+                            
                             setOpen={setPicker}
                             listItemContainerStyle={{ backgroundColor: isDark ? "#1b1b1b" : "#fff", borderWidth: 0, }}
                             listItemLabelStyle={{ color: isDark ? "#fff" : "#000000" }}
@@ -301,7 +302,7 @@ const RoadPage = ({ navigation, route }) => {
                                 setSearchValue(text)
                                 setCalismalar(fullCalismalar.filter(item=>item.descr.toLocaleLowerCase()?.includes(text.toLocaleLowerCase())))
                             }
-                        } placeholder='Yol veya bölge adı aratın...' placeholderTextColor={isDark?"#fff":"#000000"} style={{paddingLeft:13}}/>
+                        } placeholder='Yol veya bölge adı aratın...' placeholderTextColor={isDark?"#fff":"#000000"} style={{paddingLeft:13, zIndex:-1}}/>
                     </View>
                     
                     <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignItems: "center" }}>
