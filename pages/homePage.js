@@ -243,7 +243,7 @@ const HomePage = ({ navigation, route }) => {
                     }}
                 />
                 <View style={{ marginLeft: 15, marginBottom: 15 }}>
-                    <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Rota</Text>
+                    <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>{item.name}</Text>
                     <View style={{ flexDirection: "row", flexShrink: 1, marginTop: 8 }}>
                         <CalendarBlank size={24} color={isDark ? "#fff" : "#000000"} />
                         <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000000", flexShrink: 1 }}>{item.repeat}</Text>
@@ -459,9 +459,7 @@ const HomePage = ({ navigation, route }) => {
                             fontSize: 36, color: isDark ? "#FFFFFF" : "#000000", marginLeft: 32,
                             marginTop: 20, fontWeight: "700"
                         }}>{(route.params ? route.params.isci : asyncIsci) ? "Kolay gelsin" : "Selam"}, {username}!</Text>
-                    <View style={{ alignContent: "center", justifyContent: "center", alignItems: "stretch", alignSelf: "center", flex: 1, flexDirection: "row" }}>
-                        <Image source={require("../pp.png")} style={{ width: 37, height: 37, justifyContent: "flex-end", marginRight: 0, marginTop: 18, alignSelf: "center" }} />
-                    </View>
+                   
                 </View>
 
                 <View style={{ flexDirection: "row", }}>

@@ -167,7 +167,7 @@ const RoutesPage = ({ navigation, route }) => {
                         }}
                     />
                     <View style={{ marginLeft: 18 }}>
-                        <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Rota</Text>
+                        <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>{item.name}</Text>
                         <View style={{ flexDirection: "row", flexShrink: 1 }}>
                             <Calendar size={24} color={isDark ? "#fff" : "#000000"} />
                             <Text style={{ marginLeft: 10, color: isDark ? "#fff" : "#000000", flexShrink: 1 }}>{item.date}</Text>

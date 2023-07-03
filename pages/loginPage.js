@@ -112,7 +112,7 @@ const LoginPage = ({ navigation, route }) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignItems: "center", height: "100%" }}>
+        <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignItems: "center", height: "100%" }}>
             <ImageBackground style={{ flex: 1, height: Dimensions.get("screen").height, width: Dimensions.get("screen").width, alignItems: "center", zIndex: 0 }} source={require("../assets/background.png")}>
                 <StatusBar tranlucent backgroundColor={"transparent"} barStyle={"light-content"} />
                 <Modal visible={loginVisible}>
@@ -209,7 +209,7 @@ const LoginPage = ({ navigation, route }) => {
                     <View style={{ width: Dimensions.get("window").width, height: 200 }}></View>
                 </LinearGradient>
             </ImageBackground>
-        </SafeAreaView>
+        </View>
     )
 
 }

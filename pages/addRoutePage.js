@@ -276,6 +276,7 @@ const AddRoutePage = ({ navigation, route }) => {
                     setDateStr("")
                     setRouteName("")
                     setRepeatText("")
+                    setValue(null)
                     navigation.navigate("Routes" , {extraRoutes:listRoute})}}>
                     <CaretLeft color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} size={26} />
                     <Text style={{ color: isDark ? "#fff" : "#000000", textAlign: "center", alignSelf: "center" }}>Geri</Text>
@@ -349,6 +350,8 @@ const AddRoutePage = ({ navigation, route }) => {
                         
                         }]})
                         setValue(null) 
+                        setRepeatText("")
+
                     }
                 }>
                     <Check color={isDark ? "#fff" : "#000000"} style={{ alignSelf: "center" }} size={26} />
