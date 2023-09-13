@@ -103,16 +103,7 @@ const SettingsPage = ({ navigation, route }) => {
                     </View>
                 </TouchableOpacity>
     {*/} 
-        {/* TODO: SİL! */}
-                <TouchableOpacity>
-                    <View style={{ width: "100%", height: 60, padding: 15, marginLeft: 30, marginTop: 30, flexDirection: "row" }}>
-                        <MaskSad size={43} color={isDark ? "#fff" : "#000000"} />
-                        <View style={{ marginLeft: 18 }}>
-                            <Text style={{ fontWeight: "600", color: isDark ? "#fff" : "#000000" }}>Niye Bize Ödül Vermediniz?</Text>
-                            <Text style={{ fontWeight: "400", color: isDark ? "#a8a8a8" : "#575757" }}>Alçak jüriler</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
+        
 
                 <TouchableOpacity onPress={() => {
                     setShowBildirimler(true);
