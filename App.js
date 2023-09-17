@@ -45,7 +45,7 @@ const HomeButton = (props) => (
     onPress={props.onPress}
   >
     <House size={28} color={props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000")} weight={props.accessibilityState.selected ? "fill" : "regular"} />
-    <Text style={{ textAlign: 'center', marginBottom: 15, color: props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000") }}>Ana Ekran</Text>
+    <Text numberOfLines={1} adjustsFontSizeToFit style={{ textAlign: 'center', marginBottom: 15, color: props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000") }}>Ana Ekran</Text>
   </TouchableOpacity>
 );
 
@@ -56,7 +56,7 @@ const RouteButton = (props) => (
     onPress={() => { props.onPress() }}
   >
     <MapTrifold size={28} color={props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000")} weight={props.accessibilityState.selected ? "fill" : "regular"} />
-    <Text style={{ textAlign: 'center', marginBottom: 15, color: props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000"), }}>Rotalarınız</Text>
+    <Text numberOfLines={1} adjustsFontSizeToFit style={{ textAlign: 'center', marginBottom: 15, color: props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000"), }}>Rotalarınız</Text>
   </TouchableOpacity>
 );
 const RoadworkButton = (props) => (
@@ -66,7 +66,7 @@ const RoadworkButton = (props) => (
     onPress={() => { props.onPress() }}
   >
     <Warning size={28} color={props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000")} weight={props.accessibilityState.selected ? "fill" : "regular"} />
-    <Text style={{ textAlign: 'center', marginBottom: 15, color: props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000"), }}>Çalışmalar</Text>
+    <Text numberOfLines={1} adjustsFontSizeToFit style={{ textAlign: 'center', marginBottom: 15, color: props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000"), }}>Çalışmalar</Text>
   </TouchableOpacity>
 );
 const NotificationsButton = (props) => (
@@ -76,7 +76,7 @@ const NotificationsButton = (props) => (
     onPress={() => { props.onPress() }}
   >
     <Bell size={28} color={props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000")} weight={props.accessibilityState.selected ? "fill" : "regular"} />
-    <Text style={{ textAlign: 'center', marginBottom: 15, color: props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000"), }}>Bildirimler</Text>
+    <Text numberOfLines={1} adjustsFontSizeToFit style={{ textAlign: 'center', marginBottom: 15, color: props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000"), }}>Bildirimler</Text>
   </TouchableOpacity>
 );
 const SettingsButton = (props) => (
@@ -86,7 +86,7 @@ const SettingsButton = (props) => (
     onPress={() => { props.onPress() }}
   >
     <Gear size={28} color={props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000")} weight={props.accessibilityState.selected ? "fill" : "regular"} />
-    <Text style={{ textAlign: 'center', marginBottom: 15, color: props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000"), }}>Ayarlar</Text>
+    <Text numberOfLines={1} adjustsFontSizeToFit style={{ textAlign: 'center', marginBottom: 15, color: props.accessibilityState.selected ? "#e05003" : (isDark ? "#fff" : "#000000"), }}>Ayarlar</Text>
   </TouchableOpacity>
 );
 
