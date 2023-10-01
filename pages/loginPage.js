@@ -78,7 +78,7 @@ const LoginPage = ({ navigation, route }) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ username: unameInput, pass: shasum }),
-        })
+        }).catch(console.log)
 
         const json = await resp.json()
 
@@ -105,7 +105,7 @@ const LoginPage = ({ navigation, route }) => {
                 })
             setLoginVisible(false)
         } else {
-
+            console.error(JSON.stringify(json))
         }
 
         setUnameInput(""); setPassInput("");
@@ -114,7 +114,7 @@ const LoginPage = ({ navigation, route }) => {
     return (
         <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignItems: "center", height: "100%" }}>
             <ImageBackground style={{ flex: 1, height: Dimensions.get("screen").height, width: Dimensions.get("screen").width, alignItems: "center", zIndex: 0 }} source={require("../assets/background.png")}>
-                <StatusBar tranlucent backgroundColor={"transparent"} barStyle={"light-content"} />
+                <StatusBar backgroundColor={"transparent"} barStyle={"light-content"} />
                 <Modal visible={loginVisible}>
                     <View style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", padding: 16, justifyContent: "center" }}>
                         <Text style={{ fontSize: 36, color: isDark ? "#fff" : "#000", fontWeight: "bold" }}>Giriş Yap</Text>
