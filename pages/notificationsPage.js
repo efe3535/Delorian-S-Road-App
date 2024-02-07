@@ -53,7 +53,7 @@ init({
     }
 });
 
-const client = new Paho.MQTT.Client(ip, 1923, 'uname_notif'+ (Math.random() * 10000).toString());
+const client = new Paho.MQTT.Client(ip, 1923, 'uname_notif' + (Math.random() * 10000).toString());
 
 function onConnect() {
     console.log("onConnect");
@@ -93,13 +93,13 @@ const NotificationsPage = ({ navigation, route }) => {
     const [attr, setAttr] = useState([])
     const [itemState, setItemState] = useState({})
     const [loading, setLoading] = useState(false)
-    const [expecting,setExpecting] = useState(false)
+    const [expecting, setExpecting] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
 
 
     const onMessageArrived = (msg) => {
         //console.log("onMessageArrived:" + msg.payloadString, msg.topic);
-        if(expecting) {
+        if (expecting) {
             if (msg.topic == "esp32/responsecalismalar" && JSON.parse(msg.payloadString) != []) {
                 //setCalismalar([])
                 let calismaList = []
@@ -175,19 +175,19 @@ const NotificationsPage = ({ navigation, route }) => {
                     msg.payloadString.split("📷").forEach(
                         (elm, ind, arr) => {
                             //setPhoto(photo => [...photo, { id: photo.length, photo: elm }]);
-                            ll.push({ id: ll.length, photo: elm.replace(/[\[\]']+/g,'') })
+                            ll.push({ id: ll.length, photo: elm.replace(/[\[\]']+/g, '') })
                         }
                     )
                 } else {
                     //console.log(msg.payloadString.slice(2, -2));
 
-                    ll = [{ id: photo.length, photo: msg.payloadString.replace(/[\[\]']+/g,'') }]
+                    ll = [{ id: photo.length, photo: msg.payloadString.replace(/[\[\]']+/g, '') }]
                 }
                 if (koor) {
                     console.log("ALIVE2");
-                    console.log("navigate -> ",itemState.toString());
+                    console.log("navigate -> ", itemState.toString());
 
-                    navigation.navigate("WorkDetails", { item: itemState, a:"b", koor: { x: koor[0], y: koor[1] }, photo: ll })
+                    navigation.navigate("WorkDetails", { item: itemState, a: "b", koor: { x: koor[0], y: koor[1] }, photo: ll })
                     setLoading(false)
 
                 }
@@ -208,15 +208,15 @@ const NotificationsPage = ({ navigation, route }) => {
         },
         []
     )
-   
-    
+
+
 
     const refreshList = () => {
         Geolocation.getCurrentPosition(
             info => {
                 setKoor([info.coords.latitude, info.coords.longitude])
             })
-            setExpecting(true)
+        setExpecting(true)
         client.send("esp32/calismalar", "GET", 0, false)
 
 
@@ -249,7 +249,7 @@ const NotificationsPage = ({ navigation, route }) => {
                     </Svg>
 
 
-                    <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "600", flexShrink: 1, marginLeft: 10 }}>{item.descr?.toString()} konumundaki yol çalışması {item.ended ? "sona erdi." : "devam ediyor."}</Text>
+                    <Text style={{ color: isDark ? "#fff" : "#000000", backgroundColor: isDark ? "#1b1b1b" : "#fff", fontWeight: "600", flexShrink: 1, marginLeft: 10 }}>{item.descr?.toString()} konumundaki yol çalışması {item.ended ? "sona erdi." : "devam ediyor."}</Text>
                     <CaretRight size={38} color={isDark ? "#fff" : "#000000"} style={{ marginLeft: 10, alignSelf: "center", marginRight: 10 }} />
 
                 </TouchableOpacity>
@@ -268,7 +268,7 @@ const NotificationsPage = ({ navigation, route }) => {
                 onRefresh={refreshList}
                 sections={calismalar}
                 renderItem={renderItem}
-                renderSectionHeader={({ section: { timestamp } }) => (<Text style={{ marginLeft: 30, fontSize: 20, fontWeight: "500", marginTop: 30, color: isDark ? "#a8a8a8" : "#575757" }}>{timestamp}</Text>)}
+                renderSectionHeader={({ section: { timestamp } }) => (<Text style={{ marginLeft: 30, fontSize: 20, fontWeight: "500", marginTop: 30, color: isDark ? "#a8a8a8" : "#575757", backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>{timestamp}</Text>)}
                 keyExtractor={item => item.id}
             />
             <TouchableOpacity style={{ flexDirection: "row", flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff", alignSelf: "flex-end", borderRadius: 56, borderWidth: 2, borderColor: isDark ? "#262626" : "#d9d9d9", padding: 16, position: "absolute", alignItems: "center", alignContent: "center", justifyContent: "center", marginRight: 28, marginBottom: 12, bottom: 0, right: 0 }}

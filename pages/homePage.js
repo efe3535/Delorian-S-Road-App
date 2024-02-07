@@ -288,31 +288,33 @@ const HomePage = ({ navigation, route }) => {
                             hasPhoto: item[7],
                     }
                 }))*/
-                
+
                 let _sortedCalismalar = orderByDistance(
-                    { latitude:parseFloat(koor[0]), longitude: parseFloat(koor[1]) }, 
+                    { latitude: parseFloat(koor[0]), longitude: parseFloat(koor[1]) },
                     JSON.parse(msg.payloadString)["calismalar"].map(
-                        (item) => {return {
-                            id: item[0],
-                            koorX: item[1],
-                            koorY: item[2],
-                            reason: item[3],
-                            descr: item[4],
-                            timestamp: item[5],
-                            ended: item[6],
-                            hasPhoto: item[7],
-                            //// Sort algoritması için
-                            latitude: parseFloat(item[1]),
-                            longitude: parseFloat(item[2]),
-                            distance: getDistance({latitude:koor[0], longitude:koor[1]}, {latitude:parseFloat(item[1]),longitude:parseFloat(item[2])})
-                        }}
+                        (item) => {
+                            return {
+                                id: item[0],
+                                koorX: item[1],
+                                koorY: item[2],
+                                reason: item[3],
+                                descr: item[4],
+                                timestamp: item[5],
+                                ended: item[6],
+                                hasPhoto: item[7],
+                                //// Sort algoritması için
+                                latitude: parseFloat(item[1]),
+                                longitude: parseFloat(item[2]),
+                                distance: getDistance({ latitude: koor[0], longitude: koor[1] }, { latitude: parseFloat(item[1]), longitude: parseFloat(item[2]) })
+                            }
+                        }
                     )
                 )
 
                 setCalismalar(_sortedCalismalar);
-                console.log("_sortedCalismalar",_sortedCalismalar)
+                console.log("_sortedCalismalar", _sortedCalismalar)
 
-                
+
             }
 
             if (msg.topic == "esp32/responsekoorbyid") {
@@ -431,7 +433,7 @@ const HomePage = ({ navigation, route }) => {
                     }}>
                         <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "600" }}>{item.descr?.toString()} konumunda yol çalışması</Text>
                         <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "400" }}>{item.reason}</Text>
-                        <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "600" }}><Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "bold" }}>{item.distance/1000}</Text> km uzaklıkta</Text>
+                        <Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "600" }}><Text style={{ color: isDark ? "#fff" : "#000000", fontWeight: "bold" }}>{item.distance / 1000}</Text> km uzaklıkta</Text>
                     </TouchableOpacity>
                 </View>
                 <CaretRight size={38} color={isDark ? "#fff" : "#000000"} style={{ alignSelf: 'center', justifyContent: "center" }} />
@@ -443,8 +445,7 @@ const HomePage = ({ navigation, route }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(false)
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor:isDark?"#1b1b1b":"#fff" }}>
-            <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={ isDark?"#1b1b1b":"#fff"} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
             <ScrollView style={{
                 backgroundColor: isDark ? "#1b1b1b" : "#fff",
                 flex: 1,
@@ -459,7 +460,7 @@ const HomePage = ({ navigation, route }) => {
                             fontSize: 36, color: isDark ? "#FFFFFF" : "#000000", marginLeft: 32,
                             marginTop: 20, fontWeight: "700"
                         }}>{(route.params ? route.params.isci : asyncIsci) ? "Kolay gelsin" : "Selam"}, {username}!</Text>
-                   
+
                 </View>
 
                 <View style={{ flexDirection: "row", }}>

@@ -100,7 +100,7 @@ const App: () => Node = () => {
   }
 
   const setIsciAsyncStorage = async (status) => {
-    await AsyncStorage.setItem("isci", status==true ? "true" : "false")
+    await AsyncStorage.setItem("isci", status == true ? "true" : "false")
   }
 
   useEffect(() => {
@@ -127,8 +127,8 @@ const App: () => Node = () => {
   }, [])
 
   return (
-    <View style={{ flex: 1, height:"100%", backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
-      <StatusBar barStyle="light-content" />
+    <View style={{ flex: 1, height: "100%", backgroundColor: isDark ? "#1b1b1b" : "#fff" }}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{
           headerShown: false,
@@ -138,8 +138,8 @@ const App: () => Node = () => {
           tabBarInactiveTintColor: "#a89984",
           tabBarStyle:
           {
-            backgroundColor:isDark?"#1b1b1b":"#fff",
-            height:Platform.OS == "android" ? 80: 110,
+            backgroundColor: isDark ? "#1b1b1b" : "#fff",
+            height: Platform.OS == "android" ? 80 : 110,
             borderTopWidth: 0,
           },
         }}>
@@ -154,7 +154,7 @@ const App: () => Node = () => {
           <Stack.Screen name="RouteDetails" component={RouteDetails} options={{ tabBarStyle: { display: "none" }, tabBarShowLabel: false, tabBarItemStyle: { display: "none" } }} />
           <Stack.Screen name="LoginPage" component={LoginPage} options={{ tabBarStyle: { display: "none" }, tabBarShowLabel: false, tabBarItemStyle: { display: "none" } }} />
           <Stack.Screen name="CalismaEkle" component={AddWorkPage} options={{ tabBarStyle: { display: "none" }, tabBarShowLabel: false, tabBarItemStyle: { display: "none" } }} />
-          
+
         </Stack.Navigator>
 
       </NavigationContainer>
